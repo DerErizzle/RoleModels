@@ -4,9 +4,7 @@ package jackboxgames.talkshow.actions
    
    public class ActionPackageClassManager
    {
-      
       public static var _instance:ActionPackageClassManager;
-       
       
       private var _classMetadata:Dictionary;
       
@@ -45,3 +43,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

@@ -6,8 +6,6 @@ package jackboxgames.nativeoverride
    
    public class AudioFaderGroup extends PausableEventDispatcher
    {
-       
-      
       private var _name:String;
       
       private var _onLoadCompleteCallback:Function;
@@ -119,3 +117,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

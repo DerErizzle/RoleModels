@@ -11,8 +11,6 @@ package jackboxgames.talkshow.cells
    
    public class GotoCell extends AbstractCell
    {
-       
-      
       private var _tCell:uint;
       
       private var _tFlowchart:uint;
@@ -241,3 +239,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

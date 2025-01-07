@@ -5,8 +5,6 @@ package jackboxgames.utils
    
    public class SavedTalkShowVariable
    {
-       
-      
       private var _key:String;
       
       private var _cachedValueContainer:Object;
@@ -38,3 +36,4 @@ package jackboxgames.utils
       }
    }
 }
+

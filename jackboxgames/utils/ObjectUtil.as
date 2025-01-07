@@ -2,8 +2,6 @@ package jackboxgames.utils
 {
    public final class ObjectUtil
    {
-       
-      
       public function ObjectUtil()
       {
          super();
@@ -157,6 +155,15 @@ package jackboxgames.utils
          return returnMe;
       }
       
+      public static function copyInto(to:Object, from:Object) : void
+      {
+         var key:String = null;
+         for(key in from)
+         {
+            to[key] = from[key];
+         }
+      }
+      
       public static function getObjectWithoutKeys(o:Object, k:*) : Object
       {
          var disallowedKeys:Array = null;
@@ -207,5 +214,43 @@ package jackboxgames.utils
          }
          return returnMe;
       }
+      
+      public static function getClass(o:*) : Class
+      {
+         return Object(o).constructor;
+      }
+      
+      public static function convertToQueryString(o:Object, ignoreNullValues:Boolean = true) : String
+      {
+         var key:String = null;
+         var val:* = undefined;
+         var query:String = "";
+         for(key in o)
+         {
+            val = o[key];
+            if(!(val == null && ignoreNullValues))
+            {
+               if(query.length > 0)
+               {
+                  query += "&";
+               }
+               query += encodeURIComponent(key) + "=" + encodeURIComponent(val);
+            }
+         }
+         return query;
+      }
+      
+      public static function isEmpty(o:Object) : Boolean
+      {
+         var name:String = null;
+         var _loc3_:int = 0;
+         var _loc4_:* = o;
+         for(name in _loc4_)
+         {
+            return false;
+         }
+         return true;
+      }
    }
 }
+

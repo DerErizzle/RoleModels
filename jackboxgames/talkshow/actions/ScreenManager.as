@@ -8,8 +8,6 @@ package jackboxgames.talkshow.actions
    
    public dynamic class ScreenManager extends MovieClip implements IScreenManager
    {
-       
-      
       private var _fore:uint = 0;
       
       private var _back:uint = 0;
@@ -271,3 +269,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

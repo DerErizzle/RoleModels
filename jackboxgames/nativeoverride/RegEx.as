@@ -4,7 +4,6 @@ package jackboxgames.nativeoverride
    
    public class RegEx
    {
-      
       public static var TestNative:Function = null;
       
       public static var ReplaceNative:Function = null;
@@ -12,7 +11,6 @@ package jackboxgames.nativeoverride
       public static var MatchNative:Function = null;
       
       public static var SearchNative:Function = null;
-       
       
       public function RegEx()
       {
@@ -68,3 +66,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

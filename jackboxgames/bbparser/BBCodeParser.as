@@ -4,14 +4,11 @@ package jackboxgames.bbparser
    
    public class BBCodeParser
    {
-      
       private static var _tagsToReplace:Dictionary = new Dictionary();
       
-      {
-         _tagsToReplace["&"] = "&amp";
-         _tagsToReplace["<"] = "&lt";
-         _tagsToReplace[">"] = "&gt";
-      }
+      _tagsToReplace["&"] = "&amp";
+      _tagsToReplace["<"] = "&lt";
+      _tagsToReplace[">"] = "&gt";
       
       private var _tags:Dictionary;
       
@@ -24,25 +21,12 @@ package jackboxgames.bbparser
          this._escapeHTML = escapeHTML;
       }
       
-      private static function _simpleHtmlMarkupGenerator(tag:Tag, attr:Dictionary, content:String) : String
-      {
-         return "<" + tag.tagName + ">" + content + "</" + tag.tagName + ">";
-      }
-      
       public static function get defaultTags() : Dictionary
       {
          var tags:Dictionary = new Dictionary();
-         tags["b"] = Tag.create("b",_simpleHtmlMarkupGenerator);
-         tags["i"] = Tag.create("i",_simpleHtmlMarkupGenerator);
-         tags["u"] = Tag.create("u",_simpleHtmlMarkupGenerator);
-         tags["color"] = Tag.create("color",function(tag:Tag, attr:Dictionary, content:String):String
-         {
-            if("color" in attr)
-            {
-               return "<font color=\"" + attr["color"] + "\">" + content + "</font>";
-            }
-            return content;
-         });
+         tags["b"] = Tag.create("b");
+         tags["i"] = Tag.create("i");
+         tags["u"] = Tag.create("u");
          return tags;
       }
       
@@ -101,7 +85,7 @@ package jackboxgames.bbparser
                content = this.treeToHtml(tree.subTrees,Boolean(tag) ? tag.insertLineBreaks : false,escapingHtml,stripTags);
                if(Boolean(tag) && !stripTags)
                {
-                  htmlString += tag.markupGenerator(tag,tree.attributes,content);
+                  htmlString += tag.markupGenerator(tag,content);
                }
                else
                {
@@ -117,3 +101,4 @@ package jackboxgames.bbparser
       }
    }
 }
+

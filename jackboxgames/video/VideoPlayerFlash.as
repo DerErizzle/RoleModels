@@ -10,11 +10,9 @@ package jackboxgames.video
    
    public class VideoPlayerFlash extends VideoPlayerBase implements IVideoPlayer
    {
-      
       private static var VIDEOS:Array = [];
       
       private static var ALL_PAUSED:Boolean = false;
-       
       
       private var _flashVideo:Video;
       
@@ -358,3 +356,4 @@ package jackboxgames.video
       }
    }
 }
+

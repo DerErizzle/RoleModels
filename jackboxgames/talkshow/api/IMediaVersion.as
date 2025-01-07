@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface IMediaVersion
    {
-       
-      
       function get idx() : uint;
       
       function get id() : int;
@@ -17,3 +15,4 @@ package jackboxgames.talkshow.api
       function get metadata() : Object;
    }
 }
+

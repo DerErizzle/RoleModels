@@ -6,8 +6,6 @@ package jackboxgames.talkshow.stub
    
    public class StubAction implements IAction
    {
-       
-      
       private var _actionName:String;
       
       public function StubAction(actionName:String)
@@ -50,5 +48,11 @@ package jackboxgames.talkshow.stub
       {
          return 0;
       }
+      
+      public function get numParameters() : int
+      {
+         return 0;
+      }
    }
 }
+

@@ -5,9 +5,7 @@ package com.greensock.plugins
    
    public class VolumePlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       protected var _target:Object;
       
@@ -20,7 +18,7 @@ package com.greensock.plugins
       
       override public function _onInitTween(target:Object, value:*, tween:TweenLite) : Boolean
       {
-         if(isNaN(value) || target.hasOwnProperty("volume") || !target.hasOwnProperty("soundTransform"))
+         if(isNaN(value) || Boolean(target.hasOwnProperty("volume")) || !target.hasOwnProperty("soundTransform"))
          {
             return false;
          }
@@ -37,3 +35,4 @@ package com.greensock.plugins
       }
    }
 }
+

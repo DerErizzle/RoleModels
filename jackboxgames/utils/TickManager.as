@@ -8,11 +8,9 @@ package jackboxgames.utils
    
    public class TickManager extends EventDispatcher
    {
-      
       private static var _instance:TickManager;
       
       public static const EVENT_TICK:String = "tick";
-       
       
       private var _isActive:Boolean;
       
@@ -75,3 +73,4 @@ package jackboxgames.utils
       }
    }
 }
+

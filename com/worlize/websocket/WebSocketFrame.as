@@ -7,7 +7,6 @@ package com.worlize.websocket
    
    public class WebSocketFrame
    {
-      
       private static const NEW_FRAME:int = 0;
       
       private static const WAITING_FOR_16_BIT_LENGTH:int = 1;
@@ -19,7 +18,6 @@ package com.worlize.websocket
       private static const COMPLETE:int = 4;
       
       private static var _tempMaskBytes:Vector.<uint> = new Vector.<uint>(4);
-       
       
       public var fin:Boolean;
       
@@ -70,13 +68,13 @@ package com.worlize.websocket
             {
                firstByte = int(input.readByte());
                secondByte = int(input.readByte());
-               this.fin = Boolean(firstByte & 128);
-               this.rsv1 = Boolean(firstByte & 64);
-               this.rsv2 = Boolean(firstByte & 32);
-               this.rsv3 = Boolean(firstByte & 16);
-               this.mask = Boolean(secondByte & 128);
-               this.opcode = firstByte & 15;
-               this._length = secondByte & 127;
+               this.fin = Boolean(firstByte & 0x80);
+               this.rsv1 = Boolean(firstByte & 0x40);
+               this.rsv2 = Boolean(firstByte & 0x20);
+               this.rsv3 = Boolean(firstByte & 0x10);
+               this.mask = Boolean(secondByte & 0x80);
+               this.opcode = firstByte & 0x0F;
+               this._length = secondByte & 0x7F;
                if(this.mask)
                {
                   this.protocolError = true;
@@ -184,10 +182,10 @@ package com.worlize.websocket
          if(this.mask && !this.useNullMask)
          {
             maskKey = Math.ceil(Math.random() * 4294967295);
-            _tempMaskBytes[0] = maskKey >> 24 & 255;
-            _tempMaskBytes[1] = maskKey >> 16 & 255;
-            _tempMaskBytes[2] = maskKey >> 8 & 255;
-            _tempMaskBytes[3] = maskKey & 255;
+            _tempMaskBytes[0] = maskKey >> 24 & 0xFF;
+            _tempMaskBytes[1] = maskKey >> 16 & 0xFF;
+            _tempMaskBytes[2] = maskKey >> 8 & 0xFF;
+            _tempMaskBytes[3] = maskKey & 0xFF;
          }
          var firstByte:int = 0;
          var secondByte:int = 0;
@@ -211,7 +209,7 @@ package com.worlize.websocket
          {
             secondByte |= 128;
          }
-         firstByte |= this.opcode & 15;
+         firstByte |= this.opcode & 0x0F;
          if(this.opcode === WebSocketOpcode.CONNECTION_CLOSE)
          {
             data = new ByteArray();
@@ -250,7 +248,7 @@ package com.worlize.websocket
          }
          if(this._length <= 125)
          {
-            secondByte |= this._length & 127;
+            secondByte |= this._length & 0x7F;
          }
          else if(this._length > 125 && this._length <= 65535)
          {
@@ -303,3 +301,4 @@ package com.worlize.websocket
       }
    }
 }
+

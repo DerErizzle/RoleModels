@@ -9,8 +9,6 @@ package jackboxgames.engine.componenets
    
    public class PrepareComponent extends PausableEventDispatcher implements IPrepareComponent, IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       public function PrepareComponent(engine:GameEngine)
@@ -91,3 +89,4 @@ package jackboxgames.engine.componenets
       }
    }
 }
+

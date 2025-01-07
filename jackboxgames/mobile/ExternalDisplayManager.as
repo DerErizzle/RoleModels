@@ -6,11 +6,9 @@ package jackboxgames.mobile
    
    public class ExternalDisplayManager extends PausableEventDispatcher
    {
-      
       private static var _instance:ExternalDisplayManager;
       
       public static const EVENT_SCREEN_STATE_CHANGED:String = "ExternalDisplayManager.ScreenStateChanged";
-       
       
       private var _isOnExternalDisplay:Boolean = true;
       
@@ -44,3 +42,4 @@ package jackboxgames.mobile
       }
    }
 }
+

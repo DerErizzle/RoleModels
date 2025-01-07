@@ -14,8 +14,6 @@ package jackboxgames.audio
    
    public class JBGSound extends PausableEventDispatcher
    {
-       
-      
       private const SAMPLE_RATE:Number = 44100;
       
       private const BUFFER_SIZE:int = 8192;
@@ -136,7 +134,7 @@ package jackboxgames.audio
                try
                {
                   metadata = JSON.deserialize(this._loadedSound.id3.comment) as Object;
-                  this._sampleTarget = metadata.s;
+                  this._sampleTarget = Boolean(metadata) ? int(metadata.s) : 0;
                }
                catch(err:Error)
                {
@@ -371,3 +369,4 @@ package jackboxgames.audio
       }
    }
 }
+

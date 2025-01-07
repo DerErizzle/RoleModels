@@ -5,8 +5,6 @@ package jackboxgames.logger
    
    public class LocalConnectionTarget
    {
-       
-      
       private var _lc:LocalConnection;
       
       private var _id:String;
@@ -37,3 +35,4 @@ package jackboxgames.logger
       }
    }
 }
+

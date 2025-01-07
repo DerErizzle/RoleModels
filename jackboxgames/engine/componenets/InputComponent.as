@@ -5,12 +5,11 @@ package jackboxgames.engine.componenets
    import jackboxgames.nativeoverride.Gamepad;
    import jackboxgames.nativeoverride.Input;
    import jackboxgames.utils.BuildConfig;
+   import jackboxgames.utils.KeyboardInputHandler;
    import jackboxgames.utils.PausableEventDispatcher;
    
    public class InputComponent extends PausableEventDispatcher implements IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       public function InputComponent(engine:GameEngine)
@@ -41,10 +40,7 @@ package jackboxgames.engine.componenets
       
       public function startGame(doneFn:Function) : void
       {
-         if(BuildConfig.instance.configVal("flashKeyboard"))
-         {
-            Gamepad.instance.setKeyboardObserver(this._engine.activeGame.main.stage);
-         }
+         KeyboardInputHandler.initialize(this._engine.activeGame.main.stage);
          doneFn();
       }
       
@@ -53,3 +49,4 @@ package jackboxgames.engine.componenets
       }
    }
 }
+

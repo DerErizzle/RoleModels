@@ -3,14 +3,13 @@ package jackboxgames.engine
    import flash.events.*;
    import jackboxgames.engine.componenets.*;
    import jackboxgames.engine.componentLists.*;
+   import jackboxgames.nativeoverride.*;
    import jackboxgames.utils.*;
    import jackboxgames.widgets.*;
    
    public class GameEngine extends PausableEventDispatcher
    {
-      
       private static var _instance:GameEngine;
-       
       
       private var _rootGame:IGame;
       
@@ -35,20 +34,25 @@ package jackboxgames.engine
          onAddedToStage = function(evt:Event):void
          {
             game.main.removeEventListener(Event.ADDED_TO_STAGE,onAddedToStage);
+            JSON.Initialize();
             BuildConfig.instance.init(configList);
             BuildConfig.instance.load(function():void
             {
                if(Boolean(_instance))
                {
-                  game.init();
-                  _instance.startGame(game,Nullable.NULL_FUNCTION);
+                  game.init(function():void
+                  {
+                     _instance.startGame(game,Nullable.NULL_FUNCTION);
+                  });
                   return;
                }
                _instance = new GameEngine(game,componentList);
                _instance.init(function():void
                {
-                  game.init();
-                  _instance.startGame(game,Nullable.NULL_FUNCTION);
+                  game.init(function():void
+                  {
+                     _instance.startGame(game,Nullable.NULL_FUNCTION);
+                  });
                });
             });
          };
@@ -188,10 +192,10 @@ package jackboxgames.engine
          component.setPauseEnabled(enabled);
       }
       
-      public function setPauseType(type:String) : void
+      public function setPauseContext(context:String) : void
       {
          var component:IPauseComponent = this._getComponentOfTypeByPriority(IPauseComponent) as IPauseComponent;
-         component.setPauseType(type);
+         component.setPauseContext(context);
       }
       
       public function get isPaused() : Boolean
@@ -216,24 +220,6 @@ package jackboxgames.engine
       {
          var component:IPauseComponent = this._getComponentOfTypeByPriority(IPauseComponent) as IPauseComponent;
          component.resume();
-      }
-      
-      public function get supportsFullscreen() : Boolean
-      {
-         var component:IFullscreenComponent = this._getComponentOfTypeByPriority(IFullscreenComponent) as IFullscreenComponent;
-         return component.supportsFullscreen;
-      }
-      
-      public function setFullscreen(isFull:Boolean) : void
-      {
-         var component:IFullscreenComponent = this._getComponentOfTypeByPriority(IFullscreenComponent) as IFullscreenComponent;
-         component.setFullscreen(isFull);
-      }
-      
-      public function setVolume(percent:Number) : void
-      {
-         var component:IVolumeComponent = this._getComponentOfTypeByPriority(IVolumeComponent) as IVolumeComponent;
-         component.setVolume(percent);
       }
       
       public function prepare(id:String, doneFn:Function) : void
@@ -262,3 +248,4 @@ package jackboxgames.engine
       }
    }
 }
+

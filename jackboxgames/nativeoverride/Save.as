@@ -6,11 +6,9 @@ package jackboxgames.nativeoverride
    
    public class Save implements IPreparable
    {
+      private static var _instance:Save;
       
       public static var GamePrefix:String = "";
-      
-      private static var _instance:Save;
-       
       
       private var _prepareCallback:Function;
       
@@ -161,3 +159,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

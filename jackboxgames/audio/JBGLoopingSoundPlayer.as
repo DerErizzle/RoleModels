@@ -8,8 +8,6 @@ package jackboxgames.audio
    
    public class JBGLoopingSoundPlayer
    {
-       
-      
       private var _playingUrl:String;
       
       private var _currentSound:JBGSound;
@@ -145,3 +143,4 @@ package jackboxgames.audio
       }
    }
 }
+

@@ -2,6 +2,13 @@ package jackboxgames.settings
 {
    public final class SettingsConstants
    {
+      public static const PLAYER_CONTENT_FILTERING_OFF:String = "PLAYER_CONTENT_FILTERING_OFF";
+      
+      public static const PLAYER_CONTENT_FILTERING_HATE_SPEECH:String = "PLAYER_CONTENT_FILTERING_HATE_SPEECH";
+      
+      public static const PLAYER_CONTENT_FILTERING_PROFANITY:String = "PLAYER_CONTENT_FILTERING_PROFANITY";
+      
+      public static const ALL_PLAYER_CONTENT_FILTERING_OPTIONS:Array = [PLAYER_CONTENT_FILTERING_OFF,PLAYER_CONTENT_FILTERING_HATE_SPEECH,PLAYER_CONTENT_FILTERING_PROFANITY];
       
       public static const SETTING_AUDIENCE_ON:String = "AudienceOn";
       
@@ -9,7 +16,11 @@ package jackboxgames.settings
       
       public static const SETTING_FILTER_US_CENTRIC_CONTENT:String = "FilterUSCentricContent";
       
+      public static const SETTING_FILTER_PLAYERNAME:String = "FilterPlayerNameContent";
+      
       public static const SETTING_EXTENDED_TIMERS:String = "ExtendedTimers";
+      
+      public static const SETTING_NO_TIMERS:String = "NoTimers";
       
       public static const SETTING_FULL_SCREEN:String = "FullScreen";
       
@@ -40,7 +51,12 @@ package jackboxgames.settings
       public static const SETTING_MAX_PLAYERS:String = "MaxPlayers";
       
       public static const SETTING_PASSWORDED_ROOM:String = "PasswordedRoom";
-       
+      
+      public static const SETTING_MODERATED_ROOM:String = "ModeratedRoom";
+      
+      public static const SETTING_PLAYER_CONTENT_FILTERING:String = "PlayerContentFiltering";
+      
+      public static const SETTING_MOTION_SENSITIVITY:String = "MotionSensitivity";
       
       public function SettingsConstants()
       {
@@ -48,3 +64,4 @@ package jackboxgames.settings
       }
    }
 }
+

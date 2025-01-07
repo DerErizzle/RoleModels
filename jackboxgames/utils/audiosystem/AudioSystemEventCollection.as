@@ -1,11 +1,11 @@
 package jackboxgames.utils.audiosystem
 {
+   import flash.geom.*;
+   import jackboxgames.logger.*;
    import jackboxgames.utils.*;
    
    public class AudioSystemEventCollection
    {
-       
-      
       private var _audioDictionary:Object;
       
       private var _isLoaded:Boolean;
@@ -52,6 +52,11 @@ package jackboxgames.utils.audiosystem
          }
          this._isLoaded = isLoaded;
          numToLoad = ObjectUtil.countProperties(this._audioDictionary);
+         if(numToLoad == 0)
+         {
+            completeFn(true);
+            return;
+         }
          successful = true;
          for(key in this._audioDictionary)
          {
@@ -78,6 +83,7 @@ package jackboxgames.utils.audiosystem
          var audioIsDoneFn:Function = Nullable.convertToNullableIfNecessary(doneFn,Function);
          if(!this.hasAudio(key))
          {
+            Logger.warning("Attempting to play event in AudioSystemEventCollection with non-existent key = " + key);
             audioIsDoneFn();
             return;
          }
@@ -94,5 +100,36 @@ package jackboxgames.utils.audiosystem
          var e:AudioSystemEventPlayer = this._audioDictionary[key];
          e.stop();
       }
+      
+      public function setParameterValue(key:String, name:String, val:Number) : void
+      {
+         if(!this.hasAudio(key))
+         {
+            return;
+         }
+         var e:AudioSystemEventPlayer = this._audioDictionary[key];
+         e.setParameterValue(name,val);
+      }
+      
+      public function triggerCue(key:String) : void
+      {
+         if(!this.hasAudio(key))
+         {
+            return;
+         }
+         var e:AudioSystemEventPlayer = this._audioDictionary[key];
+         e.triggerCue();
+      }
+      
+      public function setLocation(key:String, flashLocation:Point) : void
+      {
+         if(!this.hasAudio(key))
+         {
+            return;
+         }
+         var e:AudioSystemEventPlayer = this._audioDictionary[key];
+         e.setLocation(flashLocation);
+      }
    }
 }
+

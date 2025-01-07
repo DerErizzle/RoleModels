@@ -1,16 +1,13 @@
 package jackboxgames.loader
 {
-   import flash.filesystem.File;
-   import flash.net.*;
-   import jackboxgames.utils.*;
+   import flash.net.URLLoaderDataFormat;
+   import flash.net.URLRequestMethod;
    
    public class JBGLoader
    {
-      
       protected static var _instance:JBGLoader;
       
       private static var GamePrefix:String = "";
-       
       
       public function JBGLoader()
       {
@@ -25,7 +22,7 @@ package jackboxgames.loader
       public static function setGamePrefix(value:String = "") : void
       {
          var fullpath:String = value.substring(0,value.lastIndexOf("/") + 1);
-         var startindex:int = fullpath.indexOf("://");
+         var startindex:int = int(fullpath.indexOf("://"));
          startindex = startindex >= 0 ? startindex + 3 : 0;
          GamePrefix = fullpath.substring(startindex);
       }
@@ -41,16 +38,7 @@ package jackboxgames.loader
       
       public function getUrl(url:String, local:Boolean = true) : String
       {
-         var file:File = null;
          var output:String = this.getMediaUrl(url,local);
-         if(EnvUtil.isAIR())
-         {
-            file = File.applicationDirectory.resolvePath(output);
-            if(file != null && Boolean(file.exists))
-            {
-               return output;
-            }
-         }
          return url;
       }
       
@@ -96,7 +84,7 @@ package jackboxgames.loader
          var extension:String = "";
          if(pathParts.length > 0)
          {
-            extension = String(pathParts[pathParts.length - 1]);
+            extension = pathParts[pathParts.length - 1];
          }
          switch(extension)
          {
@@ -116,3 +104,4 @@ package jackboxgames.loader
       }
    }
 }
+

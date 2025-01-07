@@ -1,14 +1,7 @@
 package jackboxgames.talkshow.core
 {
-   import flash.display.MovieClip;
-   import flash.events.Event;
-   import jackboxgames.logger.Logger;
-   import jackboxgames.talkshow.api.IPreloader;
-   
    internal class DefaultPreloader extends MovieClip implements IPreloader
    {
-       
-      
       public function DefaultPreloader()
       {
          super();
@@ -50,3 +43,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

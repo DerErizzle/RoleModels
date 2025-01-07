@@ -5,8 +5,6 @@ package jackboxgames.engine.componenets
    
    public class NativeComponent extends PausableEventDispatcher implements IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       public function NativeComponent(engine:GameEngine)
@@ -43,3 +41,4 @@ package jackboxgames.engine.componenets
       }
    }
 }
+

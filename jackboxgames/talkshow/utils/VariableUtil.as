@@ -6,11 +6,9 @@ package jackboxgames.talkshow.utils
    
    public class VariableUtil
    {
-      
       public static const VALID_VAR_NAME:String = "^[a-z_\\$]{1}(\\w|\\$)*$";
       
       public static const REPLACE_VARIABLES:String = "\\{\\{(((g|l)\\.[A-Za-z_$][A-Za-z0-9_$]*)((.[A-Za-z_$][A-Za-z0-9_$]*)*))\\}\\}";
-       
       
       public function VariableUtil()
       {
@@ -37,7 +35,7 @@ package jackboxgames.talkshow.utils
          var result:Object = regex.exec(end);
          while(result != null)
          {
-            match = String(result[0]);
+            match = result[0];
             trimmed = match.substr(2,match.length - 4);
             value = getVariableValue(trimmed);
             if(s == match)
@@ -147,3 +145,4 @@ package jackboxgames.talkshow.utils
       }
    }
 }
+

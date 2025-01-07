@@ -4,7 +4,6 @@ package jackboxgames.talkshow.events
    
    public class PlaybackEngineEvent extends Event
    {
-      
       public static const ENGINE_READY:String = "ready";
       
       public static const CONFIG_FINISHED:String = "config_finished";
@@ -16,7 +15,6 @@ package jackboxgames.talkshow.events
       public static const LOAD_PAUSE:String = "load_pause";
       
       public static const LOAD_RESUME:String = "load_resume";
-       
       
       public var time:uint;
       
@@ -40,3 +38,4 @@ package jackboxgames.talkshow.events
       }
    }
 }
+

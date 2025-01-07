@@ -1,14 +1,9 @@
 package jackboxgames.text
 {
-   import jackboxgames.bbparser.BBCodeParser;
    import jackboxgames.utils.NumberUtil;
    
    public final class MapperFactory
    {
-      
-      private static const BBCODE_PARSER:BBCodeParser = new BBCodeParser(BBCodeParser.defaultTags);
-       
-      
       public function MapperFactory()
       {
          super();
@@ -45,13 +40,6 @@ package jackboxgames.text
             return s.substr(0,substringLength);
          };
       }
-      
-      public static function createBBCodeMapper() : Function
-      {
-         return function(s:String, data:*):String
-         {
-            return BBCODE_PARSER.parse(s);
-         };
-      }
    }
 }
+

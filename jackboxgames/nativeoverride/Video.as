@@ -6,8 +6,6 @@ package jackboxgames.nativeoverride
    
    public class Video extends PausableEventDispatcher
    {
-       
-      
       public var loadNative:Function = null;
       
       public var playNative:Function = null;
@@ -136,3 +134,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

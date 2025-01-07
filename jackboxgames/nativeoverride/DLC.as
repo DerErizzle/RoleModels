@@ -6,11 +6,9 @@ package jackboxgames.nativeoverride
    
    public class DLC extends PausableEventDispatcher
    {
+      private static var _instance:DLC;
       
       public static const EVENT_INSTALLED_DLC_CHANGED:String = "InstalledDLCChanged";
-      
-      private static var _instance:DLC;
-       
       
       private var _prepareCallback:Function;
       
@@ -103,3 +101,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

@@ -18,13 +18,11 @@ package jackboxgames.talkshow.cells
    
    public class ActionCell extends AbstractCell
    {
-      
       public static const MODE_LOCKED:uint = 0;
       
       public static const MODE_TIMING:uint = 1;
       
       public static const MODE_ACTION:uint = 2;
-       
       
       private var _childId:int;
       
@@ -382,3 +380,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

@@ -7,7 +7,6 @@ package jackboxgames.nativeoverride
    
    public class AudioEvent extends PausableEventDispatcher
    {
-      
       public static const EVENT_PLAYBACK_DONE:String = "PlaybackDone";
       
       public static const EVENT_TIMELINE_MARKER:String = "TimelineMarker";
@@ -25,7 +24,6 @@ package jackboxgames.nativeoverride
       public static const PLAYBACK_STATE_STOPPING:String = "stopping";
       
       public static const PLAYBACK_STATE_INVALID:String = "invalid";
-       
       
       private var _name:String;
       
@@ -48,6 +46,8 @@ package jackboxgames.nativeoverride
       public var setPausedNative:Function = null;
       
       public var getPausedNative:Function = null;
+      
+      public var triggerCueNative:Function = null;
       
       public var setVolumeNative:Function = null;
       
@@ -101,6 +101,7 @@ package jackboxgames.nativeoverride
          this.stopNative = null;
          this.setPausedNative = null;
          this.getPausedNative = null;
+         this.triggerCueNative = null;
          this.setVolumeNative = null;
          this.getVolumeNative = null;
          this.setPositionNative = null;
@@ -188,6 +189,14 @@ package jackboxgames.nativeoverride
          return this.getPausedNative != null ? this.getPausedNative() : false;
       }
       
+      public function triggerCue() : void
+      {
+         if(this.triggerCueNative != null)
+         {
+            this.triggerCueNative();
+         }
+      }
+      
       public function set volume(val:Number) : void
       {
          if(this.setVolumeNative != null)
@@ -248,3 +257,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

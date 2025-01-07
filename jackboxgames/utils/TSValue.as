@@ -5,11 +5,9 @@ package jackboxgames.utils
    
    public class TSValue
    {
-      
       protected static var _ts:IEngineAPI;
       
       protected static var _values:Dictionary;
-       
       
       private var _tsName:String;
       
@@ -66,3 +64,4 @@ package jackboxgames.utils
       }
    }
 }
+

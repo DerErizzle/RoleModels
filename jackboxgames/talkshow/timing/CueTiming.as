@@ -5,8 +5,6 @@ package jackboxgames.talkshow.timing
    
    public class CueTiming extends Timing
    {
-       
-      
       private var _cueName:String;
       
       private var _ref:ActionRef;
@@ -94,3 +92,4 @@ package jackboxgames.talkshow.timing
       }
    }
 }
+

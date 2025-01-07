@@ -4,8 +4,6 @@ package jackboxgames.configuration
    
    public class CommandLineSource implements IConfigSource
    {
-       
-      
       private var _commandLineArguments:Object;
       
       public function CommandLineSource()
@@ -21,7 +19,7 @@ package jackboxgames.configuration
       
       public function hasValueForKey(key:String) : Boolean
       {
-         return Boolean(this._commandLineArguments) ? this._commandLineArguments.hasOwnProperty(key) : false;
+         return Boolean(this._commandLineArguments) ? Boolean(this._commandLineArguments.hasOwnProperty(key)) : false;
       }
       
       public function getValueForKey(key:String) : *
@@ -30,3 +28,4 @@ package jackboxgames.configuration
       }
    }
 }
+

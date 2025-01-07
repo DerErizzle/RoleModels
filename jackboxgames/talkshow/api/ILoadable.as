@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface ILoadable
    {
-       
-      
       function load(param1:ILoadData = null) : void;
       
       function isLoaded() : Boolean;
@@ -11,3 +9,4 @@ package jackboxgames.talkshow.api
       function get loadStatus() : int;
    }
 }
+

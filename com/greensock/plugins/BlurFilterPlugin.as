@@ -5,11 +5,9 @@ package com.greensock.plugins
    
    public class BlurFilterPlugin extends FilterPlugin
    {
-      
       public static const API:Number = 2;
       
       private static var _propNames:Array = ["blurX","blurY","quality"];
-       
       
       public function BlurFilterPlugin()
       {
@@ -22,3 +20,4 @@ package com.greensock.plugins
       }
    }
 }
+

@@ -2,9 +2,7 @@ package com.greensock.easing
 {
    public class Ease
    {
-      
       protected static var _baseParams:Array = [0,0,1,1];
-       
       
       protected var _func:Function;
       
@@ -60,3 +58,4 @@ package com.greensock.easing
       }
    }
 }
+

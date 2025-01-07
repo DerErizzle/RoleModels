@@ -1,18 +1,15 @@
 package jackboxgames.talkshow.actions
 {
-   import jackboxgames.talkshow.api.IActionRef;
-   import jackboxgames.talkshow.api.SWFActionPackage;
-   import jackboxgames.utils.JBGUtil;
+   import jackboxgames.talkshow.api.*;
+   import jackboxgames.utils.*;
    
    public class JBGActionPackage extends SWFActionPackage
    {
-       
-      
       protected var _delegates:Array;
       
-      public function JBGActionPackage(sourceURL:String)
+      public function JBGActionPackage(apRef:IActionPackageRef)
       {
-         super(sourceURL);
+         super(apRef);
          this._delegates = [];
       }
       
@@ -57,7 +54,11 @@ package jackboxgames.talkshow.actions
          {
             return false;
          }
-         source[actionName](ref,params);
+         var returnVal:* = source[actionName](ref,params);
+         if(returnVal !== undefined)
+         {
+            l["lastReturnFrom" + ref.action.name] = returnVal;
+         }
          return true;
       }
       
@@ -77,3 +78,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

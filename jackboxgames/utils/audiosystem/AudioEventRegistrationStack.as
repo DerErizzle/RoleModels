@@ -1,17 +1,23 @@
 package jackboxgames.utils.audiosystem
 {
+   import flash.geom.*;
+   import jackboxgames.algorithm.*;
+   import jackboxgames.events.*;
+   import jackboxgames.logger.*;
+   import jackboxgames.nativeoverride.*;
    import jackboxgames.utils.*;
    
    public class AudioEventRegistrationStack
    {
-       
-      
       private var _stack:Array;
+      
+      private var _playing:Array;
       
       public function AudioEventRegistrationStack()
       {
          super();
          this._stack = [];
+         this._playing = [];
       }
       
       public function reset() : void
@@ -23,55 +29,159 @@ package jackboxgames.utils.audiosystem
       {
          while(this._stack.length > 0)
          {
-            this.pop(Nullable.NULL_FUNCTION);
+            this.pop();
          }
       }
       
-      public function push(keysDictionary:Object, completeFn:Function) : void
+      public function push(dictionary:Object) : void
       {
-         var frame:AudioSystemEventCollection = new AudioSystemEventCollection(keysDictionary);
-         this._stack.push(frame);
-         frame.setLoaded(true,completeFn);
+         this._stack.push(new AudioEventRegistrationStackFrame(dictionary));
       }
       
-      public function pop(completeFn:Function) : void
+      public function pop() : void
       {
+         var frame:AudioEventRegistrationStackFrame = null;
          Assert.assert(this._stack.length > 0);
-         var frame:AudioSystemEventCollection = this._stack.pop();
-         frame.dispose();
-         completeFn(true);
+         frame = this._stack.pop();
+         this._disposeOfPlayingEventsThatMeetDelegate(function(m:AudioEventRegistrationStackPlayingMetadata):Boolean
+         {
+            return m.frame == frame;
+         });
       }
       
-      public function play(key:String, doneFn:Function = null) : void
+      public function play(key:String) : Promise
       {
-         var audioIsDoneFn:Function = null;
-         var keyWasFound:Boolean = false;
-         for(var i:int = this._stack.length - 1; i >= 0; i--)
+         var i:int;
+         var player:AudioSystemEventPlayer = null;
+         var frame:AudioEventRegistrationStackFrame = null;
+         var f:AudioEventRegistrationStackFrame = null;
+         var p:Promise = null;
+         var newMetadata:AudioEventRegistrationStackPlayingMetadata = null;
+         for(i = this._stack.length - 1; i >= 0; i--)
          {
-            if(Boolean(this._stack[i].hasAudio(key)))
+            f = this._stack[i];
+            if(f.hasEventNameForKey(key))
             {
-               this._stack[i].play(key,doneFn);
-               keyWasFound = true;
+               player = new AudioSystemEventPlayer(f.getEventNameforKey(key));
+               frame = f;
                break;
             }
          }
-         if(!keyWasFound)
+         if(Boolean(player))
          {
-            audioIsDoneFn = Nullable.convertToNullableIfNecessary(doneFn,Function);
-            audioIsDoneFn();
+            p = new Promise();
+            newMetadata = new AudioEventRegistrationStackPlayingMetadata(key,frame,player);
+            this._playing.push(newMetadata);
+            player.setLoaded(true,function(success:Boolean):void
+            {
+               if(success)
+               {
+                  player.play(function():void
+                  {
+                     _disposeOfPlayingEventsThatMeetDelegate(function(m:AudioEventRegistrationStackPlayingMetadata):Boolean
+                     {
+                        return m.player == player;
+                     });
+                  });
+                  p.resolve(player);
+               }
+               else
+               {
+                  _disposeOfMetadata(newMetadata);
+                  p.resolve(undefined);
+               }
+            });
+            return p;
          }
+         Logger.warning("Attempted to play audio from AudioEventRegistrationStack with non-existent key of " + key);
+         return PromiseUtil.RESOLVED();
       }
       
       public function stop(key:String) : void
       {
-         for(var i:int = this._stack.length - 1; i >= 0; i--)
+         this._playing.filter(function(m:AudioEventRegistrationStackPlayingMetadata, ... args):Boolean
          {
-            if(Boolean(this._stack[i].hasAudio(key)))
-            {
-               this._stack[i].stop(key);
-               break;
-            }
+            return m.key == key;
+         }).forEach(function(m:AudioEventRegistrationStackPlayingMetadata, ... args):void
+         {
+            m.player.stop();
+         });
+      }
+      
+      private function _disposeOfMetadata(playingEvent:AudioEventRegistrationStackPlayingMetadata) : void
+      {
+         trace("Disposing of metadata for: " + playingEvent.key);
+         playingEvent.player.dispose();
+         ArrayUtil.removeElementFromArray(this._playing,playingEvent);
+      }
+      
+      private function _disposeOfPlayingEventsThatMeetDelegate(delegateFn:Function) : void
+      {
+         var m:AudioEventRegistrationStackPlayingMetadata = null;
+         var eventsToDisposeOf:Array = this._playing.filter(function(m:AudioEventRegistrationStackPlayingMetadata, ... args):Boolean
+         {
+            return delegateFn(m);
+         });
+         for each(m in eventsToDisposeOf)
+         {
+            this._disposeOfMetadata(m);
          }
       }
    }
 }
+
+import jackboxgames.nativeoverride.*;
+
+class AudioEventRegistrationStackFrame
+{
+   private var _dictionary:Object;
+   
+   public function AudioEventRegistrationStackFrame(dictionary:Object)
+   {
+      super();
+      this._dictionary = dictionary;
+   }
+   
+   public function hasEventNameForKey(key:String) : Boolean
+   {
+      return key in this._dictionary;
+   }
+   
+   public function getEventNameforKey(key:String) : String
+   {
+      return this._dictionary[key];
+   }
+}
+
+class AudioEventRegistrationStackPlayingMetadata
+{
+   private var _key:String;
+   
+   private var _frame:AudioEventRegistrationStackFrame;
+   
+   private var _player:AudioSystemEventPlayer;
+   
+   public function AudioEventRegistrationStackPlayingMetadata(key:String, frame:AudioEventRegistrationStackFrame, player:AudioSystemEventPlayer)
+   {
+      super();
+      this._key = key;
+      this._frame = frame;
+      this._player = player;
+   }
+   
+   public function get key() : String
+   {
+      return this._key;
+   }
+   
+   public function get frame() : AudioEventRegistrationStackFrame
+   {
+      return this._frame;
+   }
+   
+   public function get player() : AudioSystemEventPlayer
+   {
+      return this._player;
+   }
+}
+

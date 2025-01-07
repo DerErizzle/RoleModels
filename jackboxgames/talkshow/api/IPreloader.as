@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface IPreloader
    {
-       
-      
       function preloadPercent(param1:Number) : void;
       
       function preloadDone() : void;
@@ -15,3 +13,4 @@ package jackboxgames.talkshow.api
       function bufferDone() : void;
    }
 }
+

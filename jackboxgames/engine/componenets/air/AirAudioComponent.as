@@ -1,16 +1,11 @@
 package jackboxgames.engine.componenets.air
 {
-   import flash.media.SoundMixer;
-   import flash.media.SoundTransform;
    import jackboxgames.engine.GameEngine;
    import jackboxgames.engine.componenets.IComponent;
-   import jackboxgames.engine.componenets.IVolumeComponent;
    import jackboxgames.utils.PausableEventDispatcher;
    
-   public class AirAudioComponent extends PausableEventDispatcher implements IVolumeComponent, IComponent
+   public class AirAudioComponent extends PausableEventDispatcher implements IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       public function AirAudioComponent(engine:GameEngine)
@@ -41,10 +36,6 @@ package jackboxgames.engine.componenets.air
       public function disposeGame() : void
       {
       }
-      
-      public function setVolume(percent:Number) : void
-      {
-         SoundMixer.soundTransform = new SoundTransform(percent);
-      }
    }
 }
+

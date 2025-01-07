@@ -6,8 +6,6 @@ package jackboxgames.talkshow.api
    
    public interface IEngineAPI extends ICodeSpace, IEventDispatcher
    {
-       
-      
       function toString() : String;
       
       function get uptime() : uint;
@@ -63,3 +61,4 @@ package jackboxgames.talkshow.api
       function unregisterPlugin(param1:String) : void;
    }
 }
+

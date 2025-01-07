@@ -19,13 +19,11 @@ package jackboxgames.utils
    
    public class DeveloperConsole extends Sprite
    {
-      
       public static var API:* = {};
       
       public static var DEFAULT_FONT:String = "Courier New";
       
       internal static const levels:Array = ["","debug","info","warn","error"];
-       
       
       public var consoleHeight:Number = 300;
       
@@ -33,9 +31,15 @@ package jackboxgames.utils
       
       public var showTypes:Boolean = true;
       
+      public var showVariableSuggestions:Boolean = true;
+      
+      public var showAccessorSuggestions:Boolean = false;
+      
+      public var showMethodSuggestions:Boolean = true;
+      
       public var createVarsThatDontExist:Boolean = true;
       
-      public var slideAnimation:Boolean = true;
+      public var slideAnimation:Boolean = false;
       
       public var slideAnimation_speed:Number = 15;
       
@@ -58,10 +62,6 @@ package jackboxgames.utils
       private const colour_method_name:String = "FFFFFF";
       
       private const VERSION_NAME:String = "Torrunt\'s AS3 Developer Console";
-      
-      private const HELP:String = " - Type \'clear\' to clear the console\n" + " - Type \'author\' to get info on the author of this console\n" + " - Use Quotations when you want enter string literal with spaces (\"\")\n" + " - Use Square Brackets when you want to use an arral literal (e.g:[0][1])\n" + " - You can do multiple commands at once by seperating them with \';\'s\n" + " - You can also put x# after a \';\' to do that command # many times\n" + " - Calculations are allowed when assigning or in parameters (+,-,*,/,%). BIMDAS is not supported\n" + " - Type \'trace:something\' to start tracing something or \'stoptrace:something\' to stop tracing it\n" + " - You can also use \'trace:fps\' to check your fps\n" + " - Toggle Fullscreen console with the F7 key\n" + " - Use the Up/Down arrow keys to go through your previous used commands or suggestions\n" + " - Use PAGE UP/DOWN and HOME/END on your keyboard to scroll up and down";
-      
-      private const AUTHOR:String = this.VERSION_NAME + " was programmed by Corey Zeke Womack (Torrunt)\nme@torrunt.net\nhttp://torrunt.net";
       
       private const INPUTTEXT_HEIGHT:int = 21;
       
@@ -86,8 +86,6 @@ package jackboxgames.utils
       private var cicle:Array;
       
       private var hpos:int = -1;
-      
-      private const consoleHeight_default:Number = this.consoleHeight;
       
       private var tempVarNames:Array;
       
@@ -119,45 +117,6 @@ package jackboxgames.utils
       
       private var echo_arguments:Array;
       
-      private const KEY_CODES:Object = {
-         "default":{
-            "Backspace":Keyboard.BACKSPACE,
-            "Enter":Keyboard.ENTER,
-            "PageUp":Keyboard.PAGE_UP,
-            "PageDown":Keyboard.PAGE_DOWN,
-            "Home":Keyboard.HOME,
-            "End":Keyboard.END,
-            "Up":Keyboard.UP,
-            "Down":Keyboard.DOWN,
-            "ToggleFullScreen":Keyboard.F7,
-            "OpenClose":Keyboard.BACKQUOTE
-         },
-         "ps4":{
-            "Backspace":42,
-            "Enter":40,
-            "PageUp":75,
-            "PageDown":78,
-            "Home":74,
-            "End":77,
-            "Up":82,
-            "Down":81,
-            "ToggleFullScreen":64,
-            "OpenClose":53
-         },
-         "mobile":{
-            "Backspace":67,
-            "Enter":66,
-            "PageUp":92,
-            "PageDown":93,
-            "Home":122,
-            "End":123,
-            "Up":19,
-            "Down":20,
-            "ToggleFullScreen":137,
-            "OpenClose":68
-         }
-      };
-      
       private var pressedUp:Boolean = false;
       
       private var areSuggestions:Boolean = false;
@@ -168,13 +127,57 @@ package jackboxgames.utils
       
       public function DeveloperConsole(stage:Stage)
       {
+         this.HELP = " - Type \'clear\' to clear the console\n" + " - Type \'author\' to get info on the author of this console\n" + " - Use Quotations when you want enter string literal with spaces (\"\")\n" + " - Use Square Brackets when you want to use an arral literal (e.g:[0][1])\n" + " - You can do multiple commands at once by seperating them with \';\'s\n" + " - You can also put x# after a \';\' to do that command # many times\n" + " - Calculations are allowed when assigning or in parameters (+,-,*,/,%). BIMDAS is not supported\n" + " - Type \'trace:something\' to start tracing something or \'stoptrace:something\' to stop tracing it\n" + " - You can also use \'trace:fps\' to check your fps\n" + " - Toggle Fullscreen console with the F7 key\n" + " - Use the Up/Down arrow keys to go through your previous used commands or suggestions\n" + " - Use PAGE UP/DOWN and HOME/END on your keyboard to scroll up and down";
+         this.AUTHOR = this.VERSION_NAME + " was programmed by Corey Zeke Womack (Torrunt)\nme@torrunt.net\nhttp://torrunt.net";
          this.container = new Sprite();
          this.cmdSuggest = new Array();
          this.cmdhistory = new Array();
+         this.consoleHeight_default = this.consoleHeight;
          this.tempVarNames = new Array();
          this.tempVars = new Array();
          this.traceVars = new Array();
          this.last = getTimer();
+         this.KEY_CODES = {
+            "default":{
+               "Backspace":Keyboard.BACKSPACE,
+               "Enter":Keyboard.ENTER,
+               "PageUp":Keyboard.PAGE_UP,
+               "PageDown":Keyboard.PAGE_DOWN,
+               "Home":Keyboard.HOME,
+               "End":Keyboard.END,
+               "Up":Keyboard.UP,
+               "Down":Keyboard.DOWN,
+               "ToggleFullScreen":Keyboard.F7,
+               "OpenClose":Keyboard.BACKQUOTE,
+               "OpenClose2":Keyboard.F1
+            },
+            "ps4":{
+               "Backspace":42,
+               "Enter":40,
+               "PageUp":75,
+               "PageDown":78,
+               "Home":74,
+               "End":77,
+               "Up":82,
+               "Down":81,
+               "ToggleFullScreen":64,
+               "OpenClose":53,
+               "OpenClose2":53
+            },
+            "mobile":{
+               "Backspace":67,
+               "Enter":66,
+               "PageUp":92,
+               "PageDown":93,
+               "Home":122,
+               "End":123,
+               "Up":19,
+               "Down":20,
+               "ToggleFullScreen":137,
+               "OpenClose":68,
+               "OpenClose2":68
+            }
+         };
          super();
          this.echo_arguments = new Array();
          this.lines = new Array();
@@ -447,7 +450,7 @@ package jackboxgames.utils
       private function keyToggle(e:KeyboardEvent) : void
       {
          var keyCodesToUse:Object = this._getKeyCodesToUse();
-         if(e.keyCode == keyCodesToUse["OpenClose"])
+         if(e.keyCode == keyCodesToUse["OpenClose"] || e.keyCode == keyCodesToUse["OpenClose2"])
          {
             e.preventDefault();
             this.toggle();
@@ -568,98 +571,95 @@ package jackboxgames.utils
                stre = str.substring(str.lastIndexOf(".") + 1,str.length);
                description = describeType(ob);
                type = "";
-               if(description.*.length() > 3)
+               if(this.showVariableSuggestions && description.variable != undefined)
                {
-                  if(description.variable != undefined)
+                  variable = description.variable;
+                  for each(v in variable)
                   {
-                     variable = description.variable;
-                     for each(v in variable)
+                     if(this.suggestText.numLines >= this.maxSuggestions)
                      {
-                        if(this.suggestText.numLines >= this.maxSuggestions)
+                        this.hitMax = true;
+                        break;
+                     }
+                     variableName = v.@name;
+                     if(variableName.indexOf(stre) == 0)
+                     {
+                        if(this.showTypes)
                         {
-                           this.hitMax = true;
-                           break;
+                           variableType = v.@type;
+                           type = "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">: </font>" + "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_type + "\">" + variableType + "</font>";
                         }
-                        variableName = v.@name;
-                        if(variableName.indexOf(stre) == 0)
-                        {
-                           if(this.showTypes)
-                           {
-                              variableType = v.@type;
-                              type = "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">: </font>" + "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_type + "\">" + variableType + "</font>";
-                           }
-                           this.cmdSuggest.push(variableName);
-                           this.suggestText.htmlText += "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">" + variableName + " </font>" + type + "<br>";
-                           this.areSuggestions = true;
-                        }
+                        this.cmdSuggest.push(variableName);
+                        this.suggestText.htmlText += "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">" + variableName + " </font>" + type + "<br>";
+                        this.areSuggestions = true;
                      }
                   }
-                  if(description.accessor != undefined)
+               }
+               if(this.showAccessorSuggestions && description.accessor != undefined)
+               {
+                  accessor = description.accessor;
+                  for each(a in accessor)
                   {
-                     accessor = description.accessor;
-                     for each(a in accessor)
+                     if(this.suggestText.numLines >= this.maxSuggestions)
                      {
-                        if(this.suggestText.numLines >= this.maxSuggestions)
+                        this.hitMax = true;
+                        break;
+                     }
+                     accessorName = a.@name;
+                     if(accessorName.indexOf(stre) == 0)
+                     {
+                        if(this.showTypes)
                         {
-                           this.hitMax = true;
-                           break;
+                           accessorType = a.@type;
+                           type = "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">: </font>" + "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_type + "\">" + accessorType + "</font>";
                         }
-                        accessorName = a.@name;
-                        if(accessorName.indexOf(stre) == 0)
-                        {
-                           if(this.showTypes)
-                           {
-                              accessorType = v.@type;
-                              type = "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">: </font>" + "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_type + "\">" + accessorType + "</font>";
-                           }
-                           this.cmdSuggest.push(accessorName);
-                           this.suggestText.htmlText += "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">" + accessorName + " </font>" + type + " <font face=\"" + DEFAULT_FONT + "\" color=\"#818181\">(accessor)</font><br>";
-                           this.areSuggestions = true;
-                        }
+                        this.cmdSuggest.push(accessorName);
+                        this.suggestText.htmlText += "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">" + accessorName + " </font>" + type + " <font face=\"" + DEFAULT_FONT + "\" color=\"#818181\">(accessor)</font><br>";
+                        this.areSuggestions = true;
                      }
                   }
-                  if(description.method != undefined)
+               }
+               if(this.showMethodSuggestions && description.method != undefined)
+               {
+                  methods = description.method;
+                  for each(m in methods)
                   {
-                     methods = description.method;
-                     for each(m in methods)
+                     if(this.suggestText.numLines >= this.maxSuggestions)
                      {
-                        if(this.suggestText.numLines >= this.maxSuggestions)
+                        this.hitMax = true;
+                        break;
+                     }
+                     methodName = m.@name;
+                     if(methodName.indexOf(stre) == 0)
+                     {
+                        if(this.showTypes)
                         {
-                           this.hitMax = true;
-                           break;
+                           returnType = m.@returnType;
+                           type = "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">: </font>" + "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_type + "\">" + returnType + "</font>";
                         }
-                        methodName = m.@name;
-                        if(methodName.indexOf(stre) == 0)
+                        text = "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">" + methodName + " (</font>";
+                        this.areSuggestions = true;
+                        if(m.parameter != undefined)
                         {
-                           if(this.showTypes)
+                           first = true;
+                           parameter = m.parameter;
+                           for each(p in parameter)
                            {
-                              returnType = m.@returnType;
-                              type = "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">: </font>" + "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_type + "\">" + returnType + "</font>";
-                           }
-                           text = "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">" + methodName + " (</font>";
-                           this.areSuggestions = true;
-                           if(m.parameter != undefined)
-                           {
-                              first = true;
-                              parameter = m.parameter;
-                              for each(p in parameter)
+                              if(!first)
                               {
-                                 if(!first)
-                                 {
-                                    text += "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">, </font>";
-                                 }
-                                 first = false;
-                                 parameterType = p.@type;
-                                 text += "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_param_type + "\">" + parameterType + "</font>";
+                                 text += "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">, </font>";
                               }
-                              this.cmdSuggest.push(methodName + "(");
+                              first = false;
+                              parameterType = p.@type;
+                              text += "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_param_type + "\">" + parameterType + "</font>";
                            }
-                           else
-                           {
-                              this.cmdSuggest.push(methodName + "();");
-                           }
-                           this.suggestText.htmlText += text + "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">) </font>" + type + "<br>";
+                           this.cmdSuggest.push(methodName + "(");
                         }
+                        else
+                        {
+                           this.cmdSuggest.push(methodName + "();");
+                        }
+                        this.suggestText.htmlText += text + "<font face=\"" + DEFAULT_FONT + "\" color=\"#" + this.colour_method_name + "\">) </font>" + type + "<br>";
                      }
                   }
                }
@@ -829,7 +829,7 @@ package jackboxgames.utils
          }
          catch(er:Error)
          {
-            index = tempVarNames.indexOf(v[0]);
+            index = int(tempVarNames.indexOf(v[0]));
             if(index == -1 && stringToVar(varname) != varname)
             {
                error("Invalid type");
@@ -927,7 +927,7 @@ package jackboxgames.utils
                }
                return v.length > 1;
             }
-            index = tempVarNames.indexOf(v[0].indexOf("[") == -1 ? v[0] : v[0].substring(0,v[0].indexOf("[")));
+            index = int(tempVarNames.indexOf(v[0].indexOf("[") == -1 ? v[0] : v[0].substring(0,v[0].indexOf("["))));
             if(index != -1)
             {
                if(v.length > 1 || v[0].indexOf("[") != -1)
@@ -1077,7 +1077,7 @@ package jackboxgames.utils
                }
                else
                {
-                  index = tempVarNames.indexOf(v[0].indexOf("[") == -1 ? v[0] : v[0].substring(0,v[0].indexOf("[")));
+                  index = int(tempVarNames.indexOf(v[0].indexOf("[") == -1 ? v[0] : v[0].substring(0,v[0].indexOf("["))));
                   if(index != -1)
                   {
                      ob = tempVars[index];
@@ -1338,7 +1338,7 @@ package jackboxgames.utils
          var operators:Array = new Array("+","-","/","*","%");
          for(var i:int = 0; i < operators.length; i++)
          {
-            index = str.indexOf(operators[i]);
+            index = int(str.indexOf(operators[i]));
             if(index != -1 && (before == "" || index < str.indexOf(before) || str.indexOf(before) == -1) && (after == "" || index > str.indexOf(after)))
             {
                return true;
@@ -1365,7 +1365,7 @@ package jackboxgames.utils
                args = this.echo_arguments[index].arguments;
                if(args[args.length - 1] is String && args[args.length - 1].charAt(0) == "#")
                {
-                  colour = String(args[args.length - 1]);
+                  colour = args[args.length - 1];
                   args.pop();
                }
                else
@@ -1437,7 +1437,7 @@ package jackboxgames.utils
          {
             return;
          }
-         var type:String = String(levels[level]);
+         var type:String = levels[level];
          this[type](message);
       }
       
@@ -1726,7 +1726,7 @@ package jackboxgames.utils
                if(this.traceVars[i] != "fps" || this.tracerActualTraceFPS)
                {
                   output = this.tracerActualTraceLayout;
-                  na = String(this.traceVars[i]);
+                  na = this.traceVars[i];
                   output = this.stringReplaceFirst(output,"name",na);
                   if(na == "fps")
                   {
@@ -1759,7 +1759,7 @@ package jackboxgames.utils
             this.tracerNames.text = "";
             for(i = 0; i < this.traceVars.length; i++)
             {
-               na = String(this.traceVars[i]);
+               na = this.traceVars[i];
                this.tracerNames.appendText(na + "\n");
                if(na == "fps")
                {
@@ -1810,7 +1810,7 @@ package jackboxgames.utils
          var keyDescription:XML = describeType(Keyboard);
          var keyNames:XMLList = keyDescription..constant.@name;
          var keyboardDict:Dictionary = new Dictionary();
-         var len:int = keyNames.length();
+         var len:int = int(keyNames.length());
          for(var i:int = 0; i < len; i++)
          {
             keyboardDict[Keyboard[keyNames[i]]] = keyNames[i];
@@ -1819,3 +1819,4 @@ package jackboxgames.utils
       }
    }
 }
+

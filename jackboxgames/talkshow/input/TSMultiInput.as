@@ -1,12 +1,7 @@
 package jackboxgames.talkshow.input
 {
-   import jackboxgames.utils.ArrayUtil;
-   import jackboxgames.utils.TSUtil;
-   
    internal class TSMultiInput implements ITSInputModule
    {
-       
-      
       private var _requiredInput:Array;
       
       private var _inputToSend:String;
@@ -36,3 +31,4 @@ package jackboxgames.talkshow.input
       }
    }
 }
+

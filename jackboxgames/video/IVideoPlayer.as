@@ -4,8 +4,6 @@ package jackboxgames.video
    
    public interface IVideoPlayer extends IEventDispatcher
    {
-       
-      
       function load(param1:String, param2:Boolean = false, param3:Boolean = false) : void;
       
       function play(param1:Boolean = false) : void;
@@ -27,3 +25,4 @@ package jackboxgames.video
       function set volume(param1:Number) : void;
    }
 }
+

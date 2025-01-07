@@ -16,8 +16,6 @@ package jackboxgames.swftemplatehandler.media
    
    public class TemplateGraphicVersion extends PausableEventDispatcher implements IGraphicVersion, ILoadableVersion, IMediaVersion
    {
-       
-      
       protected var _content:DisplayObject;
       
       protected var _loadStatus:int;
@@ -138,3 +136,4 @@ package jackboxgames.swftemplatehandler.media
       }
    }
 }
+

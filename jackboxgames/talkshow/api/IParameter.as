@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface IParameter
    {
-       
-      
       function get name() : String;
       
       function get type() : String;
@@ -13,3 +11,4 @@ package jackboxgames.talkshow.api
       function isLoadableMedia() : Boolean;
    }
 }
+

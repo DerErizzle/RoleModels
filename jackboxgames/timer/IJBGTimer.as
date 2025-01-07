@@ -4,8 +4,6 @@ package jackboxgames.timer
    
    public interface IJBGTimer extends IEventDispatcher
    {
-       
-      
       function get currentCount() : int;
       
       function get delay() : Number;
@@ -29,3 +27,4 @@ package jackboxgames.timer
       function resume() : void;
    }
 }
+

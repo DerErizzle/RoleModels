@@ -5,8 +5,6 @@ package jackboxgames.utils
    
    public class AsyncFunctionSequence
    {
-       
-      
       private var _array:Array;
       
       private var _fn:String;
@@ -15,6 +13,8 @@ package jackboxgames.utils
       
       private var _count:int = 0;
       
+      private var _args:Array;
+      
       public function AsyncFunctionSequence(array:Array, sequenceFn:String)
       {
          super();
@@ -22,21 +22,24 @@ package jackboxgames.utils
          this._fn = sequenceFn;
       }
       
-      public function run(doneFn:Function) : void
+      public function run(doneFn:Function, ... args) : void
       {
+         this._args = args;
          this._count = 0;
-         Logger.debug("Beginning " + this._fn + " sequence...");
+         if(!this._array || this._array.length == 0)
+         {
+            doneFn();
+            return;
+         }
          this._processFn(doneFn);
       }
       
       private function _processFn(doneFn:Function) : void
       {
-         var item:* = undefined;
-         item = this._array[this._count];
-         Logger.debug(getQualifiedClassName(item) + "::" + this._fn + ".");
-         item[this._fn](function():void
+         var item:* = this._array[this._count];
+         var vaArgs:Array = this._args.concat();
+         vaArgs.unshift(function():void
          {
-            Logger.debug(getQualifiedClassName(item) + "::" + _fn + " complete.");
             ++_count;
             if(_count < _array.length)
             {
@@ -47,6 +50,8 @@ package jackboxgames.utils
                doneFn();
             }
          });
+         item[this._fn].apply(item,vaArgs);
       }
    }
 }
+

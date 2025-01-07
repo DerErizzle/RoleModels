@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface IMedia
    {
-       
-      
       function get id() : int;
       
       function get type() : String;
@@ -25,3 +23,4 @@ package jackboxgames.talkshow.api
       function onMediaLoaded(param1:IFlowchart = null) : void;
    }
 }
+

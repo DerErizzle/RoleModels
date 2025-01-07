@@ -2,7 +2,6 @@ package com.worlize.websocket
 {
    public final class WebSocketOpcode
    {
-      
       public static const CONTINUATION:int = 0;
       
       public static const TEXT_FRAME:int = 1;
@@ -18,7 +17,6 @@ package com.worlize.websocket
       public static const PONG:int = 10;
       
       public static const EXT_CONTROL:int = 11;
-       
       
       public function WebSocketOpcode()
       {
@@ -26,3 +24,4 @@ package com.worlize.websocket
       }
    }
 }
+

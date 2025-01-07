@@ -10,14 +10,11 @@ package jackboxgames.loader
    import flash.net.URLRequest;
    import flash.system.ApplicationDomain;
    import flash.system.LoaderContext;
-   import flash.utils.ByteArray;
    import jackboxgames.logger.*;
    import jackboxgames.utils.*;
    
    public class MediaLoader extends PausableEventDispatcher implements ILoader
    {
-       
-      
       protected var _loader:Loader;
       
       protected var _context:LoaderContext;
@@ -83,21 +80,6 @@ package jackboxgames.loader
          this._loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,loadError);
          this._loader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR,loadError);
          this._loader.load(new URLRequest(this._url),this._context);
-      }
-      
-      public function loadUnzipped(bytes:ByteArray) : void
-      {
-         JBGUtil.runFunctionAfter(function():void
-         {
-            if(_context == null)
-            {
-               _context = new LoaderContext(false,ApplicationDomain.currentDomain);
-            }
-            _context.allowLoadBytesCodeExecution = true;
-            _context.allowCodeImport = true;
-            _context.checkPolicyFile = false;
-            _loader.loadBytes(bytes,_context);
-         },Duration.fromMs(33));
       }
       
       public function loadFallback() : void
@@ -183,3 +165,4 @@ package jackboxgames.loader
       }
    }
 }
+

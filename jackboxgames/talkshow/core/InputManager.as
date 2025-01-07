@@ -12,8 +12,6 @@ package jackboxgames.talkshow.core
    
    public class InputManager
    {
-       
-      
       private var _engine:PlaybackEngine;
       
       private var _input:String;
@@ -162,3 +160,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

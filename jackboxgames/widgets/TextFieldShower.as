@@ -1,14 +1,12 @@
 package jackboxgames.widgets
 {
    import flash.display.MovieClip;
-   import jackboxgames.localizy.LocalizationManager;
+   import jackboxgames.localizy.*;
    import jackboxgames.text.*;
    import jackboxgames.utils.*;
    
    public class TextFieldShower
    {
-       
-      
       private var _shower:MovieClipShower;
       
       private var _tf:*;
@@ -19,7 +17,7 @@ package jackboxgames.widgets
       {
          super();
          this._shower = new MovieClipShower(mc);
-         this._tf = new ExtendableTextField(mc.container,[],[PostEffectFactory.createDynamicResizerEffect(lines),PostEffectFactory.createBalancerEffect(TextUtils.BALANCE_CENTER)]);
+         this._tf = ETFHelperUtil.buildExtendableTextFieldFromRoot(mc.container);
          this._localized = localized;
       }
       
@@ -49,3 +47,4 @@ package jackboxgames.widgets
       }
    }
 }
+

@@ -4,8 +4,6 @@ package jackboxgames.talkshow.api
    
    public interface ITemplateHandler extends IEventDispatcher
    {
-       
-      
       function init(param1:IEngineAPI) : void;
       
       function loadRecord(param1:Object) : void;
@@ -23,3 +21,4 @@ package jackboxgames.talkshow.api
       function isFieldLoaded(param1:String) : Boolean;
    }
 }
+

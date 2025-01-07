@@ -5,8 +5,6 @@ package jackboxgames.talkshow.media
    
    public class TextMedia extends AbstractMedia
    {
-       
-      
       public function TextMedia(id:int, container:IExport, fl:IFlowchart)
       {
          super(id,container,fl);
@@ -23,3 +21,4 @@ package jackboxgames.talkshow.media
       }
    }
 }
+

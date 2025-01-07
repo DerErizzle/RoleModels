@@ -19,9 +19,7 @@ package jackboxgames.talkshow.debug
    
    public class Debugger
    {
-      
       public static var DEFAULT_FONT:String = "Courier New";
-       
       
       private var _jump:Object;
       
@@ -131,7 +129,7 @@ package jackboxgames.talkshow.debug
                System.setClipboard(l);
             }
          }
-         else if(event.keyCode == Keyboard.F7)
+         else if(event.keyCode == Keyboard.F7 && event.ctrlKey && event.shiftKey)
          {
             this._showCells = this._showCells ? false : true;
             if(this._showCells)
@@ -297,6 +295,7 @@ package jackboxgames.talkshow.debug
       private function handleSetVars(jsonString:String) : void
       {
          var variableList:Array = JSON.deserialize(jsonString) as Array;
+         Assert.assert(variableList != null);
          for(var i:uint = 0; i < variableList.length; i += 2)
          {
             this._ts.setVariableValue(variableList[i],variableList[i + 1]);
@@ -349,7 +348,7 @@ package jackboxgames.talkshow.debug
          var hitlist:Array = null;
          (this._ts as Object).startNextManager.reset();
          refCell = evt.cell as IBranchingCell;
-         refVar = String((evt.cell as Object).referenceVariable);
+         refVar = (evt.cell as Object).referenceVariable;
          clip = new MovieClip();
          tf = new TextField();
          txt = "<body>No matching branch for reference cell: " + refVar + "=" + VariableUtil.getVariableValue(refVar);
@@ -413,3 +412,4 @@ package jackboxgames.talkshow.debug
       }
    }
 }
+

@@ -4,7 +4,6 @@ package com.worlize.websocket
    
    public class WebSocketEvent extends Event
    {
-      
       public static const OPEN:String = "open";
       
       public static const CLOSED:String = "closed";
@@ -16,7 +15,6 @@ package com.worlize.websocket
       public static const PING:String = "ping";
       
       public static const PONG:String = "pong";
-       
       
       public var message:WebSocketMessage;
       
@@ -28,3 +26,4 @@ package com.worlize.websocket
       }
    }
 }
+

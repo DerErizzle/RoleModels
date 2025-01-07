@@ -8,11 +8,9 @@ package jackboxgames.nativeoverride
    
    public class License extends PausableEventDispatcher implements IPreparable
    {
+      private static var _instance:License;
       
       public static const EVENT_LICENSE_CHANGED:String = "License.LicenseChanged";
-      
-      private static var _instance:License;
-       
       
       private var _prepareCallback:Function;
       
@@ -122,3 +120,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

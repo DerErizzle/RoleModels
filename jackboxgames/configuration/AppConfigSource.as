@@ -2,12 +2,9 @@ package jackboxgames.configuration
 {
    import jackboxgames.nativeoverride.*;
    import jackboxgames.services.*;
-   import jackboxgames.utils.*;
    
    public class AppConfigSource implements IConfigSource
    {
-       
-      
       private var _restAPI:RestAPI;
       
       private var _serverConfig:Object;
@@ -43,7 +40,7 @@ package jackboxgames.configuration
             params.platform = platform;
          }
          domainWithAPIVersion = domain + "/api/v2";
-         this._restAPI = new RestAPI(domainWithAPIVersion,protocol);
+         this._restAPI = new RestAPI(domainWithAPIVersion,protocol + "://");
          this._restAPI.GET("/app-configs/" + appId,params,function(result:Object):void
          {
             if(!result.ok || !result.body || !result.body.settings)
@@ -59,7 +56,7 @@ package jackboxgames.configuration
       
       public function hasValueForKey(key:String) : Boolean
       {
-         return Boolean(this._serverConfig) ? this._serverConfig.hasOwnProperty(key) : false;
+         return Boolean(this._serverConfig) ? Boolean(this._serverConfig.hasOwnProperty(key)) : false;
       }
       
       public function getValueForKey(key:String) : *
@@ -68,3 +65,4 @@ package jackboxgames.configuration
       }
    }
 }
+

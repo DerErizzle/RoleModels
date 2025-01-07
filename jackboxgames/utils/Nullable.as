@@ -2,12 +2,10 @@ package jackboxgames.utils
 {
    public final class Nullable
    {
-      
       public static function NULL_FUNCTION(... args):*
       {
          return null;
-      } 
-      
+      }
       public function Nullable()
       {
          super();
@@ -43,3 +41,4 @@ package jackboxgames.utils
       }
    }
 }
+

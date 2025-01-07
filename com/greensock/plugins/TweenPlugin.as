@@ -5,11 +5,9 @@ package com.greensock.plugins
    
    public class TweenPlugin
    {
-      
       public static const version:String = "12.1.5";
       
       public static const API:Number = 2;
-       
       
       public var _propName:String;
       
@@ -45,7 +43,8 @@ package com.greensock.plugins
                {
                   pt2 = pt2._next;
                }
-               if(Boolean(pt._prev = Boolean(pt2) ? pt2._prev : last))
+               pt._prev = Boolean(pt2) ? pt2._prev : last;
+               if(Boolean(pt._prev))
                {
                   pt._prev._next = pt;
                }
@@ -53,7 +52,8 @@ package com.greensock.plugins
                {
                   first = pt;
                }
-               if(Boolean(pt._next = pt2))
+               pt._next = pt2;
+               if(Boolean(pt._next))
                {
                   pt2._prev = pt;
                }
@@ -192,3 +192,4 @@ package com.greensock.plugins
       }
    }
 }
+

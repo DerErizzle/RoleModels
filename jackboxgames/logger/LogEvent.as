@@ -4,9 +4,7 @@ package jackboxgames.logger
    
    public class LogEvent extends Event
    {
-      
       public static const LOG:String = "log";
-       
       
       private var _level:int;
       
@@ -51,3 +49,4 @@ package jackboxgames.logger
       }
    }
 }
+

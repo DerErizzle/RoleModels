@@ -4,8 +4,6 @@ package jackboxgames.utils
    
    public final class SimpleObjectUtil
    {
-       
-      
       public function SimpleObjectUtil()
       {
          super();
@@ -35,3 +33,4 @@ package jackboxgames.utils
       }
    }
 }
+

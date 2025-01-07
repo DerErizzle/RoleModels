@@ -4,8 +4,6 @@ package jackboxgames.talkshow.utils
    
    public class ExportDictionary
    {
-       
-      
       private var _data:Array;
       
       public function ExportDictionary(d:String)
@@ -56,3 +54,4 @@ package jackboxgames.talkshow.utils
       }
    }
 }
+

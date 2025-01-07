@@ -1,12 +1,7 @@
 package jackboxgames.talkshow.export
 {
-   import jackboxgames.talkshow.templates.Template;
-   import jackboxgames.talkshow.templates.TemplateField;
-   import jackboxgames.talkshow.utils.ExportDictionary;
-   
    internal class TemplateFactory
    {
-      
       private static const DELIMITER_TEMPLATES:String = "^";
       
       private static const DELIMITER_TEMPLATE_DATA:String = "|";
@@ -16,7 +11,6 @@ package jackboxgames.talkshow.export
       private static const DELIMITER_FIELD_DATA:String = ",";
       
       private static const DELIMITER_PARAMETER:String = "!";
-       
       
       public function TemplateFactory()
       {
@@ -61,7 +55,7 @@ package jackboxgames.talkshow.export
                for each(i in x)
                {
                   fData = i.split(DELIMITER_FIELD_DATA);
-                  type = String(fData[2]);
+                  type = fData[2];
                   def = type == "A" || type == "G" ? fData[3] : dict.lookup(fData[3]);
                   f = new TemplateField(int(fData[0]),dict.lookup(fData[1]),type,def,dict.lookup(fData[4]));
                   fields["F" + f.id] = f;
@@ -73,3 +67,4 @@ package jackboxgames.talkshow.export
       }
    }
 }
+

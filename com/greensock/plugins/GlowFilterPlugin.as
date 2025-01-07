@@ -5,11 +5,9 @@ package com.greensock.plugins
    
    public class GlowFilterPlugin extends FilterPlugin
    {
-      
       public static const API:Number = 2;
       
       private static var _propNames:Array = ["color","alpha","blurX","blurY","strength","quality","inner","knockout"];
-       
       
       public function GlowFilterPlugin()
       {
@@ -22,3 +20,4 @@ package com.greensock.plugins
       }
    }
 }
+

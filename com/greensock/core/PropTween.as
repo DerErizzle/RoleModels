@@ -2,8 +2,6 @@ package com.greensock.core
 {
    public final class PropTween
    {
-       
-      
       public var t:Object;
       
       public var p:String;
@@ -45,3 +43,4 @@ package com.greensock.core
       }
    }
 }
+

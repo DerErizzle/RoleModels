@@ -8,13 +8,10 @@ package jackboxgames.talkshow.actions
    import jackboxgames.talkshow.api.IExport;
    import jackboxgames.talkshow.api.ILoadData;
    import jackboxgames.talkshow.core.PlaybackEngine;
-   import jackboxgames.talkshow.utils.ConfigInfo;
    import jackboxgames.talkshow.utils.LoadStatus;
    
    public class ActionPackageRef implements IActionPackageRef
    {
-       
-      
       protected var _name:String;
       
       protected var _id:int;
@@ -24,8 +21,6 @@ package jackboxgames.talkshow.actions
       protected var _actionPackage:IActionPackage;
       
       protected var _type:String;
-      
-      protected var _url:String;
       
       protected var _loadStatus:int;
       
@@ -58,11 +53,6 @@ package jackboxgames.talkshow.actions
                this._export = export;
             }
          }
-      }
-      
-      public function setUrl(s:String) : void
-      {
-         this._url = s;
       }
       
       public function get name() : String
@@ -122,7 +112,6 @@ package jackboxgames.talkshow.actions
       private function initActionPackage() : void
       {
          var apClass:Class = null;
-         var url:String = null;
          if(this._actionPackage == null)
          {
             apClass = ActionPackageClassManager.instance.getClass(this._name);
@@ -131,8 +120,7 @@ package jackboxgames.talkshow.actions
                Logger.debug("ERROR -- Action Package : " + this._name + " does not have a registered class!");
                return;
             }
-            url = this._url != null ? this._url : this.getExport().configInfo.getValue(ConfigInfo.ACTION_PATH) + this._id + ".swf";
-            this._actionPackage = new apClass(url);
+            this._actionPackage = new apClass(this);
          }
          switch(this._type)
          {
@@ -145,3 +133,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

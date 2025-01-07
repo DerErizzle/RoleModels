@@ -10,6 +10,9 @@ package com.greensock
    
    public class TweenLite extends Animation
    {
+      public static var _onPluginEvent:Function;
+      
+      protected static var _overwriteLookup:Object;
       
       public static const version:String = "12.1.5";
       
@@ -20,8 +23,6 @@ package com.greensock
       public static var ticker:Shape = Animation.ticker;
       
       public static var _plugins:Object = {};
-      
-      public static var _onPluginEvent:Function;
       
       protected static var _tweenLookup:Dictionary = new Dictionary(false);
       
@@ -62,9 +63,6 @@ package com.greensock
          "paused":1,
          "reversed":1
       };
-      
-      protected static var _overwriteLookup:Object;
-       
       
       public var target:Object;
       
@@ -428,7 +426,8 @@ package com.greensock
             tl = tl._timeline;
          }
          t /= ts;
-         return t > reference ? t - reference : (zeroDur && t == reference || !tween._initted && t - reference < 2 * min ? min : ((t = t + tween.totalDuration() / tween._timeScale / ts) > reference + min ? 0 : t - reference - min));
+         t = t + tween.totalDuration() / tween._timeScale / ts;
+         return t > reference ? t - reference : (zeroDur && t == reference || !tween._initted && t - reference < 2 * min ? min : (t > reference + min ? 0 : t - reference - min));
       }
       
       protected function _init() : void
@@ -994,3 +993,4 @@ package com.greensock
       }
    }
 }
+

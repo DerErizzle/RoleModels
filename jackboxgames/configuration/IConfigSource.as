@@ -2,8 +2,6 @@ package jackboxgames.configuration
 {
    public interface IConfigSource
    {
-       
-      
       function load(param1:Function, param2:Function) : void;
       
       function hasValueForKey(param1:String) : Boolean;
@@ -11,3 +9,4 @@ package jackboxgames.configuration
       function getValueForKey(param1:String) : *;
    }
 }
+

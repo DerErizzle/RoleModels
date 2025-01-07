@@ -5,7 +5,6 @@ package jackboxgames.talkshow.events
    
    public class ExportEvent extends Event
    {
-      
       public static const STARTFILE_LOADED:String = "startfile_loaded";
       
       public static const STARTFILE_PROGRESS:String = "startfile_progress";
@@ -31,7 +30,6 @@ package jackboxgames.talkshow.events
       public static const TEMPLATE_PROGRESS:String = "template_progress";
       
       public static const TEMPLATE_ERROR:String = "template_error";
-       
       
       public var msg:String;
       
@@ -58,3 +56,4 @@ package jackboxgames.talkshow.events
       }
    }
 }
+

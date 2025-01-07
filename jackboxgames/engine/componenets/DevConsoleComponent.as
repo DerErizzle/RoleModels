@@ -3,15 +3,11 @@ package jackboxgames.engine.componenets
    import flash.text.*;
    import jackboxgames.engine.*;
    import jackboxgames.events.EventWithData;
-   import jackboxgames.nativeoverride.Gamepad;
+   import jackboxgames.nativeoverride.*;
    import jackboxgames.utils.*;
    
    public class DevConsoleComponent extends PausableEventDispatcher implements IComponent
    {
-       
-      
-      private const _toggleCombo:Array = ["DPAD_UP","DPAD_RIGHT","DPAD_DOWN","DPAD_LEFT","DPAD_UP","DPAD_RIGHT","DPAD_DOWN","DPAD_LEFT"];
-      
       private var _toggleIndex:int = 0;
       
       private var _engine:GameEngine;
@@ -20,6 +16,7 @@ package jackboxgames.engine.componenets
       
       public function DevConsoleComponent(engine:GameEngine)
       {
+         this._toggleCombo = ["DPAD_UP","DPAD_RIGHT","DPAD_DOWN","DPAD_LEFT","DPAD_UP","DPAD_RIGHT","DPAD_DOWN","DPAD_LEFT"];
          super();
          this._engine = engine;
       }
@@ -83,3 +80,4 @@ package jackboxgames.engine.componenets
       }
    }
 }
+

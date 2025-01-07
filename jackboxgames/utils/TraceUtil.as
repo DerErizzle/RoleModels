@@ -6,8 +6,6 @@ package jackboxgames.utils
    
    public final class TraceUtil
    {
-       
-      
       public function TraceUtil()
       {
          super();
@@ -187,3 +185,4 @@ package jackboxgames.utils
       }
    }
 }
+

@@ -6,21 +6,19 @@ package com.greensock.core
    
    public class Animation
    {
+      public static var _rootTimeline:SimpleTimeline;
+      
+      public static var _rootFramesTimeline:SimpleTimeline;
       
       public static const version:String = "12.1.1";
       
       public static var ticker:Shape = new Shape();
-      
-      public static var _rootTimeline:SimpleTimeline;
-      
-      public static var _rootFramesTimeline:SimpleTimeline;
       
       protected static var _rootFrame:Number = -1;
       
       protected static var _tickEvent:Event = new Event("tick");
       
       protected static var _tinyNum:Number = 1e-10;
-       
       
       protected var _onUpdate:Function;
       
@@ -472,3 +470,4 @@ package com.greensock.core
       }
    }
 }
+

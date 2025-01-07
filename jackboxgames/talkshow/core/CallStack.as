@@ -1,13 +1,12 @@
 package jackboxgames.talkshow.core
 {
    import jackboxgames.talkshow.api.ICell;
+   import jackboxgames.talkshow.api.ISubroutine;
    import jackboxgames.talkshow.api.events.CellEvent;
    import jackboxgames.talkshow.cells.CallCell;
    
    public class CallStack
    {
-       
-      
       private var _list:Array;
       
       public function CallStack(engine:PlaybackEngine)
@@ -88,6 +87,10 @@ package jackboxgames.talkshow.core
       private function handleCellJump(evt:CellEvent) : void
       {
          var current:CallCell = this.currentCallCell;
+         if(current != null && evt.cell.flowchart is ISubroutine && evt.cell.flowchart.id == current.subroutine.id)
+         {
+            return;
+         }
          while(this._list.length > 0)
          {
             this.pop(true);
@@ -95,3 +98,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

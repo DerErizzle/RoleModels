@@ -15,11 +15,9 @@ package jackboxgames.talkshow.actions
    
    public final class InternalActionPackage extends ActionPackage
    {
-      
       public static var STOP_AUDIO_ON_INPUT:Boolean = true;
       
       public static var STOP_AUDIO_ON_JUMP:Boolean = true;
-       
       
       private var _playing:Array;
       
@@ -50,34 +48,37 @@ package jackboxgames.talkshow.actions
       
       override public function handleAction(ref:IActionRef, params:Object) : void
       {
-         var version:IAudioVersion = null;
          if(ref.action.name == "Play Audio")
          {
-            version = params.Audio as IAudioVersion;
-            if(version == null)
-            {
-               Logger.error("InternalActionPackage: Skipping missing version: " + params.Audio,"Media");
-               ref.end();
-               return;
-            }
-            if(!version.isPlayable)
-            {
-               ref.end();
-               return;
-            }
-            Logger.info("InternalActionPackage: Start Audio " + version,"Media");
-            version.play();
-            version.addEventListener(Event.SOUND_COMPLETE,this.handleSoundComplete);
-            AudioNotifier.instance.notifyStartAudio(String(version.id),version.category,version.text,version.metadata);
-            this._playing.push({
-               "ref":ref,
-               "v":version
-            });
+            this.play(params.Audio,ref);
          }
          else if(ref.action.name == "Pause")
          {
             _ts.pauser.userPause();
          }
+      }
+      
+      public function play(version:IAudioVersion, ref:IActionRef) : void
+      {
+         if(version == null)
+         {
+            Logger.error("InternalActionPackage: Skipping missing version: " + version,"Media");
+            ref.end();
+            return;
+         }
+         if(!version.isPlayable)
+         {
+            ref.end();
+            return;
+         }
+         Logger.info("InternalActionPackage: Start Audio " + version,"Media");
+         version.play();
+         version.addEventListener(Event.SOUND_COMPLETE,this.handleSoundComplete);
+         AudioNotifier.instance.notifyStartAudio(String(version.id),version.category,version.text,version.metadata);
+         this._playing.push({
+            "ref":ref,
+            "v":version
+         });
       }
       
       public function widgetOn(ref:IActionRef) : void
@@ -102,6 +103,7 @@ package jackboxgames.talkshow.actions
                obj = this._playing[i];
                this._playing.splice(i,1);
                AudioNotifier.instance.notifyEndAudio(obj.v.id);
+               (evt.currentTarget as IAudioVersion).unload();
                ActionRef(obj.ref).end();
                break;
             }
@@ -113,12 +115,13 @@ package jackboxgames.talkshow.actions
          var obj:Object = null;
          for each(obj in this._playing)
          {
-            if(obj.hasOwnProperty("v") && obj.v is IAudioVersion)
+            if(Boolean(obj.hasOwnProperty("v")) && obj.v is IAudioVersion)
             {
                try
                {
                   AudioNotifier.instance.notifyEndAudio(obj.v.id);
                   (obj.v as IAudioVersion).stop();
+                  (obj.v as IAudioVersion).unload();
                }
                catch(err:Error)
                {
@@ -130,3 +133,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

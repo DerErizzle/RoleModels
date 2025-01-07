@@ -5,20 +5,21 @@ package jackboxgames.utils
    
    public class MovieClipShower extends PausableEventDispatcher
    {
-      
       public static const EVENT_SHOWN_CHANGED:String = "ShownChanged";
       
       public static const EVENT_SHOWN_ANIMATION_COMPLETE:String = "ShownAnimationComplete";
-       
       
       protected var _mc:MovieClip = null;
       
       private var _shown:Boolean = false;
       
+      private var _canceler:Function;
+      
       private var _behaviorTranslator:Function;
       
       public function MovieClipShower(mc:MovieClip)
       {
+         this._canceler = Nullable.NULL_FUNCTION;
          super();
          this._mc = mc;
          this._behaviorTranslator = null;
@@ -29,6 +30,7 @@ package jackboxgames.utils
          var createShowerFn:Function;
          var i:int;
          var numDone:int = 0;
+         var s:MovieClipShower = null;
          if(a.length == 0)
          {
             doneFn();
@@ -51,12 +53,22 @@ package jackboxgames.utils
          numDone = 0;
          for(i = 0; i < a.length; i++)
          {
-            JBGUtil.runFunctionAfter(createShowerFn(a[i]),Duration.scale(d,i));
+            if(a[i] is MovieClipShower)
+            {
+               s = a[i];
+            }
+            else if(Boolean(a[i].hasOwnProperty("shower")))
+            {
+               s = a[i].shower;
+            }
+            JBGUtil.runFunctionAfter(createShowerFn(s),Duration.scale(d,i));
          }
       }
       
       public function reset() : void
       {
+         this._canceler();
+         this._canceler = Nullable.NULL_FUNCTION;
          if(Boolean(this._mc))
          {
             JBGUtil.gotoFrame(this._mc,"Park");
@@ -95,7 +107,8 @@ package jackboxgames.utils
          this._shown = shown;
          dispatchEvent(new EventWithData(EVENT_SHOWN_CHANGED,{"shown":shown}));
          baseBehavior = this._shown ? "Appear" : "Disappear";
-         JBGUtil.gotoFrameWithFn(this._mc,this._behaviorTranslator != null ? this._behaviorTranslator(baseBehavior) : baseBehavior,this._shown ? MovieClipEvent.EVENT_APPEAR_DONE : MovieClipEvent.EVENT_DISAPPEAR_DONE,function():void
+         this._canceler();
+         this._canceler = JBGUtil.gotoFrameWithFnCancellable(this._mc,this._behaviorTranslator != null ? this._behaviorTranslator(baseBehavior) : baseBehavior,this._shown ? MovieClipEvent.EVENT_APPEAR_DONE : MovieClipEvent.EVENT_DISAPPEAR_DONE,function():void
          {
             dispatchEvent(new EventWithData(EVENT_SHOWN_ANIMATION_COMPLETE,{"shown":shown}));
             doneFn();
@@ -110,6 +123,8 @@ package jackboxgames.utils
             doneFn();
             return false;
          }
+         this._canceler();
+         this._canceler = Nullable.NULL_FUNCTION;
          JBGUtil.gotoFrameWithFn(this._mc,this._behaviorTranslator != null ? this._behaviorTranslator(behavior) : behavior,MovieClipEvent.EVENT_ANIMATION_DONE,doneFn);
          return true;
       }
@@ -121,3 +136,4 @@ package jackboxgames.utils
       }
    }
 }
+

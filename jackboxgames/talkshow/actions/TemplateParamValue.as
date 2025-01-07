@@ -5,8 +5,6 @@ package jackboxgames.talkshow.actions
    
    public class TemplateParamValue
    {
-       
-      
       private var _templateId:int;
       
       private var _fieldId:int;
@@ -55,3 +53,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

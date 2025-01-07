@@ -4,11 +4,9 @@ package jackboxgames.talkshow.api.events
    
    public class PauseEvent extends Event
    {
-      
       public static const PAUSE:String = "pause";
       
       public static const RESUME:String = "resume";
-       
       
       private var _type:int;
       
@@ -24,3 +22,4 @@ package jackboxgames.talkshow.api.events
       }
    }
 }
+

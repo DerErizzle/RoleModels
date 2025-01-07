@@ -4,6 +4,7 @@ package jackboxgames.engine
    import jackboxgames.events.*;
    import jackboxgames.loader.*;
    import jackboxgames.localizy.*;
+   import jackboxgames.pause.*;
    import jackboxgames.settings.*;
    import jackboxgames.talkshow.actionpackages.*;
    import jackboxgames.talkshow.actions.*;
@@ -14,12 +15,11 @@ package jackboxgames.engine
    import jackboxgames.talkshow.input.*;
    import jackboxgames.talkshow.stub.*;
    import jackboxgames.talkshow.utils.*;
+   import jackboxgames.ui.settings.*;
    import jackboxgames.utils.*;
    
    public class TalkshowGame extends Sprite implements IGame
    {
-       
-      
       private var _root:MovieClip;
       
       private var _engine:GameEngine;
@@ -92,9 +92,10 @@ package jackboxgames.engine
       {
       }
       
-      public function init() : void
+      public function init(doneFn:Function) : void
       {
          this._engine = GameEngine.instance;
+         doneFn();
       }
       
       public function start() : void
@@ -107,6 +108,7 @@ package jackboxgames.engine
       {
          if(BuildConfig.instance.configVal("isBundle"))
          {
+            SettingsMenu.instance.reset();
             this._engine.launchGame("Picker","Picker.swf",this.gameName);
          }
          else
@@ -115,7 +117,7 @@ package jackboxgames.engine
          }
       }
       
-      public function doReset() : void
+      public function doReset(error:String = "") : void
       {
          this.restart();
       }
@@ -165,23 +167,9 @@ package jackboxgames.engine
          JBGUtil.safeRemoveChild(this._root,this);
       }
       
-      public function get initialSettings() : Object
+      public function get settings() : Array
       {
-         var gameName:String = BuildConfig.instance.configVal("gameName");
-         var initialValues:Object = {};
-         initialValues[gameName + SettingsConstants.SETTING_AUDIENCE_ON] = true;
-         initialValues[gameName + SettingsConstants.SETTING_FAMILY_FRIENDLY] = false;
-         initialValues[gameName + SettingsConstants.SETTING_EXTENDED_TIMERS] = false;
-         initialValues[gameName + SettingsConstants.SETTING_REQUIRE_TWITCH] = false;
-         initialValues[gameName + SettingsConstants.SETTING_CENSORABLE] = false;
-         initialValues[gameName + SettingsConstants.SETTING_SKIP_TUTORIAL] = false;
-         initialValues[gameName + SettingsConstants.SETTING_GAMEPAD_START] = false;
-         initialValues[gameName + SettingsConstants.SETTING_HIDE_ROOMCODE] = false;
-         initialValues[gameName + SettingsConstants.SETTING_SUBTITLES] = false;
-         initialValues[gameName + SettingsConstants.SETTING_POST_GAME_SHARING] = true;
-         initialValues[gameName + SettingsConstants.SETTING_PASSWORDED_ROOM] = false;
-         initialValues[gameName + SettingsConstants.SETTING_FILTER_US_CENTRIC_CONTENT] = false;
-         return initialValues;
+         return [new SettingConfig(SettingsConstants.SETTING_VOLUME,1,false),new SettingConfig(SettingsConstants.SETTING_VOLUME_HOST,1,false),new SettingConfig(SettingsConstants.SETTING_VOLUME_SFX,1,false),new SettingConfig(SettingsConstants.SETTING_VOLUME_MUSIC,1,false),new SettingConfig(SettingsConstants.SETTING_FULL_SCREEN,true,false),new SettingConfig(SettingsConstants.SETTING_AUDIENCE_ON,true,false),new SettingConfig(SettingsConstants.SETTING_FAMILY_FRIENDLY,false,false),new SettingConfig(SettingsConstants.SETTING_EXTENDED_TIMERS,false,false),new SettingConfig(SettingsConstants.SETTING_NO_TIMERS,false,false),new SettingConfig(SettingsConstants.SETTING_REQUIRE_TWITCH,false,false),new SettingConfig(SettingsConstants.SETTING_CENSORABLE,false,false),new SettingConfig(SettingsConstants.SETTING_SKIP_TUTORIAL,false,false),new SettingConfig(SettingsConstants.SETTING_GAMEPAD_START,false,false),new SettingConfig(SettingsConstants.SETTING_HIDE_ROOMCODE,false,false),new SettingConfig(SettingsConstants.SETTING_SUBTITLES,false,false),new SettingConfig(SettingsConstants.SETTING_POST_GAME_SHARING,true,false),new SettingConfig(SettingsConstants.SETTING_PASSWORDED_ROOM,false,false),new SettingConfig(SettingsConstants.SETTING_FILTER_US_CENTRIC_CONTENT,false,false),new SettingConfig(SettingsConstants.SETTING_FILTER_PLAYERNAME,false,false),new SettingConfig(SettingsConstants.SETTING_MODERATED_ROOM,false,false),new SettingConfig(SettingsConstants.SETTING_PLAYER_CONTENT_FILTERING,SettingsConstants.PLAYER_CONTENT_FILTERING_HATE_SPEECH,false),new SettingConfig(SettingsConstants.SETTING_MOTION_SENSITIVITY,false,false),new SettingConfig(LocalizationManager.SETTING_LOCALE,LocalizationManager.DEFAULT_LOCALE,false)];
       }
       
       public function initEngine() : void
@@ -211,19 +199,21 @@ package jackboxgames.engine
          TSUtil.setup(this._ts);
          TSInputHandler.initialize(this._ts);
          this._ts.g.settings = SettingsManager.instance;
+         PauseMenuManager.instance.loadMenuData(JBGLoader.instance.getMediaUrl(PauseMenuManager.PAUSE_MENU_DATA_FILE),Nullable.NULL_FUNCTION);
          LocalizationManager.instance.addEventListener(LocalizationManager.EVENT_LOCALE_CHANGED,this.onLocaleChanged);
       }
       
       public function initConfig(cfg:Object) : void
       {
-         cfg[ConfigInfo.SCRIPT_BASE] = JBGLoader.instance.getUrl("TalkshowExport/" + ConfigInfo.DEFAULTS[ConfigInfo.SCRIPT_BASE]);
-         cfg[ConfigInfo.EXPORT_PATH] = JBGLoader.instance.getUrl("TalkshowExport/" + ConfigInfo.DEFAULTS[ConfigInfo.EXPORT_PATH]);
-         cfg[ConfigInfo.DATA_PATH] = JBGLoader.instance.getUrl("TalkshowExport/" + ConfigInfo.DEFAULTS[ConfigInfo.DATA_PATH]);
-         cfg[ConfigInfo.MEDIA_PATH] = JBGLoader.instance.getUrl("TalkshowExport/" + ConfigInfo.DEFAULTS[ConfigInfo.MEDIA_PATH]);
-         cfg[ConfigInfo.ACTION_PATH] = JBGLoader.instance.getUrl("TalkshowExport/" + ConfigInfo.DEFAULTS[ConfigInfo.ACTION_PATH]);
-         cfg[ConfigInfo.TEMPLATE_PATH] = JBGLoader.instance.getUrl("TalkshowExport/" + ConfigInfo.DEFAULTS[ConfigInfo.TEMPLATE_PATH]);
-         cfg[ConfigInfo.PLUGIN_PATH] = JBGLoader.instance.getUrl("TalkshowExport/" + ConfigInfo.DEFAULTS[ConfigInfo.PLUGIN_PATH]);
-         cfg[ConfigInfo.START_FILE] = JBGLoader.instance.getUrl("TalkshowExport/" + ConfigInfo.DEFAULTS[ConfigInfo.START_FILE]);
+         var root:String = BuildConfig.instance.hasConfigVal("tsRoot") ? BuildConfig.instance.configVal("tsRoot") : "TalkshowExport";
+         cfg[ConfigInfo.SCRIPT_BASE] = JBGLoader.instance.getUrl(root + "/" + ConfigInfo.DEFAULTS[ConfigInfo.SCRIPT_BASE]);
+         cfg[ConfigInfo.EXPORT_PATH] = JBGLoader.instance.getUrl(root + "/" + ConfigInfo.DEFAULTS[ConfigInfo.EXPORT_PATH]);
+         cfg[ConfigInfo.DATA_PATH] = JBGLoader.instance.getUrl(root + "/" + ConfigInfo.DEFAULTS[ConfigInfo.DATA_PATH]);
+         cfg[ConfigInfo.MEDIA_PATH] = JBGLoader.instance.getUrl(root + "/" + ConfigInfo.DEFAULTS[ConfigInfo.MEDIA_PATH]);
+         cfg[ConfigInfo.ACTION_PATH] = JBGLoader.instance.getUrl(root + "/" + ConfigInfo.DEFAULTS[ConfigInfo.ACTION_PATH]);
+         cfg[ConfigInfo.TEMPLATE_PATH] = JBGLoader.instance.getUrl(root + "/" + ConfigInfo.DEFAULTS[ConfigInfo.TEMPLATE_PATH]);
+         cfg[ConfigInfo.PLUGIN_PATH] = JBGLoader.instance.getUrl(root + "/" + ConfigInfo.DEFAULTS[ConfigInfo.PLUGIN_PATH]);
+         cfg[ConfigInfo.START_FILE] = JBGLoader.instance.getUrl(root + "/" + ConfigInfo.DEFAULTS[ConfigInfo.START_FILE]);
          this._config = new ConfigInfo(cfg);
          this.configFinished();
       }
@@ -248,3 +238,4 @@ package jackboxgames.engine
       }
    }
 }
+

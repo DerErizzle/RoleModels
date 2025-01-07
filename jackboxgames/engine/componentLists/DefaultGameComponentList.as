@@ -2,7 +2,6 @@ package jackboxgames.engine.componentLists
 {
    import jackboxgames.engine.GameEngine;
    import jackboxgames.engine.componenets.AudioComponent;
-   import jackboxgames.engine.componenets.BlobCastComponent;
    import jackboxgames.engine.componenets.DevConsoleComponent;
    import jackboxgames.engine.componenets.InputComponent;
    import jackboxgames.engine.componenets.LocalizationComponent;
@@ -18,6 +17,7 @@ package jackboxgames.engine.componentLists
    import jackboxgames.engine.componenets.WindowComponent;
    import jackboxgames.engine.componenets.air.AirAudioComponent;
    import jackboxgames.engine.componenets.air.AirInputComponent;
+   import jackboxgames.engine.componenets.air.AirManagerComponent;
    import jackboxgames.engine.componenets.air.AirNetworkComponent;
    import jackboxgames.engine.componenets.air.AirPauseComponent;
    import jackboxgames.engine.componenets.air.AirPlatformComponent;
@@ -27,8 +27,6 @@ package jackboxgames.engine.componentLists
    
    public class DefaultGameComponentList implements IComponentList
    {
-       
-      
       private var _components:Array;
       
       public function DefaultGameComponentList()
@@ -60,6 +58,14 @@ package jackboxgames.engine.componentLists
          {
             this._components.push(new AirPlatformComponent(engine));
          }
+         if(EnvUtil.isAIR())
+         {
+            this._components.push(new AirNetworkComponent(engine));
+         }
+         if(EnvUtil.isAIR())
+         {
+            this._components.push(new AirManagerComponent());
+         }
          this._components.push(new DevConsoleComponent(engine));
          this._components.push(new SaveComponent(engine));
          this._components.push(new ToolsComponent(engine));
@@ -69,12 +75,7 @@ package jackboxgames.engine.componentLists
          {
             this._components.push(new AirAudioComponent(engine));
          }
-         this._components.push(new BlobCastComponent(engine));
          this._components.push(new NetworkComponent(engine));
-         if(EnvUtil.isAIR())
-         {
-            this._components.push(new AirNetworkComponent(engine));
-         }
          this._components.push(new LocalizationComponent(engine));
          this._components.push(new PauseComponent(engine));
          if(EnvUtil.isAIR())
@@ -90,3 +91,4 @@ package jackboxgames.engine.componentLists
       }
    }
 }
+

@@ -28,7 +28,6 @@ package com.worlize.websocket
    [Event(name="connectionFail",type="com.worlize.websocket.WebSocketErrorEvent")]
    public class WebSocket extends EventDispatcher
    {
-      
       private static const MODE_UTF8:int = 0;
       
       private static const MODE_BINARY:int = 0;
@@ -38,8 +37,7 @@ package com.worlize.websocket
       public static function logger(text:String):void
       {
          trace(text);
-      } 
-      
+      }
       private var _bufferedAmount:int = 0;
       
       private var _readyState:int;
@@ -167,10 +165,10 @@ package com.worlize.websocket
             separators = ["(",")","<",">","@",",",";",":","\\","\"","/","[","]","?","=","{","}"," ",String.fromCharCode(9)];
             for(p = 0; p < this._protocols.length; p++)
             {
-               protocol = String(this._protocols[p]);
+               protocol = this._protocols[p];
                for(i = 0; i < protocol.length; i++)
                {
-                  charCode = protocol.charCodeAt(i);
+                  charCode = int(protocol.charCodeAt(i));
                   char = protocol.charAt(i);
                   if(charCode < 33 || charCode > 126 || separators.indexOf(char) !== -1)
                   {
@@ -849,7 +847,7 @@ package com.worlize.websocket
                this.failHandshake("Received more than " + MAX_HANDSHAKE_BYTES + " bytes during handshake.");
                return;
             }
-            headersTerminatorIndex = this.serverHandshakeResponse.search(/\r?\n\r?\n/);
+            headersTerminatorIndex = int(this.serverHandshakeResponse.search(/\r?\n\r?\n/));
          }
          if(headersTerminatorIndex === -1)
          {
@@ -868,9 +866,9 @@ package com.worlize.websocket
             this.failHandshake("Unable to find correctly-formed HTTP status line.");
             return;
          }
-         httpVersion = String(responseLineMatch[1]);
+         httpVersion = responseLineMatch[1];
          statusCode = parseInt(responseLineMatch[2],10);
-         statusDescription = String(responseLineMatch[3]);
+         statusDescription = responseLineMatch[3];
          if(this.debug)
          {
             logger("HTTP Status Received: " + statusCode + " " + statusDescription);
@@ -887,8 +885,8 @@ package com.worlize.websocket
             {
                responseLine = lines.shift();
                header = this.parseHTTPHeader(responseLine);
-               lcName = String(header.name.toLocaleLowerCase());
-               lcValue = String(header.value.toLocaleLowerCase());
+               lcName = header.name.toLocaleLowerCase();
+               lcValue = header.value.toLocaleLowerCase();
                if(lcName === "upgrade" && lcValue === "websocket")
                {
                   upgradeHeader = true;
@@ -1016,3 +1014,4 @@ package com.worlize.websocket
       }
    }
 }
+

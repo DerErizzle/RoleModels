@@ -1,12 +1,7 @@
 package jackboxgames.talkshow.core
 {
-   import jackboxgames.talkshow.api.ICell;
-   import jackboxgames.talkshow.cells.CallCell;
-   
    internal class SubroutineCall
    {
-       
-      
       private var _callCell:CallCell;
       
       private var _l:Object;
@@ -39,3 +34,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

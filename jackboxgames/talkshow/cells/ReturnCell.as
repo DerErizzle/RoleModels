@@ -9,8 +9,6 @@ package jackboxgames.talkshow.cells
    
    public class ReturnCell extends AbstractCell
    {
-       
-      
       private var _returnValue:String;
       
       public function ReturnCell(f:IFlowchart, id:uint, target:String, returnValue:String)
@@ -62,3 +60,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

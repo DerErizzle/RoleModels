@@ -6,17 +6,15 @@ package jackboxgames.logger
    
    public class Logger extends PausableEventDispatcher
    {
-      
       public static var console:DeveloperConsole;
       
-      internal static const levels:Array = ["","Debug","Info","Warn","Error"];
-      
       private static var _inst:Logger;
+      
+      internal static const levels:Array = ["","Debug","Info","Warn","Error"];
       
       private static var MAX_LOG_LENGTH:int = 500;
       
       private static var _log:Vector.<String> = new Vector.<String>();
-       
       
       public function Logger()
       {
@@ -112,3 +110,4 @@ package jackboxgames.logger
       }
    }
 }
+

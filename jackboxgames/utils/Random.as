@@ -4,9 +4,7 @@ package jackboxgames.utils
    
    public class Random
    {
-      
       private static var _instance:Random;
-       
       
       private var _seed:uint;
       
@@ -65,3 +63,4 @@ package jackboxgames.utils
       }
    }
 }
+

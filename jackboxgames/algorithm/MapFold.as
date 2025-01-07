@@ -2,7 +2,6 @@ package jackboxgames.algorithm
 {
    public final class MapFold
    {
-      
       public static function MAP_IDENTITY(v:*, ... args):*
       {
          return v;
@@ -26,8 +25,7 @@ package jackboxgames.algorithm
       public static function FOLD_OR(current:*, newValue:*):*
       {
          return current || newValue;
-      } 
-      
+      }
       public function MapFold()
       {
          super();
@@ -53,3 +51,4 @@ package jackboxgames.algorithm
       }
    }
 }
+

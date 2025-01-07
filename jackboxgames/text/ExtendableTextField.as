@@ -1,25 +1,21 @@
 package jackboxgames.text
 {
-   import flash.display.MovieClip;
-   import flash.text.TextField;
-   import flash.text.TextFormat;
-   import flash.text.TextLineMetrics;
+   import flash.display.*;
+   import flash.text.*;
    import jackboxgames.utils.*;
    
    public class ExtendableTextField
    {
-      
       private static var _enableManualInlineStyling:Boolean = false;
       
       public static function NULL_MAPPER(s:String, data:*):String
       {
          return s;
       }
-      public static function NULL_EFFECT(parentMc:MovieClip, tf:TextField, text:String, data:*):void
+      public static function NULL_EFFECT(root:DisplayObjectContainer, tf:TextField, text:String, data:*):void
       {
-      } 
-      
-      private var _mc:MovieClip;
+      }
+      private var _root:DisplayObjectContainer;
       
       private var _tfs:Array;
       
@@ -33,13 +29,15 @@ package jackboxgames.text
       
       private var _lastTextMapped:String;
       
+      private var _letterSpacingTextFormat:TextFormat;
+      
       private var _boldFontName:String;
       
       private var _italicFontName:String;
       
       private var _boldItalicFontName:String;
       
-      public function ExtendableTextField(mc:MovieClip, mappers:Array, postEffects:Array)
+      public function ExtendableTextField(root:DisplayObjectContainer, mappers:Array, postEffects:Array)
       {
          var allText:String;
          var i:int = 0;
@@ -50,13 +48,13 @@ package jackboxgames.text
          var index:int = 0;
          var textLine:String = null;
          super();
-         this._mc = mc;
+         this._root = root;
          this._tfs = [];
-         if(Boolean(this._mc))
+         if(Boolean(this._root))
          {
-            for(i = 0; i < this._mc.numChildren; i++)
+            for(i = 0; i < this._root.numChildren; i++)
             {
-               child = this._mc.getChildAt(i);
+               child = this._root.getChildAt(i);
                if(child is TextField)
                {
                   if(child.name.indexOf("instance") != 0)
@@ -102,11 +100,8 @@ package jackboxgames.text
             {
                textLine = tf.getLineText(index);
                textLine = textLine.replace(/[\x01-\x20]+$/g,"");
-               if(textLine.length > 0)
-               {
-                  allText += separator + textLine;
-                  separator = " ";
-               }
+               allText += separator + textLine;
+               separator = "<br/>";
             }
          }
          this.text = allText;
@@ -119,7 +114,7 @@ package jackboxgames.text
       
       public function dispose() : void
       {
-         this._mc = null;
+         this._root = null;
          this._tfs = [];
          this._mappers = [];
          this._postEffects = [];
@@ -133,11 +128,13 @@ package jackboxgames.text
       private function _setupTf(tf:TextField) : void
       {
          tf.mouseWheelEnabled = false;
+         this._letterSpacingTextFormat = new TextFormat();
+         this._letterSpacingTextFormat.letterSpacing = tf.getTextFormat().letterSpacing;
       }
       
-      public function get parentMC() : MovieClip
+      public function get root() : DisplayObjectContainer
       {
-         return this._mc;
+         return this._root;
       }
       
       public function get tfs() : Array
@@ -164,9 +161,10 @@ package jackboxgames.text
                this._lastTextMapped = this.styleText(tf,this._lastTextMapped);
             }
             tf.htmlText = this._lastTextMapped;
+            tf.setTextFormat(this._letterSpacingTextFormat);
             for each(postEffectFn in this._postEffects)
             {
-               postEffectFn(this._mc,tf,this._lastTextMapped,data);
+               postEffectFn(this._root,tf,this._lastTextMapped,data);
             }
          }
       }
@@ -226,6 +224,15 @@ package jackboxgames.text
          return 0;
       }
       
+      public function get textHeight() : Number
+      {
+         if(Boolean(this._tfs) && this._tfs.length > 0)
+         {
+            return TextUtils.getTextHeight(this._tfs[0]);
+         }
+         return 0;
+      }
+      
       public function getLineMetrics(lineIndex:Number) : TextLineMetrics
       {
          if(Boolean(this._tfs) && this._tfs.length > 0)
@@ -233,6 +240,18 @@ package jackboxgames.text
             return (this._tfs[0] as TextField).getLineMetrics(lineIndex);
          }
          return null;
+      }
+      
+      public function addMapper(mapperFn:Function) : void
+      {
+         this._mappers.push(mapperFn);
+         this.text = this.text;
+      }
+      
+      public function addPostEffect(postEffectFn:Function) : void
+      {
+         this._postEffects.push(postEffectFn);
+         this.text = this.text;
       }
       
       public function setColor(c:uint, a:Number) : void
@@ -245,3 +264,4 @@ package jackboxgames.text
       }
    }
 }
+

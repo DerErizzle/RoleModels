@@ -4,9 +4,7 @@ package com.greensock.plugins
    
    public class HexColorsPlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       protected var _colors:Array;
       
@@ -37,9 +35,9 @@ package com.greensock.plugins
          if(start != end)
          {
             r = uint(start >> 16);
-            g = uint(start >> 8 & 255);
-            b = uint(start & 255);
-            this._colors[this._colors.length] = new ColorProp(target,p,isFunc,r,(end >> 16) - r,g,(end >> 8 & 255) - g,b,(end & 255) - b);
+            g = uint(start >> 8 & 0xFF);
+            b = uint(start & 0xFF);
+            this._colors[this._colors.length] = new ColorProp(target,p,isFunc,r,(end >> 16) - r,g,(end >> 8 & 0xFF) - g,b,(end & 0xFF) - b);
             _overwriteProps[_overwriteProps.length] = p;
          }
       }
@@ -81,8 +79,6 @@ package com.greensock.plugins
 
 class ColorProp
 {
-    
-   
    public var t:Object;
    
    public var p:String;
@@ -115,3 +111,4 @@ class ColorProp
       this.bc = bc;
    }
 }
+

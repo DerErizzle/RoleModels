@@ -8,6 +8,7 @@ package jackboxgames.nativeoverride
    
    public class Input extends PausableEventDispatcher
    {
+      private static var _instance:Input;
       
       public static const EVENT_ALERT_DONE:String = "Input.AlertDone";
       
@@ -16,9 +17,6 @@ package jackboxgames.nativeoverride
       public static const KEYBOARD_TYPE_EMAIL:String = "email";
       
       public static const KEYBOARD_TYPE_URL:String = "url";
-      
-      private static var _instance:Input;
-       
       
       public var ctorNative:Function = null;
       
@@ -120,3 +118,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

@@ -4,8 +4,6 @@ package jackboxgames.bbparser
    
    public class Token
    {
-       
-      
       private var _type:TokenType;
       
       private var _content:String;
@@ -80,3 +78,4 @@ package jackboxgames.bbparser
       }
    }
 }
+

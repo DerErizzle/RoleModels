@@ -2,7 +2,6 @@ package com.worlize.websocket
 {
    public final class WebSocketCloseStatus
    {
-      
       public static const NORMAL:int = 1000;
       
       public static const GOING_AWAY:int = 1001;
@@ -28,7 +27,6 @@ package com.worlize.websocket
       public static const SERVER_ERROR:int = 1011;
       
       public static const FAILED_TLS_HANDSHAKE:int = 1015;
-       
       
       public function WebSocketCloseStatus()
       {
@@ -36,3 +34,4 @@ package com.worlize.websocket
       }
    }
 }
+

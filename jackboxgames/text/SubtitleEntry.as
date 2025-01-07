@@ -2,8 +2,6 @@ package jackboxgames.text
 {
    public class SubtitleEntry
    {
-       
-      
       private var _id:String;
       
       private var _subtitleLines:Array;
@@ -31,3 +29,4 @@ package jackboxgames.text
       }
    }
 }
+

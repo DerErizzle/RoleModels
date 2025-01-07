@@ -11,6 +11,7 @@ package jackboxgames.flash
    
    public class MouseManager extends PausableEventDispatcher
    {
+      private static var _instance:MouseManager;
       
       public static const EVENT_MOUSE_WHEEL:String = "MouseEvent.MouseWheel";
       
@@ -18,14 +19,11 @@ package jackboxgames.flash
       
       public static const EVENT_MOUSE_UP:String = "MouseEvent.MouseUp";
       
-      private static var _instance:MouseManager;
-      
       private static const IDLE_TIME:int = 5000;
       
       private static const IDLE_STATE_IDLE:int = 0;
       
       private static const IDLE_STATE_HIDDEN:int = 2;
-       
       
       private var _idleState:int = 0;
       
@@ -124,3 +122,4 @@ package jackboxgames.flash
       }
    }
 }
+

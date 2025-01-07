@@ -2,8 +2,6 @@ package com.greensock.core
 {
    public class SimpleTimeline extends Animation
    {
-       
-      
       public var autoRemoveChildren:Boolean;
       
       public var smoothChildTiming:Boolean;
@@ -142,3 +140,4 @@ package com.greensock.core
       }
    }
 }
+

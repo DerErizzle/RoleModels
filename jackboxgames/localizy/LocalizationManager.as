@@ -3,10 +3,12 @@ package jackboxgames.localizy
    import jackboxgames.events.*;
    import jackboxgames.loader.*;
    import jackboxgames.logger.*;
+   import jackboxgames.settings.*;
    import jackboxgames.utils.*;
    
    public class LocalizationManager extends PausableEventDispatcher
    {
+      private static var _instance:LocalizationManager;
       
       public static var GameSource:String = "";
       
@@ -20,11 +22,6 @@ package jackboxgames.localizy
       
       public static const LOCALIZATION_FILE:String = "Localization.json";
       
-      public static const MAIN__LOCALIZATION_SOURCE:String = "Localization_Default";
-      
-      private static var _instance:LocalizationManager;
-       
-      
       private var _currentLocale:String;
       
       private var _localizationPerSource:Object;
@@ -34,9 +31,11 @@ package jackboxgames.localizy
       public function LocalizationManager()
       {
          super();
-         this._currentLocale = DEFAULT_LOCALE;
+         this._currentLocale = defaultLocale;
          this._localizationPerSource = {};
          this._supportedLocales = {};
+         var localeVal:SettingsValue = SettingsManager.instance.getValue(SETTING_LOCALE);
+         localeVal.addEventListener(SettingsValue.EVENT_VALUE_CHANGED,this._onLocaleChanged);
       }
       
       public static function get defaultLocale() : String
@@ -53,11 +52,9 @@ package jackboxgames.localizy
          return _instance;
       }
       
-      public function load(url:String) : void
+      public function load(url:String, source:String) : void
       {
-         var source:String = null;
          var _this:LocalizationManager = null;
-         source = GameSource;
          this._localizationPerSource[source] = {};
          this._supportedLocales[source] = [];
          _this = this;
@@ -66,15 +63,14 @@ package jackboxgames.localizy
             _localizationPerSource[source] = null;
             if(Boolean(result.success))
             {
-               _localizationPerSource[source] = JSON.deserialize(result.data);
+               _localizationPerSource[source] = result.loader.contentAsJSON;
             }
             _this.dispatchEvent(new EventWithData(EVENT_LOAD_COMPLETE,result));
          });
       }
       
-      public function unload() : void
+      public function unload(source:String) : void
       {
-         var source:String = GameSource;
          this._localizationPerSource[source] = {};
          this._supportedLocales[source] = [];
          delete this._localizationPerSource[source];
@@ -90,17 +86,33 @@ package jackboxgames.localizy
       {
          if(this._currentLocale == value)
          {
+            Logger.info("Already using locale \"" + value + "\".");
             return;
          }
+         if(this.supportedLocales.indexOf(value) < 0)
+         {
+            Logger.info("Trying to set an unsupported locale \"" + value + "\". Keeping \"" + this._currentLocale + "\" instead.");
+            return;
+         }
+         Logger.info("Switching to locale \"" + value + "\".");
          this._currentLocale = value;
-         dispatchEvent(new EventWithData(EVENT_LOCALE_CHANGED,null));
+         dispatchEvent(new EventWithData(EVENT_LOCALE_CHANGED,{"locale":this._currentLocale}));
       }
       
-      private function _getDataForKey(key:String) : *
+      private function _onLocaleChanged(event:EventWithData) : void
       {
-         var source:String = GameSource;
+         var newLocale:String = event.data.newVal;
+         this.currentLocale = event.data.newVal;
+      }
+      
+      private function _getDataForKey(key:String, source:String, strict:Boolean = false) : *
+      {
+         if(source == null)
+         {
+            source = GameSource;
+         }
          var _data:Object = this._localizationPerSource[source];
-         if(!_data)
+         if(!_data || !_data.hasOwnProperty("table"))
          {
             Logger.error("_getDataForKey (\"" + key + "\", \"" + source + "\") is missing source for: \"" + source + "\"!");
             return null;
@@ -113,70 +125,104 @@ package jackboxgames.localizy
          if(!_data.table[this._currentLocale].hasOwnProperty(key))
          {
             Logger.error("_getDataForKey (\"" + key + "\", \"" + source + "\" ) is missing key \"" + key + "\" for locale: \"" + this._currentLocale + "\"!");
-            if(this._currentLocale == DEFAULT_LOCALE)
+            if(strict || this._currentLocale == defaultLocale)
             {
                return null;
             }
-            return "(" + this._currentLocale + ")" + (Boolean(_data.table[DEFAULT_LOCALE].hasOwnProperty(key)) ? _data.table[DEFAULT_LOCALE][key] : "[\"" + key + "\"]");
+            return "(" + this._currentLocale + ")" + (Boolean(_data.table[defaultLocale].hasOwnProperty(key)) ? _data.table[defaultLocale][key] : "[\"" + key + "\"]");
          }
          return _data.table[this._currentLocale][key];
       }
       
-      public function getLinesForKey(key:String) : Array
+      public function getLinesForKey(key:String, source:String = null) : Array
       {
-         var _data:* = this._getDataForKey(key);
+         var data:Array;
+         var _data:* = this._getDataForKey(key,source);
          if(_data == null)
          {
             return null;
          }
-         return _data is Array ? _data : [_data];
-      }
-      
-      public function getValueForKey(key:String) : String
-      {
-         var _data:* = this._getDataForKey(key);
-         if(_data == null)
+         data = _data is Array ? _data : [_data];
+         if(BuildConfig.instance.configVal("pseudoLocale"))
          {
-            return null;
+            data.forEach(function(value:String, index:int, array:Array):void
+            {
+               array[index] = LocalizationUtil.pseudoLocalize(value);
+            });
          }
-         return _data is Array ? ArrayUtil.getRandomElement(_data) : _data;
+         return data;
       }
       
-      public function getText(key:String) : String
+      public function hasValueForKey(key:String, source:String = null) : Boolean
       {
+         return this._getDataForKey(key,source,true) != null;
+      }
+      
+      public function getValueForKey(key:String, source:String = null) : String
+      {
+         var altKey:String = null;
          var stackTrace:String = null;
-         var result:String = this.getValueForKey(key);
-         if(result != null)
+         var _data:* = this._getDataForKey(key,source);
+         if(_data == null)
          {
-            return result;
+            if(key == null)
+            {
+               TraceUtil.backTrace("LocalizationManager.getValueForKey");
+               return "(null)";
+            }
+            altKey = key.toUpperCase().replace(/[^A-Z_0-9]+/g,"_");
+            if(altKey != key && this.getValueForKey(altKey,source) != null)
+            {
+               stackTrace = new Error().getStackTrace();
+               Logger.error("Did you mean \"" + altKey + "\"? Called from: " + stackTrace);
+            }
+            return key;
          }
-         var altKey:String = key.toUpperCase().replace(/[^A-Z_0-9]+/g,"_");
-         if(altKey != key && this.getValueForKey(altKey) != null)
+         var value:String = _data is Array ? ArrayUtil.getRandomElement(_data) : _data;
+         if(BuildConfig.instance.configVal("pseudoLocale"))
          {
-            stackTrace = new Error().getStackTrace();
-            Logger.error("Did you mean \"" + altKey + "\"? Called from: " + stackTrace);
+            value = LocalizationUtil.pseudoLocalize(value);
          }
-         return key;
+         else if(BuildConfig.instance.configVal("showLocaleKeys"))
+         {
+            value = "~" + key + "~";
+         }
+         return value;
       }
       
-      public function supportedLocales() : Array
+      public function getText(key:String, source:String = null) : String
+      {
+         return this.getValueForKey(key,source);
+      }
+      
+      public function hasDataFor(source:String) : Boolean
+      {
+         var _data:Object = this._localizationPerSource[source];
+         return Boolean(_data) && Boolean(_data.hasOwnProperty("table"));
+      }
+      
+      public function get supportedLocales() : Array
       {
          var locale:String = null;
          var source:String = GameSource;
          var _data:Object = this._localizationPerSource[source];
-         if(!_data)
+         if(!_data || !_data.hasOwnProperty("table"))
          {
-            return null;
+            return [];
          }
-         if(this._supportedLocales[source] == null)
+         if(this._supportedLocales[source].length == 0)
          {
-            for(locale in _data)
+            for(locale in _data.table)
             {
-               this._supportedLocales[source].push(locale);
-               Logger.debug("Found locale: " + locale + " in " + source);
+               if(!ObjectUtil.isEmpty(_data.table[locale]))
+               {
+                  this._supportedLocales[source].push(locale);
+                  Logger.debug("Found locale: " + locale + " in " + source);
+               }
             }
          }
          return this._supportedLocales[source];
       }
    }
 }
+

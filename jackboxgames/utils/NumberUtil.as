@@ -2,47 +2,45 @@ package jackboxgames.utils
 {
    public class NumberUtil
    {
+      public static const LANGUAGE_ENGLISH:String = "en";
       
-      public static const LANGUAGE_ENGLISH:String = "en_US";
+      public static const LANGUAGE_FRENCH:String = "fr";
       
-      public static const LANGUAGE_FRENCH:String = "fr_FR";
+      public static const LANGUAGE_GERMAN:String = "de";
       
-      public static const LANGUAGE_GERMAN:String = "de_DE";
+      public static const LANGUAGE_ITALIAN:String = "it";
       
-      public static const LANGUAGE_ITALIAN:String = "it_IT";
-      
-      public static const LANGUAGE_SPANISH:String = "es_ES";
+      public static const LANGUAGE_SPANISH:String = "es";
       
       private static const localeData:Object = {
-         "en_US":{
+         "en":{
             "grouping":",",
             "decimal":"."
          },
-         "fr_FR":{
+         "fr":{
             "grouping":" ",
             "decimal":","
          },
-         "de_DE":{
+         "de":{
             "grouping":" ",
             "decimal":","
          },
-         "es_ES":{
+         "es":{
             "grouping":".",
             "decimal":","
          },
-         "it_IT":{
+         "it":{
             "grouping":".",
             "decimal":","
          }
       };
-       
       
       public function NumberUtil()
       {
          super();
       }
       
-      public static function format(number:Number, decimalDigits:int = -1, language:String = "en_US") : String
+      public static function format(number:Number, decimalDigits:int = -1, language:String = "en") : String
       {
          return getFormatOfNumber(number,decimalDigits,localeData[language]);
       }
@@ -51,20 +49,21 @@ package jackboxgames.utils
       {
          var splitByDecimal:Array = null;
          var chunk:String = null;
-         var numString:String = String(number);
-         var index:Number = numString.indexOf(".");
+         var sign:String = number < 0 ? "-" : "";
+         var numString:String = String(Math.abs(number));
+         var index:Number = Number(numString.indexOf("."));
          var decimal:String = "";
          if(index > 0)
          {
             splitByDecimal = numString.split(".");
-            numString = String(splitByDecimal[0]);
+            numString = splitByDecimal[0];
             if(decimalDigits == -1)
             {
-               decimal = String(splitByDecimal[1]);
+               decimal = splitByDecimal[1];
             }
             else
             {
-               decimal = String(splitByDecimal[1].substr(0,decimalDigits));
+               decimal = splitByDecimal[1].substr(0,decimalDigits);
             }
          }
          else if(index === 0)
@@ -91,7 +90,7 @@ package jackboxgames.utils
          {
             result = result + locale.decimal + decimal;
          }
-         return result;
+         return sign + result;
       }
       
       public static function getEnglishSpellingOfInt(i:int) : String
@@ -315,5 +314,23 @@ package jackboxgames.utils
          }
          return result;
       }
+      
+      public static function roundToMultiple(numToRound:Number, multiple:Number) : Number
+      {
+         Assert.assert(multiple != 0,"Attempted to round to a multiple of zero.");
+         return multiple * Math.round(numToRound / multiple);
+      }
+      
+      public static function roundDownToMultiple(numToRound:Number, multiple:Number) : Number
+      {
+         Assert.assert(multiple != 0,"Attempted to round to a multiple of zero.");
+         return multiple * Math.floor(numToRound / multiple);
+      }
+      
+      public static function roundToDecimalPlace(numToRound:Number, numDecimalPlaces:int) : Number
+      {
+         return int(numToRound * Math.pow(10,numDecimalPlaces)) / Math.pow(10,numDecimalPlaces);
+      }
    }
 }
+

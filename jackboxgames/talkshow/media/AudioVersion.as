@@ -14,8 +14,6 @@ package jackboxgames.talkshow.media
    
    public class AudioVersion extends AbstractLoadableVersion implements IAudioVersion, IPausable
    {
-       
-      
       protected var _request:URLRequest;
       
       protected var _event:AudioEvent;
@@ -93,7 +91,7 @@ package jackboxgames.talkshow.media
             _this.dispatchEvent(new Event(Event.COMPLETE));
             return;
          }
-         eventName = _metadata.hasOwnProperty("EventName") ? String(_metadata["EventName"]) : "HOST/DummyHost";
+         eventName = !!_metadata.hasOwnProperty("EventName") ? _metadata["EventName"] : "HOST/DummyHost";
          event = AudioSystem.instance.createEventFromPath(eventName,path);
          if(event.isValid)
          {
@@ -336,3 +334,4 @@ package jackboxgames.talkshow.media
       }
    }
 }
+

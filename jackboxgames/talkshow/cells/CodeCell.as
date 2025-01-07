@@ -6,8 +6,6 @@ package jackboxgames.talkshow.cells
    
    public class CodeCell extends AbstractCell
    {
-       
-      
       private var _childId:uint;
       
       public function CodeCell(f:IFlowchart, id:uint, target:String, childId:uint)
@@ -43,3 +41,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

@@ -9,9 +9,7 @@ package jackboxgames.utils
    
    public class PlatformSkinner extends PausableEventDispatcher
    {
-      
       public static var EVENT_STATE_CHANGED:String = "PlatformSkinner.StateChanged";
-       
       
       private var _mc:MovieClip;
       
@@ -135,3 +133,4 @@ package jackboxgames.utils
       }
    }
 }
+

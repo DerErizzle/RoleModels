@@ -4,8 +4,6 @@ package jackboxgames.events
    
    public class EventWithData extends Event
    {
-       
-      
       private var _data:*;
       
       public function EventWithData(type:String, data:*)
@@ -20,3 +18,4 @@ package jackboxgames.events
       }
    }
 }
+

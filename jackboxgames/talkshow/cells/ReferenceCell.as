@@ -14,8 +14,6 @@ package jackboxgames.talkshow.cells
    
    public class ReferenceCell extends AbstractCell implements IBranchingCell
    {
-       
-      
       private var _refVar:String;
       
       private var _branches:Array;
@@ -104,3 +102,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

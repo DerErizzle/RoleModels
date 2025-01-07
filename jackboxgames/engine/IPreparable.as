@@ -2,8 +2,6 @@ package jackboxgames.engine
 {
    public interface IPreparable
    {
-       
-      
       function get needsPrepare() : Boolean;
       
       function get prepareFailError() : String;
@@ -13,3 +11,4 @@ package jackboxgames.engine
       function prepareDone(param1:Boolean) : void;
    }
 }
+

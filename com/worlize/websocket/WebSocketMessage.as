@@ -4,11 +4,9 @@ package com.worlize.websocket
    
    public class WebSocketMessage
    {
-      
       public static const TYPE_BINARY:String = "binary";
       
       public static const TYPE_UTF8:String = "utf8";
-       
       
       public var type:String;
       
@@ -22,3 +20,4 @@ package com.worlize.websocket
       }
    }
 }
+

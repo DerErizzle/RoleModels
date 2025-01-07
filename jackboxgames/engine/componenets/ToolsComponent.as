@@ -1,15 +1,11 @@
 package jackboxgames.engine.componenets
 {
    import jackboxgames.engine.GameEngine;
-   import jackboxgames.nativeoverride.JSON;
-   import jackboxgames.utils.EnvUtil;
    import jackboxgames.utils.PausableEventDispatcher;
    import jackboxgames.utils.TickManager;
    
    public class ToolsComponent extends PausableEventDispatcher implements IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       public function ToolsComponent(engine:GameEngine)
@@ -27,10 +23,6 @@ package jackboxgames.engine.componenets
       {
          TickManager.initialize();
          TickManager.instance.isActive = true;
-         if(!EnvUtil.isAIR())
-         {
-            JSON.Initialize();
-         }
          doneFn();
       }
       
@@ -49,3 +41,4 @@ package jackboxgames.engine.componenets
       }
    }
 }
+

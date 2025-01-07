@@ -2,7 +2,6 @@ package jackboxgames.utils
 {
    public final class EnvUtil
    {
-      
       private static const ENV_AIR:String = "air";
       
       private static const ENV_CONSOLE:String = "console";
@@ -10,7 +9,6 @@ package jackboxgames.utils
       private static const ENV_MOBILE:String = "mobile";
       
       private static const ENV_PC:String = "pc";
-       
       
       public function EnvUtil()
       {
@@ -43,3 +41,4 @@ package jackboxgames.utils
       }
    }
 }
+

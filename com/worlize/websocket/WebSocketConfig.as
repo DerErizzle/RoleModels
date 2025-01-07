@@ -2,9 +2,7 @@ package com.worlize.websocket
 {
    public class WebSocketConfig
    {
-       
-      
-      public var maxReceivedFrameSize:uint = 1048576;
+      public var maxReceivedFrameSize:uint = 2097152;
       
       public var maxMessageSize:uint = 8388608;
       
@@ -22,3 +20,4 @@ package com.worlize.websocket
       }
    }
 }
+

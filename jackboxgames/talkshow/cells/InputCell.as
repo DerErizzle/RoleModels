@@ -16,8 +16,6 @@ package jackboxgames.talkshow.cells
    
    public class InputCell extends AbstractCell implements IBranchingCell
    {
-       
-      
       private var _ass:String;
       
       private var _fib:String;
@@ -186,3 +184,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

@@ -5,11 +5,9 @@ package jackboxgames.timer
    
    public final class TimerUtil
    {
-      
       public static var PAUSABLE_TIMER:Class = PausableTimer;
       
       private static var RUNNING_TIMERS:Dictionary = new Dictionary();
-       
       
       public function TimerUtil()
       {
@@ -48,3 +46,4 @@ package jackboxgames.timer
       }
    }
 }
+

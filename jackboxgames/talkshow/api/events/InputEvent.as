@@ -4,11 +4,9 @@ package jackboxgames.talkshow.api.events
    
    public class InputEvent extends Event
    {
-      
       public static const INPUT:String = "input";
       
       public static const USER_INPUT:String = "userInput";
-       
       
       private var _input:String;
       
@@ -32,3 +30,4 @@ package jackboxgames.talkshow.api.events
       }
    }
 }
+

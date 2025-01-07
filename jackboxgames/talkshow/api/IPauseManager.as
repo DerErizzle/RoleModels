@@ -4,8 +4,6 @@ package jackboxgames.talkshow.api
    
    public interface IPauseManager extends IEventDispatcher
    {
-       
-      
       function userPause() : void;
       
       function userResume() : void;
@@ -25,3 +23,4 @@ package jackboxgames.talkshow.api
       function get isPaused() : Boolean;
    }
 }
+

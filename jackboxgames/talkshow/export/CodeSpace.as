@@ -4,8 +4,6 @@ package jackboxgames.talkshow.export
    
    public class CodeSpace implements ICodeSpace
    {
-       
-      
       private var _g:Object;
       
       private var _l:Object;
@@ -28,3 +26,4 @@ package jackboxgames.talkshow.export
       }
    }
 }
+

@@ -2,7 +2,6 @@ package jackboxgames.talkshow.templates
 {
    public class TemplateField
    {
-      
       public static const TYPE_AUDIO:String = "A";
       
       public static const TYPE_BOOLEAN:String = "B";
@@ -12,7 +11,6 @@ package jackboxgames.talkshow.templates
       public static const TYPE_NUMBER:String = "N";
       
       public static const TYPE_STRING:String = "S";
-       
       
       protected var _name:String;
       
@@ -70,3 +68,4 @@ package jackboxgames.talkshow.templates
       }
    }
 }
+

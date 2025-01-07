@@ -1,12 +1,11 @@
 package jackboxgames.utils
 {
    import jackboxgames.configuration.*;
+   import jackboxgames.expressionparser.*;
    
-   public class BuildConfig
+   public class BuildConfig implements IExpressionDataDelegate
    {
-      
       private static var _instance:BuildConfig;
-       
       
       private var _sourcesInLoadOrder:Array;
       
@@ -25,10 +24,11 @@ package jackboxgames.utils
       public function init(paths:Array) : void
       {
          var clSource:IConfigSource = new CommandLineSource();
+         var nativeOverrideSource:IConfigSource = new NativeOverrideSource();
          var configFileSource:IConfigSource = new ConfigFileSource(paths);
          var appConfigSource:IConfigSource = new AppConfigSource();
-         this._sourcesInLoadOrder = [clSource,configFileSource,appConfigSource];
-         this._sourcesInLookupOrder = [appConfigSource,clSource,configFileSource];
+         this._sourcesInLoadOrder = [clSource,nativeOverrideSource,configFileSource,appConfigSource];
+         this._sourcesInLookupOrder = [appConfigSource,clSource,nativeOverrideSource,configFileSource];
       }
       
       public function load(doneFn:Function) : void
@@ -110,5 +110,11 @@ package jackboxgames.utils
       {
          return this._getConfigValFromSources(key,this._sourcesInLookupOrder);
       }
+      
+      public function getKeywordValue(keyword:String) : *
+      {
+         return this.configVal(keyword);
+      }
    }
 }
+

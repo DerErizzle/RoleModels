@@ -9,21 +9,23 @@ package jackboxgames.talkshow.api
    import flash.net.URLRequest;
    import flash.system.ApplicationDomain;
    import flash.system.LoaderContext;
+   import jackboxgames.localizy.LocalizedTextFieldManager;
    import jackboxgames.logger.Logger;
    import jackboxgames.talkshow.api.events.CellEvent;
+   import jackboxgames.talkshow.utils.ConfigInfo;
+   import jackboxgames.userinput.ButtonCalloutManager;
    import jackboxgames.utils.BuildConfig;
-   import jackboxgames.utils.EnvUtil;
    import jackboxgames.utils.Nullable;
    
    public class SWFActionPackage implements IActionPackage
    {
-       
+      protected var _apRef:IActionPackageRef;
       
-      protected var _sourceURL:String;
+      protected var _loaded:Boolean;
       
       protected var _loader:Loader;
       
-      protected var _loadCancellor:Function;
+      protected var _loadCanceler:Function;
       
       protected var _mc:MovieClip;
       
@@ -31,18 +33,17 @@ package jackboxgames.talkshow.api
       
       protected var _init:Boolean;
       
-      public function SWFActionPackage(sourceURL:String)
+      public function SWFActionPackage(apRef:IActionPackageRef)
       {
-         var skipPath:String = null;
          super();
-         if(EnvUtil.isAIR() && BuildConfig.instance.configVal("isBundle"))
-         {
-            skipPath = "games/" + BuildConfig.instance.configVal("gameName") + "/";
-            sourceURL = sourceURL.substr(skipPath.length);
-         }
-         this._sourceURL = sourceURL;
+         this._apRef = apRef;
          this._init = false;
-         this._loadCancellor = Nullable.NULL_FUNCTION;
+         this._loadCanceler = Nullable.NULL_FUNCTION;
+      }
+      
+      protected function get _sourceURL() : String
+      {
+         return this._apRef.getExport().configInfo.getValue(ConfigInfo.ACTION_PATH) + this._apRef.id + ".swf";
       }
       
       public function get isLoaded() : Boolean
@@ -116,7 +117,7 @@ package jackboxgames.talkshow.api
       
       private function get _isLoaded() : Boolean
       {
-         return this._loader != null;
+         return this._loaded;
       }
       
       private function _load(doneFn:Function) : void
@@ -133,11 +134,23 @@ package jackboxgames.talkshow.api
          {
             doneFn();
          };
+         var url:String = this._sourceURL;
+         if(!url)
+         {
+            this._loaded = true;
+            doneFn();
+            return;
+         }
+         if(BuildConfig.instance.hasConfigVal("swfRoot"))
+         {
+            url = BuildConfig.instance.configVal("swfRoot") + "/" + url;
+         }
          this._loader = new Loader();
+         this._loaded = true;
          this._loader.contentLoaderInfo.addEventListener(Event.COMPLETE,onLoadComplete);
          this._loader.contentLoaderInfo.addEventListener(IOErrorEvent.NETWORK_ERROR,onLoadError);
          this._loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR,onLoadError);
-         this._loadCancellor = function():void
+         this._loadCanceler = function():void
          {
             _loader.contentLoaderInfo.removeEventListener(Event.COMPLETE,onLoadComplete);
             _loader.contentLoaderInfo.removeEventListener(IOErrorEvent.NETWORK_ERROR,onLoadError);
@@ -146,15 +159,19 @@ package jackboxgames.talkshow.api
          context = new LoaderContext();
          context.checkPolicyFile = true;
          context.applicationDomain = ApplicationDomain.currentDomain;
-         this._loader.load(new URLRequest(this._sourceURL),context);
+         this._loader.load(new URLRequest(url),context);
       }
       
       private function _unload() : void
       {
-         this._loadCancellor();
-         this._loadCancellor = Nullable.NULL_FUNCTION;
-         this._loader.unloadAndStop(true);
-         this._loader = null;
+         this._loaded = false;
+         this._loadCanceler();
+         this._loadCanceler = Nullable.NULL_FUNCTION;
+         if(Boolean(this._loader))
+         {
+            this._loader.unloadAndStop(true);
+            this._loader = null;
+         }
       }
       
       protected function _setLoaded(isLoaded:Boolean, doneFn:Function) : void
@@ -168,20 +185,38 @@ package jackboxgames.talkshow.api
          {
             this._load(function():void
             {
-               _createReferences();
-               doneFn();
+               _loadExtraResources(function():void
+               {
+                  _createReferences();
+                  LocalizedTextFieldManager.instance.addFromRoot(_mc);
+                  ButtonCalloutManager.instance.addFromRoot(_mc);
+                  doneFn();
+               });
             });
          }
          else
          {
-            if(Boolean(this._mc))
+            this._unloadExtraResources(function():void
             {
-               this._disposeOfReferences();
-            }
-            this._unload();
-            this._mc = null;
-            doneFn();
+               if(Boolean(_mc))
+               {
+                  _disposeOfReferences();
+               }
+               _unload();
+               _mc = null;
+               doneFn();
+            });
          }
+      }
+      
+      protected function _loadExtraResources(doneFn:Function) : void
+      {
+         doneFn();
+      }
+      
+      protected function _unloadExtraResources(doneFn:Function) : void
+      {
+         doneFn();
       }
       
       protected function _createReferences() : void
@@ -193,3 +228,4 @@ package jackboxgames.talkshow.api
       }
    }
 }
+

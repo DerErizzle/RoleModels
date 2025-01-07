@@ -8,8 +8,6 @@ package jackboxgames.talkshow.cells
    
    public class StopListeningCell extends AbstractCell
    {
-       
-      
       private var _childId:uint;
       
       public function StopListeningCell(f:IFlowchart, id:uint, target:String, childId:uint)
@@ -45,3 +43,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

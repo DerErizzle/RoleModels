@@ -2,8 +2,6 @@ package jackboxgames.talkshow.timing
 {
    public class Timing
    {
-       
-      
       protected var _start:Boolean;
       
       protected var _time:Number;
@@ -36,3 +34,4 @@ package jackboxgames.talkshow.timing
       }
    }
 }
+

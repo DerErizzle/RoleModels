@@ -6,8 +6,6 @@ package jackboxgames.engine.componenets
    
    public class VideoComponent extends PausableEventDispatcher implements IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       public function VideoComponent(engine:GameEngine)
@@ -41,3 +39,4 @@ package jackboxgames.engine.componenets
       }
    }
 }
+

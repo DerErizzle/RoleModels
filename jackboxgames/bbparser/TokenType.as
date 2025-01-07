@@ -2,7 +2,6 @@ package jackboxgames.bbparser
 {
    public class TokenType
    {
-      
       public static const TEXT:TokenType = new TokenType();
       
       public static const STARTTAG:TokenType = new TokenType();
@@ -11,9 +10,7 @@ package jackboxgames.bbparser
       
       private static var _enumCreated:Boolean = false;
       
-      {
-         _enumCreated = true;
-      }
+      _enumCreated = true;
       
       public function TokenType()
       {
@@ -25,3 +22,4 @@ package jackboxgames.bbparser
       }
    }
 }
+

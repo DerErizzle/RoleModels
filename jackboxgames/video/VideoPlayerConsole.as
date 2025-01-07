@@ -18,8 +18,6 @@ package jackboxgames.video
    
    public class VideoPlayerConsole extends VideoPlayerBase implements IVideoPlayer
    {
-       
-      
       private var _flashVideo:Video;
       
       private var _videoX:Number;
@@ -33,6 +31,8 @@ package jackboxgames.video
       private var _seekToPausedTime:Number;
       
       private var _timerHack:PausableTimer;
+      
+      private var _delayedAddCanceler:Function;
       
       public function VideoPlayerConsole(videoframe:MovieClip = null, parent:DisplayObjectContainer = null)
       {
@@ -77,6 +77,7 @@ package jackboxgames.video
          this._stream.addEventListener(IOErrorEvent.IO_ERROR,this.handleError);
          _length = -1;
          _duration = 0;
+         this._delayedAddCanceler = Nullable.NULL_FUNCTION;
          videoClient = new Object();
          videoClient.onMetaData = this.onMetaData;
          this._stream.client = videoClient;
@@ -109,14 +110,7 @@ package jackboxgames.video
          this._flashVideo.x = this._videoX;
          this._flashVideo.y = this._videoY;
          this._stream.resume();
-         if(Parent != null)
-         {
-            Parent.addChild(this._flashVideo);
-         }
-         else
-         {
-            Logger.debug("VideoPlayerConsole::play no parent set");
-         }
+         this._addVideoToParentDelayed();
          (this._stream as Object).loop = _loop;
          GameEngine.instance.addEventListener("pause",this._pauseListener);
       }
@@ -167,6 +161,8 @@ package jackboxgames.video
       
       override public function stop() : void
       {
+         this._delayedAddCanceler();
+         this._delayedAddCanceler = Nullable.NULL_FUNCTION;
          super.stop();
          if(this._stream != null && this._flashVideo != null)
          {
@@ -193,6 +189,8 @@ package jackboxgames.video
       
       override public function dispose() : void
       {
+         this._delayedAddCanceler();
+         this._delayedAddCanceler = Nullable.NULL_FUNCTION;
          super.dispose();
          if(this._timerHack != null)
          {
@@ -280,16 +278,15 @@ package jackboxgames.video
                else
                {
                   this._stream.resume();
-                  if(Parent != null)
-                  {
-                     Parent.addChild(this._flashVideo);
-                  }
                   _ready = true;
                }
                if(_length != -1)
                {
                   dispatchEvent(new Event("VideoLoaded"));
                }
+               break;
+            case "NetStream.Buffer.Full":
+               Logger.debug("VideoPlayerConsole: NetStream.Buffer.Full.");
                break;
             case "NetStream.Buffer.Empty":
                Logger.debug("VideoPlayerConsole: NetStream.Buffer.Empty.");
@@ -342,5 +339,17 @@ package jackboxgames.video
             dispatchEvent(new Event("VideoLoaded"));
          }
       }
+      
+      private function _addVideoToParentDelayed() : void
+      {
+         this._delayedAddCanceler = JBGUtil.runFunctionAfter(function():void
+         {
+            if(Parent != null)
+            {
+               Parent.addChild(_flashVideo);
+            }
+         },Duration.fromMs(200));
+      }
    }
 }
+

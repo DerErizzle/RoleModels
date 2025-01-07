@@ -2,7 +2,6 @@ package jackboxgames.bbparser
 {
    public class ParseTreeType
    {
-      
       public static const ROOT:ParseTreeType = new ParseTreeType();
       
       public static const TEXT:ParseTreeType = new ParseTreeType();
@@ -11,9 +10,7 @@ package jackboxgames.bbparser
       
       private static var _enumCreated:Boolean = false;
       
-      {
-         _enumCreated = true;
-      }
+      _enumCreated = true;
       
       public function ParseTreeType()
       {
@@ -25,3 +22,4 @@ package jackboxgames.bbparser
       }
    }
 }
+

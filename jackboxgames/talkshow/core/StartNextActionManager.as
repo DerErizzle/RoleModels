@@ -12,8 +12,6 @@ package jackboxgames.talkshow.core
    
    public class StartNextActionManager
    {
-       
-      
       private var _ts:IEngineAPI;
       
       private var _keyCell:ActionCell;
@@ -130,3 +128,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

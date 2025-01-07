@@ -6,15 +6,10 @@ package jackboxgames.loader
    import flash.media.Sound;
    import flash.media.SoundLoaderContext;
    import flash.net.URLRequest;
-   import flash.utils.ByteArray;
-   import jackboxgames.utils.Duration;
-   import jackboxgames.utils.JBGUtil;
    import jackboxgames.utils.PausableEventDispatcher;
    
    public class SoundLoader extends PausableEventDispatcher implements ILoader
    {
-       
-      
       protected var _sound:Sound;
       
       protected var _context:SoundLoaderContext;
@@ -74,15 +69,6 @@ package jackboxgames.loader
          this._sound.load(new URLRequest(this._url),this._context);
       }
       
-      public function loadUnzipped(bytes:ByteArray) : void
-      {
-         this._sound.loadCompressedDataFromByteArray(bytes,bytes.length);
-         JBGUtil.runFunctionAfter(function():void
-         {
-            _sound.dispatchEvent(new Event(Event.COMPLETE));
-         },Duration.fromMs(33));
-      }
-      
       public function loadFallback() : void
       {
          this._sound.load(new URLRequest(this._url));
@@ -116,3 +102,4 @@ package jackboxgames.loader
       }
    }
 }
+

@@ -6,8 +6,6 @@ package jackboxgames.talkshow.cells
    
    public class AbstractBranch implements IBranch
    {
-       
-      
       protected var _targetId:int;
       
       protected var _type:uint;
@@ -66,3 +64,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

@@ -2,8 +2,6 @@ package jackboxgames.utils
 {
    public class Counter
    {
-       
-      
       private var _finalCount:int;
       
       private var _fn:Function;
@@ -34,10 +32,11 @@ package jackboxgames.utils
       
       public function generateDoneFn() : Function
       {
-         return function():void
+         return function(... args):*
          {
             tick();
          };
       }
    }
 }
+

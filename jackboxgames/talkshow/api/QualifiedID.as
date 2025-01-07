@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public class QualifiedID
    {
-       
-      
       private var _eid:String;
       
       private var _fid:String;
@@ -56,3 +54,4 @@ package jackboxgames.talkshow.api
       }
    }
 }
+

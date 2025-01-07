@@ -5,8 +5,6 @@ package com.hurlant.crypto.hash
    
    public class SHABase implements IHash
    {
-       
-      
       public var pad_size:int = 40;
       
       public function SHABase()
@@ -68,3 +66,4 @@ package com.hurlant.crypto.hash
       }
    }
 }
+

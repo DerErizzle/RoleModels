@@ -4,7 +4,6 @@ package jackboxgames.events
    
    public class MovieClipEvent extends Event
    {
-      
       public static const EVENT_APPEAR_DONE:String = "MovieClipEvent.AppearDone";
       
       public static const EVENT_DISAPPEAR_DONE:String = "MovieClipEvent.DisappearDone";
@@ -18,7 +17,6 @@ package jackboxgames.events
       public static const EVENT_TRANSITION_DONE:String = "MovieClipEvent.TransitionDone";
       
       public static const EVENT_TRIGGER:String = "MovieClipEvent.Trigger";
-       
       
       private var _data:*;
       
@@ -34,3 +32,4 @@ package jackboxgames.events
       }
    }
 }
+

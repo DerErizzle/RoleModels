@@ -5,11 +5,9 @@ package com.greensock.plugins
    
    public class BevelFilterPlugin extends FilterPlugin
    {
-      
       public static const API:Number = 2;
       
       private static var _propNames:Array = ["distance","angle","highlightColor","highlightAlpha","shadowColor","shadowAlpha","blurX","blurY","strength","quality"];
-       
       
       public function BevelFilterPlugin()
       {
@@ -22,3 +20,4 @@ package com.greensock.plugins
       }
    }
 }
+

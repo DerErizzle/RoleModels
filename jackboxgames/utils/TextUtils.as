@@ -1,19 +1,17 @@
 package jackboxgames.utils
 {
-   import flash.display.DisplayObject;
-   import flash.geom.Rectangle;
-   import flash.text.StyleSheet;
-   import flash.text.TextField;
-   import flash.text.TextFormat;
-   import jackboxgames.algorithm.*;
+   import flash.geom.*;
+   import flash.text.*;
    import jackboxgames.nativeoverride.*;
+   import jackboxgames.text.*;
    
    public class TextUtils
    {
-      
       public static const ALPHABET:String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       
       public static const ALPHANUMERIC:String = "abcdefghijklmnopqrstuvwxyz0123456789";
+      
+      public static const VALID_CHARACTERS_FROM_THE_CONTROLLER:String = "‚ !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz{|}~¡«»¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØŒÙÚÛÜÝŸÞßàáâãäåæçèéêëìíîïðñòóôõö÷øœùúûüýþÿ‘’“”„";
       
       public static const BALANCE_TOP:String = "top";
       
@@ -22,7 +20,6 @@ package jackboxgames.utils
       public static const BALANCE_BOTTOM:String = "bottom";
       
       private static const NOT_ALLOWED:Array = ["FUCK","BITCH","CUNT","SHIT","COCK","FAGGOT","FAG","NIGGER","NIGGA","DICK","DYKE","HOMO","BONER","TWAT","RAPE","PENIS","VAGINA","WANK","DOUCHE","PUSSY","CLIT","CUM","KIKE"];
-       
       
       public function TextUtils()
       {
@@ -140,41 +137,27 @@ package jackboxgames.utils
          return s;
       }
       
-      public static function balanceTf(tf:TextField, balancer:DisplayObject, type:String) : void
+      public static function balanceTf(tf:TextField, initialRectangle:Rectangle, type:String) : void
       {
          if(type == BALANCE_TOP)
          {
-            tf.y = balancer.y;
+            tf.y = initialRectangle.y;
          }
          else if(type == BALANCE_CENTER)
          {
-            tf.y = balancer.y + balancer.height / 2 - tf.textHeight / 2;
-            if(EnvUtil.isAIR())
-            {
-               if(tf.numLines == 1)
-               {
-                  tf.y += Number(tf.getTextFormat().leading) / 2;
-               }
-            }
+            tf.y = initialRectangle.y + (initialRectangle.height / 2 - getTextHeight(tf) / 2);
          }
          else if(type == BALANCE_BOTTOM)
          {
-            tf.y = balancer.height - tf.textHeight;
-            if(EnvUtil.isAIR())
-            {
-               if(tf.numLines == 1)
-               {
-                  tf.y -= Number(tf.getTextFormat().leading);
-               }
-            }
+            tf.y = initialRectangle.y + initialRectangle.height - getTextHeight(tf);
          }
       }
       
       public static function getTextHeight(txt:TextField) : Number
       {
-         if(txt.numLines > 1)
+         if(txt.numLines > 1 || !EnvUtil.isAIR())
          {
-            return txt.textHeight;
+            return NumberUtil.roundToDecimalPlace(txt.textHeight,2);
          }
          var tfmt:TextFormat = txt.getTextFormat();
          var origLeading:Object = tfmt.leading;
@@ -183,7 +166,7 @@ package jackboxgames.utils
          var noLeadingSlh:Number = txt.textHeight;
          tfmt.leading = origLeading;
          txt.setTextFormat(tfmt);
-         return noLeadingSlh;
+         return NumberUtil.roundToDecimalPlace(noLeadingSlh,2);
       }
       
       public static function getBounds(tf:TextField) : Rectangle
@@ -221,7 +204,7 @@ package jackboxgames.utils
       {
          var s:Number = NaN;
          var temp:String = "";
-         while((s = src.indexOf("<")) != -1)
+         while(s = Number(src.indexOf("<")), s != -1)
          {
             temp += src.substr(0,s);
             src = src.substr(src.indexOf(">") + 1);
@@ -317,46 +300,6 @@ package jackboxgames.utils
          return result;
       }
       
-      private static function _getBytesNeededForCharCode(charCode:int) : int
-      {
-         if(charCode <= 127)
-         {
-            return 1;
-         }
-         if(charCode <= 2047)
-         {
-            return 2;
-         }
-         if(charCode <= 65535)
-         {
-            return 3;
-         }
-         if(charCode <= 2097151)
-         {
-            return 4;
-         }
-         Assert.assert(false);
-         return 1;
-      }
-      
-      public static function regexIndexToStringIndex(s:String, regexIndex:int) : int
-      {
-         if(EnvUtil.isAIR())
-         {
-            return regexIndex;
-         }
-         var currentBytes:int = 0;
-         for(var i:int = 0; i < s.length; i++)
-         {
-            if(currentBytes >= regexIndex)
-            {
-               return i;
-            }
-            currentBytes += _getBytesNeededForCharCode(s.charCodeAt(i));
-         }
-         return -1;
-      }
-      
       public static function isEmail(email:String) : Boolean
       {
          var reg:String = "^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]+)";
@@ -388,7 +331,7 @@ package jackboxgames.utils
          }
          var first:String = input.substr(0,1);
          var rest:String = input.substr(1,input.length);
-         return first.toUpperCase() + rest.toLowerCase();
+         return first.toUpperCase() + rest;
       }
       
       public static function capitalizeForName(input:String) : String
@@ -409,7 +352,7 @@ package jackboxgames.utils
       {
          for(var i:int = 0; i < filters.length; i++)
          {
-            s = String(filters[i](s));
+            s = filters[i](s);
          }
          return s;
       }
@@ -463,16 +406,37 @@ package jackboxgames.utils
          return s.replace(/&quot;/gi,"\"").replace(/&#39;/gi,"\'").replace(/&lt;/gi,"<").replace(/&gt;/gi,">").replace(/&amp;/gi,"&");
       }
       
+      public static function htmlUnescapeValidTags(s:String) : String
+      {
+         return s.replace(/&lt;i&gt;/gi,"<i>").replace(/&lt;\/i&gt;/gi,"</i>").replace(/&lt;b&gt;/gi,"<b>").replace(/&lt;\/b&gt;/gi,"</b>");
+      }
+      
       public static function htmlEscapedTruncate(s:String, length:int) : String
       {
-         return htmlEscape(htmlUnescape(s).substr(0,length));
+         return EmojiUtil.truncate(TextUtils.htmlEscape(TextUtils.htmlUnescape(s)),length);
+      }
+      
+      public static function charCount(s:String) : int
+      {
+         return EmojiUtil.charCount(s);
+      }
+      
+      public static function toUpperCase(s:String) : String
+      {
+         return EmojiUtil.toUpperCase(s);
+      }
+      
+      public static function toLowerCase(s:String) : String
+      {
+         return EmojiUtil.toLowerCase(s);
       }
       
       public static function ellipsize(s:String, maxLength:int) : String
       {
-         if(s.length > maxLength)
+         var text:String = htmlUnescape(s);
+         if(text.length > maxLength)
          {
-            return s.substr(0,maxLength - 1) + "&#8230;";
+            return EmojiUtil.truncate(s,maxLength - 1) + "&#8230;";
          }
          return s;
       }
@@ -483,7 +447,7 @@ package jackboxgames.utils
          {
             return a == b;
          }
-         return a.toLowerCase() == b.toLowerCase();
+         return EmojiUtil.toLowerCase(a) == EmojiUtil.toLowerCase(b);
       }
       
       public static function trim(s:String) : String
@@ -554,18 +518,74 @@ package jackboxgames.utils
          return s.split("").reverse().join("");
       }
       
+      public static function splitAndRemove(s:String, delimiter:String) : Array
+      {
+         var slice:String = null;
+         var result:Array = [];
+         var remainder:String = s;
+         var delimiterIndex:int = int(remainder.indexOf(delimiter));
+         while(delimiterIndex != -1)
+         {
+            slice = remainder.slice(0,delimiterIndex);
+            result.push(slice);
+            remainder = remainder.slice(delimiterIndex + delimiter.length);
+            delimiterIndex = int(remainder.indexOf(delimiter));
+         }
+         result.push(remainder);
+         return result;
+      }
+      
       public static function splitUsingPattern(textToSplit:String, pattern:*) : Array
       {
          var subStrings:Array = [];
          var searchSubstring:String = textToSplit;
-         var patternIndex:int = searchSubstring.search(pattern);
+         var patternIndex:int = int(searchSubstring.search(pattern));
          while(patternIndex > 0)
          {
             subStrings.push(searchSubstring.substring(0,patternIndex + 1));
             searchSubstring = searchSubstring.substring(patternIndex + 1);
-            patternIndex = searchSubstring.search(pattern);
+            patternIndex = int(searchSubstring.search(pattern));
          }
          return subStrings;
       }
+      
+      public static function copy(s:String) : String
+      {
+         if(s == null)
+         {
+            return null;
+         }
+         return s.slice();
+      }
+      
+      public static function convertSpaceInFrontOfPunctuation(s:String) : String
+      {
+         return s.replace(/ %/g,"&nbsp;%").replace(/ \./g,"&nbsp;.").replace(/ ,/g,"&nbsp;,").replace(/ :/g,"&nbsp;:").replace(/ ;/g,"&nbsp;;").replace(/ !/g,"&nbsp;!").replace(/ \?/g,"&nbsp;?").replace(/ …/g,"&nbsp;…").replace(/ »/g,"&nbsp;»").replace(/« /g,"«&nbsp;").replace(/¡ /g,"¡&nbsp;").replace(/¿ /g,"¿&nbsp;").replace(/ - /g,"&nbsp;-&nbsp;").replace(/ — /g,"&nbsp;—&nbsp;");
+      }
+      
+      public static function removeNonAlphaNumeric(s:String) : String
+      {
+         if(s == null)
+         {
+            return s;
+         }
+         return s.replace(new RegExp(/[^a-zA-Z 0-9]+/g),"");
+      }
+      
+      public static function removeEmoji(str:String) : String
+      {
+         var char:String = null;
+         var s:String = "";
+         for(var i:uint = 0; i < str.length; i++)
+         {
+            char = str.charAt(i);
+            if(VALID_CHARACTERS_FROM_THE_CONTROLLER.indexOf(char) >= 0)
+            {
+               s += char;
+            }
+         }
+         return s;
+      }
    }
 }
+

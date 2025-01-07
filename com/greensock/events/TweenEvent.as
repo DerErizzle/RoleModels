@@ -4,7 +4,6 @@ package com.greensock.events
    
    public class TweenEvent extends Event
    {
-      
       public static const VERSION:Number = 12;
       
       public static const START:String = "start";
@@ -16,7 +15,6 @@ package com.greensock.events
       public static const REVERSE_COMPLETE:String = "reverseComplete";
       
       public static const REPEAT:String = "repeat";
-       
       
       public function TweenEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false)
       {
@@ -29,3 +27,4 @@ package com.greensock.events
       }
    }
 }
+

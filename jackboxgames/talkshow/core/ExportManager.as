@@ -1,16 +1,7 @@
 package jackboxgames.talkshow.core
 {
-   import flash.display.Sprite;
-   import flash.errors.IllegalOperationError;
-   import jackboxgames.talkshow.events.ExportEvent;
-   import jackboxgames.talkshow.export.Export;
-   import jackboxgames.talkshow.utils.ConfigInfo;
-   import jackboxgames.utils.PausableEventDispatcher;
-   
    internal class ExportManager extends PausableEventDispatcher
    {
-       
-      
       protected var _config:ConfigInfo;
       
       protected var _exports:Object;
@@ -187,3 +178,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

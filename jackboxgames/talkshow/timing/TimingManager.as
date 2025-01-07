@@ -12,9 +12,7 @@ package jackboxgames.talkshow.timing
    
    public class TimingManager
    {
-      
       private static const kRESOLUTION:uint = 33;
-       
       
       private var _queue:Array;
       
@@ -161,3 +159,4 @@ package jackboxgames.talkshow.timing
       }
    }
 }
+

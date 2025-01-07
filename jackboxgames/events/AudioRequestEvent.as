@@ -4,9 +4,7 @@ package jackboxgames.events
    
    public class AudioRequestEvent extends Event
    {
-      
       public static const PLAY_AUDIO_EVENT:String = "AudioRequestEvent.Play";
-       
       
       private var _eventKey:String;
       
@@ -22,3 +20,4 @@ package jackboxgames.events
       }
    }
 }
+

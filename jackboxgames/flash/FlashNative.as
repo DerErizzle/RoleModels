@@ -1,13 +1,10 @@
 package jackboxgames.flash
 {
    import flash.utils.getTimer;
-   import jackboxgames.blobcast.client.BlobCastClient;
    import jackboxgames.nativeoverride.AudioSystem;
-   import jackboxgames.nativeoverride.BlobCast;
    import jackboxgames.nativeoverride.DLC;
    import jackboxgames.nativeoverride.Gamepad;
    import jackboxgames.nativeoverride.Input;
-   import jackboxgames.nativeoverride.JSON;
    import jackboxgames.nativeoverride.Platform;
    import jackboxgames.nativeoverride.Save;
    import jackboxgames.nativeoverride.Store;
@@ -15,10 +12,7 @@ package jackboxgames.flash
    
    public class FlashNative
    {
-      
       public static const MAXIMUM_NUMBER_OF_GAMEPADS:int = 4;
-      
-      protected static var _blobCast:BlobCastClient;
       
       private static var _pauseDuration:uint = 0;
       
@@ -27,34 +21,15 @@ package jackboxgames.flash
       private static var _isPaused:Boolean = false;
       
       private static var _inputCounter:int = 0;
-       
       
       public function FlashNative()
       {
          super();
       }
       
-      public static function Initialize(server:String, appId:String) : void
+      public static function Initialize() : void
       {
-         BlobCast.Initialize(server,appId);
-         _blobCast = new BlobCastClient(BlobCast.instance);
-         BlobCast.instance.createRoomNative = _blobCast.createRoom;
-         BlobCast.instance.disconnectFromServiceNative = _blobCast.disconnectFromService;
-         BlobCast.instance.joinRoomNative = _blobCast.joinRoom;
-         BlobCast.instance.sendMessageToRoomOwnerNative = _blobCast.sendMessageToRoomOwner;
-         BlobCast.instance.setCustomerBlobNative = _blobCast.setCustomer;
-         BlobCast.instance.setRoomBlobNative = _blobCast.setRoomBlob;
-         BlobCast.instance.lockRoomNative = _blobCast.lockRoom;
-         BlobCast.instance.startSessionNative = _blobCast.startSession;
-         BlobCast.instance.stopSessionNative = _blobCast.stopSession;
-         BlobCast.instance.getSessionStatusNative = _blobCast.getSessionStatus;
-         BlobCast.instance.sendSessionMessageNative = _blobCast.sendSessionMessage;
-         BlobCast.instance.getUserIdNative = _blobCast.getUserId;
-         BlobCast.instance.setLicenseNative = _blobCast.setLicense;
          Gamepad.Initialize();
-         Gamepad.instance.ctorNative = ctorGamepad;
-         Gamepad.instance.ctorNative();
-         Gamepad.instance.getNumberOfJoysticksNative = getNumberOfJoysticks;
          Platform.instance.getPlatformIdNative = getPlatformId;
          Platform.instance.getPushNotificationTokenNative = getPushNotificationToken;
          Platform.instance.getScreenDimensionsNative = getScreenDimensions;
@@ -81,8 +56,6 @@ package jackboxgames.flash
          Store.instance.restorePurchasesNative = restorePurchases;
          Store.instance.retrieveProductsNative = retrieveProducts;
          Store.instance.setJvidNative = setJvid;
-         JSON.deserializeNative = JSON.parse;
-         JSON.serializeNative = JSON.stringify;
          DLC.Initialize();
          DLC.instance.prepareNative = function():void
          {
@@ -98,15 +71,6 @@ package jackboxgames.flash
          };
          Input.instance.getKeyboardInputNative = getKeyboardInput;
          AudioSystem.Initialize();
-      }
-      
-      public static function ctorGamepad() : void
-      {
-      }
-      
-      public static function getNumberOfJoysticks() : int
-      {
-         return InputManager.instance.gamepadsConnected ? 1 : 0;
       }
       
       public static function getPlatformId() : String
@@ -271,3 +235,4 @@ package jackboxgames.flash
       }
    }
 }
+

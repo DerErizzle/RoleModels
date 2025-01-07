@@ -6,19 +6,17 @@ package jackboxgames.animation.tween
    
    public class JBGTween extends PausableEventDispatcher
    {
-      
       public static const EVENT_TWEEN_START:String = "start";
       
       public static const EVENT_TWEEN_UPDATE:String = "update";
       
       public static const EVENT_TWEEN_COMPLETE:String = "complete";
-       
       
       private var _target:Object;
       
       private var _tween:TweenMax;
       
-      public function JBGTween(target:Object, d:Duration, vars:Object, ease:* = undefined)
+      public function JBGTween(target:Object, d:Duration, vars:Object, ease:* = undefined, updateEvents:Boolean = false)
       {
          super();
          this._target = target;
@@ -28,7 +26,7 @@ package jackboxgames.animation.tween
             varsCopy.ease = ease;
          }
          varsCopy.onStart = this._onStart;
-         if(Boolean(varsCopy.updateEvents))
+         if(updateEvents)
          {
             varsCopy.onUpdate = this._onUpdate;
          }
@@ -40,7 +38,10 @@ package jackboxgames.animation.tween
       {
          if(Boolean(this._tween))
          {
-            this._tween.invalidate();
+            this._tween.eventCallback("onStart",null);
+            this._tween.eventCallback("onUpdate",null);
+            this._tween.eventCallback("onComplete",null);
+            this._tween.kill();
             this._tween = null;
          }
       }
@@ -126,3 +127,4 @@ package jackboxgames.animation.tween
       }
    }
 }
+

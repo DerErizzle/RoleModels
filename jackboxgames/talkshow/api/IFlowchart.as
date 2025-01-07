@@ -4,8 +4,6 @@ package jackboxgames.talkshow.api
    
    public interface IFlowchart extends IEventDispatcher, ILoadable
    {
-       
-      
       function get qualifiedID() : QualifiedID;
       
       function get fileName() : String;
@@ -27,3 +25,4 @@ package jackboxgames.talkshow.api
       function getParentExport() : IExport;
    }
 }
+

@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface ISubroutine extends IFlowchart
    {
-       
-      
       function getSubroutineParams() : Array;
       
       function get firstCell() : ICell;
@@ -11,3 +9,4 @@ package jackboxgames.talkshow.api
       function setLocalVariableObject(param1:Object) : void;
    }
 }
+

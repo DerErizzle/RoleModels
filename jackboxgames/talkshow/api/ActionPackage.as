@@ -6,8 +6,6 @@ package jackboxgames.talkshow.api
    
    public class ActionPackage implements IActionPackage
    {
-       
-      
       protected var _ts:IEngineAPI;
       
       protected var _init:Boolean;
@@ -102,3 +100,4 @@ package jackboxgames.talkshow.api
       }
    }
 }
+

@@ -4,8 +4,6 @@ package jackboxgames.utils
    
    public class ArrayUtil
    {
-       
-      
       public function ArrayUtil()
       {
          super();
@@ -16,6 +14,14 @@ package jackboxgames.utils
          return a.concat(b);
       }
       
+      public static function GENERATE_FILTER_EXCEPT(obj:*) : Function
+      {
+         return function(o:*, i:int, a:Array):Boolean
+         {
+            return o != obj;
+         };
+      }
+      
       public static function getElement(array:Array, index:int) : *
       {
          if(array == null || index >= array.length)
@@ -23,6 +29,11 @@ package jackboxgames.utils
             return null;
          }
          return array[index];
+      }
+      
+      public static function getElementWrap(array:Array, index:int) : *
+      {
+         return array[(index % array.length + array.length) % array.length];
       }
       
       public static function getRandomElement(array:Array, removeSelected:Boolean = false) : *
@@ -84,9 +95,72 @@ package jackboxgames.utils
          return numToChoose == 1 ? returnMe[0] : returnMe;
       }
       
+      public static function flatten(array:Array) : Array
+      {
+         var element:* = undefined;
+         var returnMe:Array = [];
+         for each(element in array)
+         {
+            if(element is Array)
+            {
+               returnMe = returnMe.concat(flatten(element));
+            }
+            else
+            {
+               returnMe.push(element);
+            }
+         }
+         return returnMe;
+      }
+      
       public static function shuffled(array:Array) : Array
       {
          return makeArrayIfNecessary(getRandomElements(array,array.length));
+      }
+      
+      public static function rotate(array:Array, numberOfRotations:int, rotateArrayForward:Boolean = true) : Array
+      {
+         var rotationsDone:int = 0;
+         var tempForward:* = undefined;
+         var tempBackward:* = undefined;
+         if(array.length == 0)
+         {
+            return array;
+         }
+         var result:Array = copy(array);
+         var rotationsToDo:int = numberOfRotations % result.length;
+         if(rotateArrayForward)
+         {
+            for(rotationsDone = 0; rotationsDone < rotationsToDo; rotationsDone++)
+            {
+               tempForward = result.shift();
+               result.push(tempForward);
+            }
+         }
+         else
+         {
+            for(rotationsDone = 0; rotationsDone < rotationsToDo; rotationsDone++)
+            {
+               tempBackward = result.pop();
+               result.unshift(tempBackward);
+            }
+         }
+         return result;
+      }
+      
+      public static function deranged(array:Array) : Array
+      {
+         var j:int = 0;
+         var temp:* = undefined;
+         var returnMe:Array = array.concat();
+         for(var i:int = 0; i < returnMe.length - 1; i++)
+         {
+            j = i + 1 + Math.floor(Math.random() * (returnMe.length - i - 1));
+            temp = returnMe[j];
+            returnMe[j] = returnMe[i];
+            returnMe[i] = temp;
+         }
+         return returnMe;
       }
       
       public static function deduplicated(array:Array) : Array
@@ -164,9 +238,9 @@ package jackboxgames.utils
          return lengthBefore != array.length;
       }
       
-      public static function removeElementAtIndex(array:Array, i:int) : void
+      public static function removeElementAtIndex(array:Array, i:int) : *
       {
-         array.splice(i,1);
+         return first(array.splice(i,1));
       }
       
       public static function parallelForEach(forEachFn:Function, ... args) : void
@@ -215,6 +289,13 @@ package jackboxgames.utils
          return copy(array).reverse();
       }
       
+      public static function swap(a:Array, i:int, j:int) : void
+      {
+         var temp:* = a[i];
+         a[i] = a[j];
+         a[j] = temp;
+      }
+      
       public static function arrayContainsOneOf(array:Array, these:Array) : Boolean
       {
          var t:* = undefined;
@@ -226,6 +307,22 @@ package jackboxgames.utils
             }
          }
          return false;
+      }
+      
+      public static function areEqual(a:Array, b:Array) : Boolean
+      {
+         if(a.length != b.length)
+         {
+            return false;
+         }
+         for(var i:int = 0; i < a.length; i++)
+         {
+            if(a[i] != b[i])
+            {
+               return false;
+            }
+         }
+         return true;
       }
       
       public static function makeArrayIfNecessary(a:*) : Array
@@ -241,12 +338,51 @@ package jackboxgames.utils
          return [a];
       }
       
+      public static function makeArray(count:int, val:*) : Array
+      {
+         var a:Array = new Array(count);
+         for(var i:int = 0; i < count; i++)
+         {
+            a[i] = val is Function ? val(i) : val;
+         }
+         return a;
+      }
+      
       public static function count(a:Array, countMe:*) : int
       {
          return MapFold.process(a,function(o:*, ... args):int
          {
             return o == countMe ? 1 : 0;
          },MapFold.FOLD_SUM);
+      }
+      
+      public static function average(a:Array) : Number
+      {
+         var n:Number = NaN;
+         n = 0;
+         a.forEach(function(num:Number, ... args):void
+         {
+            n += num;
+         });
+         return n / a.length;
+      }
+      
+      public static function replaceOrPush(a:Array, existingElement:*, newElement:*) : void
+      {
+         if(!existingElement)
+         {
+            a.push(newElement);
+            return;
+         }
+         var i:int = int(a.indexOf(existingElement));
+         if(i >= 0)
+         {
+            a[i] = newElement;
+         }
+         else
+         {
+            a.push(newElement);
+         }
       }
       
       public static function find(a:Array, delegateFn:Function) : *
@@ -304,6 +440,37 @@ package jackboxgames.utils
          });
       }
       
+      public static function concat(... args) : Array
+      {
+         if(args.length == 0)
+         {
+            return [];
+         }
+         var a:Array = args[0];
+         for(var i:int = 1; i < args.length; i++)
+         {
+            if(args[i] is Array)
+            {
+               a = a.concat(args[i]);
+            }
+            else
+            {
+               a.push(args[i]);
+            }
+         }
+         return a;
+      }
+      
+      public static function foldInArrayAtIndex(target:Array, foldMe:Array, index:int) : Array
+      {
+         var copy:Array = ArrayUtil.copy(target);
+         for(var i:int = foldMe.length - 1; i >= 0; i--)
+         {
+            copy.splice(index,0,foldMe[i]);
+         }
+         return copy;
+      }
+      
       public static function first(a:Array) : *
       {
          return a.length > 0 ? a[0] : undefined;
@@ -315,3 +482,4 @@ package jackboxgames.utils
       }
    }
 }
+

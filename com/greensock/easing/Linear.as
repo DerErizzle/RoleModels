@@ -2,7 +2,6 @@ package com.greensock.easing
 {
    public final class Linear extends Ease
    {
-      
       public static var easeNone:Linear = new Linear();
       
       public static var ease:Linear = easeNone;
@@ -12,7 +11,6 @@ package com.greensock.easing
       public static var easeOut:Linear = easeNone;
       
       public static var easeInOut:Linear = easeNone;
-       
       
       public function Linear()
       {
@@ -20,3 +18,4 @@ package com.greensock.easing
       }
    }
 }
+

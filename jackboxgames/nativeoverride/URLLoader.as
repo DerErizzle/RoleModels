@@ -9,8 +9,6 @@ package jackboxgames.nativeoverride
    
    public class URLLoader extends PausableEventDispatcher
    {
-       
-      
       private var mDataFormat:String;
       
       private var mData:*;
@@ -22,12 +20,6 @@ package jackboxgames.nativeoverride
       public var loadNative:Function = null;
       
       public var closeNative:Function = null;
-      
-      public var getZipCachePathNative:Function = null;
-      
-      public var clearZipCacheNative:Function = null;
-      
-      public var getZipCacheFilesNative:Function = null;
       
       public function URLLoader()
       {
@@ -95,32 +87,6 @@ package jackboxgames.nativeoverride
          }
       }
       
-      public function getZipCachePath() : String
-      {
-         if(this.getZipCachePathNative != null)
-         {
-            return this.getZipCachePathNative();
-         }
-         return null;
-      }
-      
-      public function clearZipCache() : void
-      {
-         if(this.clearZipCacheNative != null)
-         {
-            this.clearZipCacheNative();
-         }
-      }
-      
-      public function getZipCacheFiles() : Array
-      {
-         if(this.getZipCacheFilesNative != null)
-         {
-            return this.getZipCacheFilesNative();
-         }
-         return null;
-      }
-      
       public function onComplete(data:*) : void
       {
          this.mData = data;
@@ -138,3 +104,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

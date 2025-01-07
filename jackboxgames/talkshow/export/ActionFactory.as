@@ -1,14 +1,7 @@
 package jackboxgames.talkshow.export
 {
-   import jackboxgames.talkshow.actions.Action;
-   import jackboxgames.talkshow.actions.ActionPackageRef;
-   import jackboxgames.talkshow.actions.Parameter;
-   import jackboxgames.talkshow.api.ActionPackageType;
-   import jackboxgames.talkshow.utils.ExportDictionary;
-   
    internal class ActionFactory
    {
-      
       private static const DELIMITER_PACKAGES:String = "^";
       
       private static const DELIMITER_PACKAGE_DATA:String = "|";
@@ -16,7 +9,6 @@ package jackboxgames.talkshow.export
       private static const DELIMITER_ACTIONS:String = "^";
       
       private static const DELIMITER_ACTION_DATA:String = "|";
-       
       
       public function ActionFactory()
       {
@@ -64,9 +56,9 @@ package jackboxgames.talkshow.export
          for each(actionString in actions)
          {
             data = actionString.split(DELIMITER_ACTION_DATA);
-            id = data.shift();
+            id = int(data.shift());
             name = dict.lookup(data.shift());
-            pkgId = data.shift();
+            pkgId = int(data.shift());
             pkg = export.getActionPackage(pkgId) as ActionPackageRef;
             action = new Action(id,name,pkg);
             pkg.addAction(action);
@@ -79,3 +71,4 @@ package jackboxgames.talkshow.export
       }
    }
 }
+

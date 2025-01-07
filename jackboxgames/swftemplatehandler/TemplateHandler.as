@@ -9,8 +9,6 @@ package jackboxgames.swftemplatehandler
    
    public class TemplateHandler extends PausableEventDispatcher implements ITemplateHandler
    {
-       
-      
       private var _engine:IEngineAPI;
       
       private var _records:Object;
@@ -41,8 +39,8 @@ package jackboxgames.swftemplatehandler
       {
          var rs:String = null;
          var rid:String = null;
-         rs = String(params.recordSet);
-         rid = String(params.recordId);
+         rs = params.recordSet;
+         rid = params.recordId;
          if(this._records[rid] != null)
          {
             return;
@@ -67,7 +65,7 @@ package jackboxgames.swftemplatehandler
             if(Boolean(result.success))
             {
                Logger.info("TemplateHandler: Loaded: " + _recordPath + "data.jet","Load");
-               parseRecord(rs,rid,result.contentAsJSON);
+               parseRecord(rs,rid,result.loader.contentAsJSON);
             }
             else
             {
@@ -91,12 +89,12 @@ package jackboxgames.swftemplatehandler
          var id:String = null;
          var key:String = null;
          var v:* = undefined;
-         this._active = params == null ? null : String(params.recordId);
+         this._active = params == null ? null : params.recordId;
          if(params == null || this._engine == null)
          {
             return;
          }
-         var setName:String = params.recordSet == null ? "unknown" : String(params.recordSet);
+         var setName:String = params.recordSet == null ? "unknown" : params.recordSet;
          this._engine.setVariableValue("g.templates." + setName + ".activeId",params.recordId);
          for(id in this._records)
          {
@@ -173,7 +171,7 @@ package jackboxgames.swftemplatehandler
             else if(field.t == "A")
             {
                field.v += BuildConfig.instance.configVal("audio-extension");
-               r[field.n] = new TemplateAudioVersion(this._engine,rs,field.n,this._recordPath + field.v,field.hasOwnProperty("s") ? String(field.s) : "");
+               r[field.n] = new TemplateAudioVersion(this._engine,rs,field.n,this._recordPath + field.v,!!field.hasOwnProperty("s") ? field.s : "");
             }
             else if(field.t == "G")
             {
@@ -193,3 +191,4 @@ package jackboxgames.swftemplatehandler
       }
    }
 }
+

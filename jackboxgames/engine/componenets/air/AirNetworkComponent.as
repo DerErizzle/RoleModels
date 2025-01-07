@@ -7,8 +7,6 @@ package jackboxgames.engine.componenets.air
    
    public class AirNetworkComponent extends PausableEventDispatcher implements IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       private var _networkTimeoutCanceller:Function;
@@ -45,3 +43,4 @@ package jackboxgames.engine.componenets.air
       }
    }
 }
+

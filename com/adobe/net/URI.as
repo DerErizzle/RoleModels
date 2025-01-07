@@ -2,32 +2,19 @@ package com.adobe.net
 {
    public class URI
    {
-      
-      public static const EQUAL:int = 2;
-      
-      public static const PARENT:int = 3;
-      
       public static const URImustEscape:String = " %";
       
-      public static const URIqueryEscape:String = URImustEscape + "#";
-      
-      protected static const URIqueryExcludedBitmap:URIEncodingBitmap = new URIEncodingBitmap(URIqueryEscape);
+      public static const URIbaselineEscape:String = URImustEscape + ":?#/@";
       
       public static const URIpathEscape:String = URImustEscape + "?#";
       
-      protected static const URIfragmentExcludedBitmap:URIEncodingBitmap = URIqueryExcludedBitmap;
-      
-      public static const UNKNOWN_SCHEME:String = "unknown";
-      
-      protected static var _resolver:IURIResolver = null;
+      public static const URIqueryEscape:String = URImustEscape + "#";
       
       public static const URIqueryPartEscape:String = URImustEscape + "#&=";
       
-      protected static const URIqueryPartExcludedBitmap:URIEncodingBitmap = new URIEncodingBitmap(URIqueryPartEscape);
+      public static const URInonHierEscape:String = URImustEscape + "?#/";
       
-      protected static const URIpathExcludedBitmap:URIEncodingBitmap = new URIEncodingBitmap(URIpathEscape);
-      
-      public static const URIbaselineEscape:String = URImustEscape + ":?#/@";
+      public static const UNKNOWN_SCHEME:String = "unknown";
       
       protected static const URIbaselineExcludedBitmap:URIEncodingBitmap = new URIEncodingBitmap(URIbaselineEscape);
       
@@ -35,18 +22,29 @@ package com.adobe.net
       
       protected static const URIuserpassExcludedBitmap:URIEncodingBitmap = URIbaselineExcludedBitmap;
       
-      protected static const URIportExludedBitmap:URIEncodingBitmap = URIbaselineExcludedBitmap;
-      
       protected static const URIauthorityExcludedBitmap:URIEncodingBitmap = URIbaselineExcludedBitmap;
       
-      public static const URInonHierEscape:String = URImustEscape + "?#/";
+      protected static const URIportExludedBitmap:URIEncodingBitmap = URIbaselineExcludedBitmap;
+      
+      protected static const URIpathExcludedBitmap:URIEncodingBitmap = new URIEncodingBitmap(URIpathEscape);
+      
+      protected static const URIqueryExcludedBitmap:URIEncodingBitmap = new URIEncodingBitmap(URIqueryEscape);
+      
+      protected static const URIqueryPartExcludedBitmap:URIEncodingBitmap = new URIEncodingBitmap(URIqueryPartEscape);
+      
+      protected static const URIfragmentExcludedBitmap:URIEncodingBitmap = URIqueryExcludedBitmap;
       
       protected static const URInonHierexcludedBitmap:URIEncodingBitmap = new URIEncodingBitmap(URInonHierEscape);
       
+      public static const NOT_RELATED:int = 0;
+      
       public static const CHILD:int = 1;
       
-      public static const NOT_RELATED:int = 0;
-       
+      public static const EQUAL:int = 2;
+      
+      public static const PARENT:int = 3;
+      
+      protected static var _resolver:IURIResolver = null;
       
       protected var _path:String = "";
       
@@ -335,10 +333,10 @@ package com.adobe.net
                item = pair.split("=");
                if(item.length > 0)
                {
-                  name = String(item[0]);
+                  name = item[0];
                   if(item.length > 1)
                   {
-                     value = String(item[1]);
+                     value = item[1];
                   }
                   else
                   {
@@ -431,7 +429,7 @@ package com.adobe.net
          for(item in map)
          {
             name = item;
-            value = String(map[item]);
+            value = map[item];
             if(value == null)
             {
                value = "";
@@ -567,7 +565,7 @@ package com.adobe.net
          thisParts = thisParts.concat(thatParts);
          for(i = 0; i < thisParts.length; i++)
          {
-            curDir = String(thisParts[i]);
+            curDir = thisParts[i];
             lastIsDotOperation = false;
             if(curDir == ".")
             {
@@ -660,8 +658,8 @@ package com.adobe.net
             {
                break;
             }
-            thisPart = String(thisParts[0]);
-            thatPart = String(thatParts[0]);
+            thisPart = thisParts[0];
+            thatPart = thatParts[0];
             if(!compareStr(thisPart,thatPart,caseSensitive))
             {
                break;
@@ -1242,7 +1240,7 @@ package com.adobe.net
          thatParts = thatPath.split("/");
          if(thisParts.length > thatParts.length)
          {
-            thatPart = String(thatParts[thatParts.length - 1]);
+            thatPart = thatParts[thatParts.length - 1];
             if(thatPart.length > 0)
             {
                return URI.NOT_RELATED;
@@ -1250,8 +1248,8 @@ package com.adobe.net
             thatParts.pop();
             for(i = 0; i < thatParts.length; i++)
             {
-               thisPart = String(thisParts[i]);
-               thatPart = String(thatParts[i]);
+               thisPart = thisParts[i];
+               thatPart = thatParts[i];
                if(compareStr(thisPart,thatPart,caseSensitive) == false)
                {
                   return URI.NOT_RELATED;
@@ -1261,7 +1259,7 @@ package com.adobe.net
          }
          if(thisParts.length < thatParts.length)
          {
-            thisPart = String(thisParts[thisParts.length - 1]);
+            thisPart = thisParts[thisParts.length - 1];
             if(thisPart.length > 0)
             {
                return URI.NOT_RELATED;
@@ -1269,8 +1267,8 @@ package com.adobe.net
             thisParts.pop();
             for(i = 0; i < thisParts.length; i++)
             {
-               thisPart = String(thisParts[i]);
-               thatPart = String(thatParts[i]);
+               thisPart = thisParts[i];
+               thatPart = thatParts[i];
                if(compareStr(thisPart,thatPart,caseSensitive) == false)
                {
                   return URI.NOT_RELATED;
@@ -1297,10 +1295,11 @@ package com.adobe.net
          {
             if(item == name)
             {
-               return String(map[item]);
+               return map[item];
             }
          }
          return new String("");
       }
    }
 }
+

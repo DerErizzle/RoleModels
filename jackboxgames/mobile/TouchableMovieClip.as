@@ -7,8 +7,6 @@ package jackboxgames.mobile
    
    public class TouchableMovieClip
    {
-       
-      
       private var _mc:MovieClip;
       
       private var _stage:Stage;
@@ -196,3 +194,4 @@ package jackboxgames.mobile
       }
    }
 }
+

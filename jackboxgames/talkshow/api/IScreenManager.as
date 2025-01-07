@@ -5,8 +5,6 @@ package jackboxgames.talkshow.api
    
    public interface IScreenManager
    {
-       
-      
       function addToScreen(param1:DisplayObject, param2:String = null, param3:String = "front", param4:String = "") : DisplayObject;
       
       function addTags(param1:DisplayObject, param2:String) : void;
@@ -18,3 +16,4 @@ package jackboxgames.talkshow.api
       function get screen() : MovieClip;
    }
 }
+

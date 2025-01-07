@@ -9,7 +9,6 @@ package jackboxgames.talkshow.utils
    
    public class LoadMonitor extends PausableEventDispatcher
    {
-      
       protected static var _items:Dictionary;
       
       public static const STATE_NONE:int = 0;
@@ -23,7 +22,6 @@ package jackboxgames.talkshow.utils
       public static const STATE_FAILED:int = -1;
       
       public static const STATE_REMOVED:int = -2;
-       
       
       public var _bytesLoaded:uint = 0;
       
@@ -129,7 +127,7 @@ package jackboxgames.talkshow.utils
          for(key in _items)
          {
             itemCount++;
-            url = String(_items[key].url);
+            url = _items[key].url;
             if(_items[key].state == STATE_LOADED || _items[key].state == STATE_FAILED || _items[key].state == STATE_REMOVED)
             {
                doneCount++;
@@ -220,3 +218,4 @@ package jackboxgames.talkshow.utils
       }
    }
 }
+

@@ -1,13 +1,13 @@
 package jackboxgames.utils
 {
    import flash.display.*;
-   import flash.events.Event;
-   import jackboxgames.algorithm.*;
+   import flash.events.*;
+   import flash.text.*;
+   import flash.utils.*;
+   import jackboxgames.events.*;
    
    public final class MovieClipUtil
    {
-       
-      
       public function MovieClipUtil()
       {
          super();
@@ -102,6 +102,38 @@ package jackboxgames.utils
          return mcs;
       }
       
+      public static function hasChildOfType(mc:MovieClip, className:String) : Boolean
+      {
+         return getChildrenOfType(mc,className).length > 0;
+      }
+      
+      public static function getChildrenOfType(mc:MovieClip, className:String) : Array
+      {
+         var child:* = undefined;
+         var children:Array = [];
+         for(var i:int = 0; i < mc.numChildren; i++)
+         {
+            child = mc.getChildAt(i);
+            if(className == "TextField")
+            {
+               if(!(child is TextField))
+               {
+                  continue;
+               }
+               if(child.name.indexOf("instance") == 0)
+               {
+                  continue;
+               }
+            }
+            else if(getQualifiedClassName(child) != className)
+            {
+               continue;
+            }
+            children.push(child);
+         }
+         return children;
+      }
+      
       public static function gotoFrameIfExists(mc:MovieClip, frame:String, play:Boolean = true) : Boolean
       {
          var l:FrameLabel = null;
@@ -137,19 +169,34 @@ package jackboxgames.utils
          gotoFrameIfExists(mc,frameName,play);
       }
       
-      public static function addChildWithResizeKeepRatio(root:*, addMe:*, center:Boolean = true) : void
+      public static function resizeKeepRatio(mc:MovieClip, center:Boolean = true) : void
       {
-         var xScale:Number = root.size.width / addMe.width;
-         var yScale:Number = root.size.height / addMe.height;
-         var scale:Number = Math.min(xScale,yScale);
-         addMe.scaleX = scale;
-         addMe.scaleY = scale;
+         if(!mc.parent)
+         {
+            return;
+         }
+         if(!mc.parent.hasOwnProperty("size"))
+         {
+            return;
+         }
+         var sizeMc:MovieClip = mc.parent["size"];
+         var sizeAspect:Number = sizeMc.width / sizeMc.height;
+         var mcAspect:Number = mc.width / mc.height;
+         if(mcAspect >= sizeAspect)
+         {
+            mc.width = sizeMc.width;
+            mc.height = mc.width / mcAspect;
+         }
+         else
+         {
+            mc.height = sizeMc.height;
+            mc.width = mc.height * mcAspect;
+         }
          if(center)
          {
-            addMe.x = root.size.x + root.size.width / 2 - addMe.width / 2;
-            addMe.y = root.size.y + root.size.height / 2 - addMe.height / 2;
+            mc.x = sizeMc.x + sizeMc.width / 2 - mc.width / 2;
+            mc.y = sizeMc.y + sizeMc.height / 2 - mc.height / 2;
          }
-         root.addChild(addMe);
       }
       
       public static function addChildWithResize(root:*, addMe:*) : void
@@ -280,5 +327,19 @@ package jackboxgames.utils
          }
          mc.parent.setChildIndex(mc,0);
       }
+      
+      public static function getEndingEventForBehavior(behavior:String) : String
+      {
+         if(behavior == "Appear")
+         {
+            return MovieClipEvent.EVENT_APPEAR_DONE;
+         }
+         if(behavior == "Disappear")
+         {
+            return MovieClipEvent.EVENT_DISAPPEAR_DONE;
+         }
+         return MovieClipEvent.EVENT_ANIMATION_DONE;
+      }
    }
 }
+

@@ -9,30 +9,40 @@ package jackboxgames.talkshow.actionpackages
    
    public class AudioSystem extends JBGActionPackage
    {
-       
-      
       private var _loadedBankMetadata:Array;
       
       private var _loadedEventMetadata:Array;
       
-      public function AudioSystem(sourceURL:String)
+      private var _loadingEvents:Array;
+      
+      private var _idlessEventCount:int;
+      
+      public function AudioSystem(apRef:IActionPackageRef)
       {
-         super(sourceURL);
+         super(apRef);
       }
       
       public function handleActionInit(ref:IActionRef, params:Object) : void
       {
          this._loadedBankMetadata = [];
          this._loadedEventMetadata = [];
+         this._loadingEvents = [];
+         this._idlessEventCount = 0;
          ref.end();
       }
       
       public function handleActionReset(ref:IActionRef, params:Object) : void
       {
+         var e:AudioEvent = null;
          var em:EventMetadata = null;
          var bm:BankMetadata = null;
          if(Boolean(params.unloadEvents))
          {
+            for each(e in this._loadingEvents)
+            {
+               e.dispose();
+            }
+            this._loadingEvents = [];
             for each(em in this._loadedEventMetadata)
             {
                em.dispose();
@@ -135,8 +145,10 @@ package jackboxgames.talkshow.actionpackages
             return;
          }
          e = AudioSystem.instance.createEventFromName(name);
+         this._loadingEvents.push(e);
          e.load(function(success:Boolean):void
          {
+            ArrayUtil.removeElementFromArray(_loadingEvents,e);
             if(!success)
             {
                AudioSystem.instance.disposeEvent(e);
@@ -201,6 +213,10 @@ package jackboxgames.talkshow.actionpackages
       
       private function _loadAndPlayEvent(id:String, name:String, readyFn:Function, errorFn:Function) : void
       {
+         if(!id || id.length == 0)
+         {
+            id = "IDLESS_EVENT_" + this._idlessEventCount++;
+         }
          if(Boolean(this._getEventMetadataById(id)))
          {
             Logger.warning("Warning: Tried to play event with id: " + id + " but one is already playing!");
@@ -260,6 +276,18 @@ package jackboxgames.talkshow.actionpackages
          ref.end();
       }
       
+      public function handleActionTriggerEventCue(ref:IActionRef, params:Object) : void
+      {
+         var m:EventMetadata = this._getEventMetadataById(params.id);
+         if(!m)
+         {
+            ref.end();
+            return;
+         }
+         m.event.triggerCue();
+         ref.end();
+      }
+      
       public function handleActionWaitForEventToComplete(ref:IActionRef, params:Object) : void
       {
          var m:EventMetadata = this._getEventMetadataById(params.id);
@@ -280,6 +308,18 @@ package jackboxgames.talkshow.actionpackages
             return;
          }
          this._listenForTimelineMarker(m,params.timelineMarker,params.useHistory,TSUtil.createRefEndFn(ref));
+      }
+      
+      public function handleActionSetGlobalParameter(ref:IActionRef, params:Object) : void
+      {
+         AudioSystem.instance.setGlobalParameterValue(params.parameterName,params.parameterValue);
+         ref.end();
+      }
+      
+      public function handleActionSetGlobalDucked(ref:IActionRef, params:Object) : void
+      {
+         AudioSystem.instance.setGlobalParameterValue("Ducking",Boolean(params.isDucked) ? 1 : 0);
+         ref.end();
       }
       
       public function handleActionSetEventParameter(ref:IActionRef, params:Object) : void
@@ -313,8 +353,6 @@ import jackboxgames.nativeoverride.AudioSystem;
 
 class BankMetadata
 {
-    
-   
    private var _name:String;
    
    private var _bank:AudioBank;
@@ -354,8 +392,6 @@ import jackboxgames.utils.*;
 
 class EventMetadata extends PausableEventDispatcher
 {
-    
-   
    private var _id:String;
    
    private var _name:String;
@@ -422,3 +458,7 @@ class EventMetadata extends PausableEventDispatcher
       dispatchEvent(new EventWithData(AudioEvent.EVENT_TIMELINE_MARKER,evt.data));
    }
 }
+
+import flash.events.EventDispatcher;
+import jackboxgames.utils.PausableEventDispatcher;
+

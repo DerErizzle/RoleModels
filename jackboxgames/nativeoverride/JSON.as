@@ -1,15 +1,15 @@
 package jackboxgames.nativeoverride
 {
    import flash.external.ExternalInterface;
-   import jackboxgames.utils.JSON;
+   import jackboxgames.flash.FlashNativeOverrider;
    
    public class JSON
    {
+      private static var _isInitialized:Boolean = false;
       
       public static var deserializeNative:Function = null;
       
       public static var serializeNative:Function = null;
-       
       
       public function JSON()
       {
@@ -18,14 +18,26 @@ package jackboxgames.nativeoverride
       
       public static function Initialize() : void
       {
-         ExternalInterface.call("InitializeNativeOverride","JSON",JSON);
+         if(_isInitialized)
+         {
+            return;
+         }
+         if(ExternalInterface.available)
+         {
+            ExternalInterface.call("InitializeNativeOverride","JSON",JSON);
+         }
+         else
+         {
+            FlashNativeOverrider.initializeNativeOverride("JSON",JSON);
+         }
+         _isInitialized = true;
       }
       
       public static function deserialize(source:String) : *
       {
          if(deserializeNative == null)
          {
-            return JSON.deserialize(source);
+            return null;
          }
          return deserializeNative(source);
       }
@@ -34,9 +46,10 @@ package jackboxgames.nativeoverride
       {
          if(serializeNative == null)
          {
-            return JSON.serialize(o);
+            return null;
          }
          return serializeNative(o);
       }
    }
 }
+

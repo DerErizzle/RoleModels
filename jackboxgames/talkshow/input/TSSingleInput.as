@@ -1,11 +1,7 @@
 package jackboxgames.talkshow.input
 {
-   import jackboxgames.utils.TSUtil;
-   
    internal class TSSingleInput implements ITSInputModule
    {
-       
-      
       private var _hasReceivedInput:Boolean;
       
       public function TSSingleInput()
@@ -28,3 +24,4 @@ package jackboxgames.talkshow.input
       }
    }
 }
+

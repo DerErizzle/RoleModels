@@ -1,12 +1,11 @@
 package jackboxgames.utils
 {
-   import jackboxgames.blobcast.model.*;
+   import flash.utils.*;
+   import jackboxgames.model.*;
    
    public class PerPlayerContainer
    {
-       
-      
-      private var _dataPerUserId:Object;
+      private var _dataPerPlayerObject:Dictionary;
       
       public function PerPlayerContainer()
       {
@@ -16,31 +15,45 @@ package jackboxgames.utils
       
       public function dispose() : void
       {
-         if(!this._dataPerUserId)
+         if(!this._dataPerPlayerObject)
          {
             return;
          }
-         this._dataPerUserId = null;
+         this._dataPerPlayerObject = null;
+      }
+      
+      public function clone() : PerPlayerContainer
+      {
+         var p:Object = null;
+         var newClone:PerPlayerContainer = new PerPlayerContainer();
+         if(Boolean(this._dataPerPlayerObject))
+         {
+            for(p in this._dataPerPlayerObject)
+            {
+               newClone._dataPerPlayerObject[p] = this._dataPerPlayerObject[p];
+            }
+         }
+         return newClone;
       }
       
       public function reset() : void
       {
-         this._dataPerUserId = {};
+         this._dataPerPlayerObject = new Dictionary();
       }
       
-      public function setDataForPlayer(p:BlobCastPlayer, data:*) : void
+      public function setDataForPlayer(p:JBGPlayer, data:*) : void
       {
-         this._dataPerUserId[p.userId.val] = data;
+         this._dataPerPlayerObject[p] = data;
       }
       
-      public function hasDataForPlayer(p:BlobCastPlayer) : Boolean
+      public function hasDataForPlayer(p:JBGPlayer) : Boolean
       {
-         return this._dataPerUserId.hasOwnProperty(p.userId.val);
+         return p in this._dataPerPlayerObject;
       }
       
       public function hasDataForAllOfThesePlayers(players:Array) : Boolean
       {
-         var p:BlobCastPlayer = null;
+         var p:JBGPlayer = null;
          for each(p in players)
          {
             if(!this.hasDataForPlayer(p))
@@ -51,38 +64,56 @@ package jackboxgames.utils
          return true;
       }
       
-      public function getDataForPlayer(p:BlobCastPlayer) : *
+      public function getDataForPlayer(p:JBGPlayer) : *
       {
-         return this.hasDataForPlayer(p) ? this._dataPerUserId[p.userId.val] : null;
+         return this.hasDataForPlayer(p) ? this._dataPerPlayerObject[p] : null;
       }
       
       public function getDataForPlayers(players:Array) : Array
       {
-         return players.filter(function(p:BlobCastPlayer, ... args):Boolean
+         return players.filter(function(p:JBGPlayer, ... args):Boolean
          {
             return hasDataForPlayer(p);
-         }).map(function(p:BlobCastPlayer, ... args):*
+         }).map(function(p:JBGPlayer, ... args):*
          {
             return getDataForPlayer(p);
          });
       }
       
-      public function removeDataForPlayer(p:BlobCastPlayer) : void
+      public function removeDataForPlayer(p:JBGPlayer) : void
       {
-         delete this._dataPerUserId[p.userId.val];
+         delete this._dataPerPlayerObject[p];
       }
       
       public function getAllData() : Array
       {
-         return ObjectUtil.getValues(this._dataPerUserId);
+         var p:Object = null;
+         var values:Array = [];
+         for(p in this._dataPerPlayerObject)
+         {
+            values.push(this._dataPerPlayerObject[p]);
+         }
+         return values;
       }
       
       public function forEach(f:Function) : void
       {
-         ObjectUtil.forEach(this._dataPerUserId,function(o:*, key:String, source:Object):void
+         var p:Object = null;
+         for(p in this._dataPerPlayerObject)
          {
-            f(o,key,source);
-         });
+            f(this._dataPerPlayerObject[p],p,this._dataPerPlayerObject);
+         }
+      }
+      
+      public function incrementDataForPlayer(p:JBGPlayer) : void
+      {
+         ++this._dataPerPlayerObject[p];
+      }
+      
+      public function decrementDataForPlayer(p:JBGPlayer) : void
+      {
+         --this._dataPerPlayerObject[p];
       }
    }
 }
+

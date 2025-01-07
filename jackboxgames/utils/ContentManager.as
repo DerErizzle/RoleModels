@@ -1,20 +1,21 @@
 package jackboxgames.utils
 {
-   import jackboxgames.events.EventWithData;
-   import jackboxgames.loader.JBGLoader;
-   import jackboxgames.logger.Logger;
-   import jackboxgames.nativeoverride.Save;
+   import jackboxgames.events.*;
+   import jackboxgames.expressionparser.*;
+   import jackboxgames.loader.*;
+   import jackboxgames.localizy.*;
+   import jackboxgames.logger.*;
+   import jackboxgames.nativeoverride.*;
    
    public class ContentManager extends PausableEventDispatcher
    {
-      
       private static var _instance:ContentManager;
       
       public static const EVENT_LOAD_RESULT:String = "ContentManager.LoadComplete";
       
       public static const EVENT_CONTENT_METADATA_CHANGED:String = "ContentManager.ContentMetadata";
       
-      public static const MAIN_CONTENT_SOURCE:String = "content";
+      public static const DEFAULT_CONTENT_SOURCE:String = "content";
       
       private static const TIME_LAST_SEEN_ID_KEY:String = "TIME_LAST_SEEN_ID";
       
@@ -23,7 +24,10 @@ package jackboxgames.utils
       private static const CONTENT_METADATA_KEY:String = "CONTENT_METADATA";
       
       private static const CONTENT_MULTIPLE_TO_LOOK_FORWARD_WHEN_RANDOMIZING:int = 4;
-       
+      
+      private var _expressionParser:ExpressionParser;
+      
+      private var _expressionDataDelegate:IExpressionDataDelegate;
       
       private var _contentPerSource:Object;
       
@@ -43,9 +47,11 @@ package jackboxgames.utils
       
       private var _randomize:Boolean = true;
       
-      public function ContentManager()
+      public function ContentManager(expressionDataDelegate:IExpressionDataDelegate)
       {
          super();
+         this._expressionParser = new ExpressionParser();
+         this._expressionDataDelegate = expressionDataDelegate;
          this._contentPerSource = null;
          this._manifestPerSource = null;
          this._loadSaveData();
@@ -53,12 +59,17 @@ package jackboxgames.utils
          this._shortCircuits = [];
       }
       
+      public static function initialize(expressionDataDelegate:IExpressionDataDelegate) : void
+      {
+         if(Boolean(_instance))
+         {
+            return;
+         }
+         _instance = new ContentManager(expressionDataDelegate);
+      }
+      
       public static function get instance() : ContentManager
       {
-         if(!_instance)
-         {
-            _instance = new ContentManager();
-         }
          return _instance;
       }
       
@@ -123,6 +134,7 @@ package jackboxgames.utils
       
       public function load() : void
       {
+         var contentRoot:String;
          var _this:ContentManager = null;
          if(this._isLoading)
          {
@@ -134,25 +146,44 @@ package jackboxgames.utils
          this._manifestPerSource = {};
          this._loadSaveData();
          _this = this;
-         this._loadContent(MAIN_CONTENT_SOURCE,function(success:Boolean):void
+         contentRoot = BuildConfig.instance.hasConfigVal("contentRoot") ? BuildConfig.instance.configVal("contentRoot") : DEFAULT_CONTENT_SOURCE;
+         this._loadContent(contentRoot,function(success:Boolean):void
          {
             _isLoading = false;
             _this.dispatchEvent(new EventWithData(EVENT_LOAD_RESULT,{"success":success}));
          });
       }
       
-      private function _loadJson(path:String, callback:Function) : void
+      private function _loadJson(path:String, filename:String, callback:Function) : void
       {
          var g:JBGLoader = null;
-         JBGLoader.instance.loadFile(path,function(result:Object):void
+         JBGLoader.instance.loadFile(path + "/" + filename,function(result:Object):void
          {
             if(Boolean(result.success))
             {
-               callback(result.contentAsJSON);
+               callback(result.loader.contentAsJSON,path);
             }
             else
             {
-               callback(null);
+               callback(null,null);
+            }
+         });
+      }
+      
+      private function _loadLocalizedJson(path:String, contentType:String, onLoadedFn:Function) : void
+      {
+         Logger.debug("ContentManager: Looking for \"" + path + "/" + LocalizationManager.instance.currentLocale + "/" + contentType + ".jet\"");
+         this._loadJson(path + "/" + LocalizationManager.instance.currentLocale,contentType + ".jet",function(contentData:*, dataPath:String):void
+         {
+            if(!contentData)
+            {
+               Logger.debug("ContentManager: No localized content for type \"" + contentType + "\" loading default instead.");
+               _loadJson(path,contentType + ".jet",onLoadedFn);
+            }
+            else
+            {
+               Logger.debug("ContentManager: Loaded localized content for type \"" + contentType + "\"");
+               onLoadedFn(contentData,dataPath);
             }
          });
       }
@@ -160,7 +191,7 @@ package jackboxgames.utils
       private function _loadContent(path:String, callback:Function) : void
       {
          var _this:ContentManager = this;
-         this._loadJson(path + "/manifest.jet",function(manifestData:*):void
+         this._loadJson(path,"manifest.jet",function(manifestData:*, dataPath:String):void
          {
             var createContentFn:Function;
             var numCompletedLoads:int = 0;
@@ -179,8 +210,9 @@ package jackboxgames.utils
             numCompletedLoads = 0;
             createContentFn = function(t:String):Function
             {
-               return function(contentData:*):void
+               return function(contentData:*, dataPath:String):void
                {
+                  var isValidResult:* = undefined;
                   if(!contentData)
                   {
                      callback(false);
@@ -195,9 +227,33 @@ package jackboxgames.utils
                   var content:* = contentData.content;
                   for(var i:* = 0; i < content.length; i++)
                   {
+                     if(!content[i].hasOwnProperty("id"))
+                     {
+                        content[i].id = String(i);
+                     }
                      content[i].contentType = t;
-                     content[i].path = path;
+                     content[i].path = dataPath;
                      content[i].random_for_content_manager = Math.random();
+                     if(Boolean(content[i].hasOwnProperty("isValid")))
+                     {
+                        if(content[i].isValid is String && content[i].isValid.length > 0)
+                        {
+                           isValidResult = _expressionParser.parse(content[i].isValid);
+                           if(Boolean(isValidResult.succeeded))
+                           {
+                              content[i].isValid = isValidResult.payload;
+                           }
+                           else
+                           {
+                              Logger.error("ContentManager isValid error(" + content[i].id + "): " + isValidResult.payload);
+                              delete content[i]["isValid"];
+                           }
+                        }
+                        else
+                        {
+                           delete content[i]["isValid"];
+                        }
+                     }
                      _contentPerSource[manifestData.id][t].push(content[i]);
                   }
                   ++numCompletedLoads;
@@ -208,9 +264,17 @@ package jackboxgames.utils
                   }
                };
             };
-            for each(contentType in manifestData.types)
+            if(manifestData.types.length == 0)
             {
-               _loadJson(path + "/" + contentType + ".jet",createContentFn(contentType));
+               _updateContentMetadataIfNecessary();
+               callback(true);
+            }
+            else
+            {
+               for each(contentType in manifestData.types)
+               {
+                  _loadLocalizedJson(path,contentType,createContentFn(contentType));
+               }
             }
          });
       }
@@ -368,6 +432,10 @@ package jackboxgames.utils
                contentLeft = contentLeft.filter(f);
             }
          }
+         contentLeft = contentLeft.filter(function(content:Object, ... args):Boolean
+         {
+            return !!content.hasOwnProperty("isValid") ? Boolean(IExpression(content.isValid).evaluate(_expressionDataDelegate)) : true;
+         });
          if(contentLeft.length == 0)
          {
             return [];
@@ -569,3 +637,4 @@ package jackboxgames.utils
       }
    }
 }
+

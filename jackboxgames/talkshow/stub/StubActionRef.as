@@ -6,8 +6,6 @@ package jackboxgames.talkshow.stub
    
    public class StubActionRef implements IActionRef
    {
-       
-      
       private var _actionName:String;
       
       public function StubActionRef(actionName:String)
@@ -50,3 +48,4 @@ package jackboxgames.talkshow.stub
       }
    }
 }
+

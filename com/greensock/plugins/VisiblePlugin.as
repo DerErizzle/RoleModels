@@ -4,9 +4,7 @@ package com.greensock.plugins
    
    public class VisiblePlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       protected var _target:Object;
       
@@ -39,3 +37,4 @@ package com.greensock.plugins
       }
    }
 }
+

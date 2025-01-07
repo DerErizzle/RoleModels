@@ -1,9 +1,10 @@
 package jackboxgames.settings
 {
+   import jackboxgames.nativeoverride.*;
+   import jackboxgames.utils.*;
+   
    public final class SettingsUtil
    {
-       
-      
       public function SettingsUtil()
       {
          super();
@@ -26,5 +27,11 @@ package jackboxgames.settings
          }
          return true;
       }
+      
+      public static function supportsTogglingFullScreen() : Boolean
+      {
+         return Platform.instance.supportsWindow && BuildConfig.instance.configVal("supportsFullScreen") == true;
+      }
    }
 }
+

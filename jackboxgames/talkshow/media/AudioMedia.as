@@ -5,9 +5,7 @@ package jackboxgames.talkshow.media
    
    public class AudioMedia extends AbstractMedia
    {
-      
       public static const FILE_INFO_DELIM:String = ",";
-       
       
       public function AudioMedia(id:int, container:IExport, fl:IFlowchart)
       {
@@ -33,3 +31,4 @@ package jackboxgames.talkshow.media
       }
    }
 }
+

@@ -15,8 +15,6 @@ package jackboxgames.swftemplatehandler.media
    
    public class TemplateAudioVersion extends PausableEventDispatcher implements IAudioVersion, IPausable, ILoadableVersion, IMediaVersion
    {
-       
-      
       private var _ts:IEngineAPI;
       
       private var _url:String;
@@ -129,7 +127,7 @@ package jackboxgames.swftemplatehandler.media
       {
          var _this:TemplateAudioVersion = null;
          _this = this;
-         var eventName:String = this._metadata.hasOwnProperty("EventName") ? String(this._metadata["EventName"]) : "HOST/DummyHost";
+         var eventName:String = !!this._metadata.hasOwnProperty("EventName") ? this._metadata["EventName"] : "HOST/DummyHost";
          var event:AudioEvent = AudioSystem.instance.createEventFromPath(eventName,this._url);
          if(event.isValid)
          {
@@ -361,3 +359,4 @@ package jackboxgames.swftemplatehandler.media
       }
    }
 }
+

@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface ICell extends ILoadable
    {
-       
-      
       function get flowchart() : IFlowchart;
       
       function get id() : uint;
@@ -13,3 +11,4 @@ package jackboxgames.talkshow.api
       function start() : void;
    }
 }
+

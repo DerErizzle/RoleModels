@@ -5,8 +5,6 @@ package jackboxgames.talkshow.media
    
    public class AbstractVersion extends PausableEventDispatcher implements IMediaVersion
    {
-       
-      
       protected var _idx:uint;
       
       protected var _id:int;
@@ -62,3 +60,4 @@ package jackboxgames.talkshow.media
       }
    }
 }
+

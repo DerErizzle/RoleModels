@@ -9,15 +9,11 @@ package jackboxgames.loader
    import flash.utils.ByteArray;
    import jackboxgames.logger.Logger;
    import jackboxgames.nativeoverride.JSON;
-   import jackboxgames.utils.Duration;
-   import jackboxgames.utils.JBGUtil;
    import jackboxgames.utils.PausableEventDispatcher;
    import jackboxgames.utils.TraceUtil;
    
    public class DataLoader extends PausableEventDispatcher implements ILoader
    {
-       
-      
       protected var _loader:URLLoader;
       
       protected var _url:String;
@@ -46,6 +42,7 @@ package jackboxgames.loader
       
       public function load(callback:Function = null) : void
       {
+         var _dataLoader:DataLoader = null;
          var loadComplete:Function = null;
          var loadError:Function = null;
          loadComplete = function(event:Event):void
@@ -54,10 +51,7 @@ package jackboxgames.loader
             {
                callback({
                   "success":true,
-                  "data":_loader.data,
-                  "contentAsJSON":contentAsJSON,
-                  "contentAsXML":contentAsXML,
-                  "contentAsByteArray":contentAsByteArray
+                  "loader":_dataLoader
                });
             }
          };
@@ -71,19 +65,11 @@ package jackboxgames.loader
                });
             }
          };
+         _dataLoader = this;
          this._loader.addEventListener(Event.COMPLETE,loadComplete);
          this._loader.addEventListener(IOErrorEvent.IO_ERROR,loadError);
          this._loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR,loadError);
          this._loader.load(new URLRequest(this._url));
-      }
-      
-      public function loadUnzipped(bytes:ByteArray) : void
-      {
-         this._loader.data = bytes;
-         JBGUtil.runFunctionAfter(function():void
-         {
-            _loader.dispatchEvent(new Event(Event.COMPLETE));
-         },Duration.fromMs(33));
       }
       
       public function loadFallback() : void
@@ -118,7 +104,7 @@ package jackboxgames.loader
          }
          catch(err:Error)
          {
-            Logger.debug("DataLoader::contentAsXML => content is not valid XML");
+            Logger.debug("ERROR: DataLoader::contentAsXML => content is not valid XML");
             Logger.debug(TraceUtil.objectRecursive(err,"Error"));
          }
          return xmlContent;
@@ -126,21 +112,26 @@ package jackboxgames.loader
       
       public function get contentAsJSON() : Object
       {
-         var jsonContent:Object = null;
          if(this._loader.dataFormat != URLLoaderDataFormat.TEXT)
          {
             return null;
          }
-         try
+         var jsonContent:Object = JSON.deserialize(String(this.content));
+         if(!jsonContent)
          {
-            jsonContent = JSON.deserialize(String(this.content)) as Object;
-         }
-         catch(err:Error)
-         {
-            Logger.debug("DataLoader::contentAsJSON => content is not valid JSON");
-            Logger.debug(TraceUtil.objectRecursive(err,"Error"));
+            Logger.debug("ERROR: DataLoader::contentAsJSON => content is not valid JSON");
+            Logger.debug(String(this.content));
          }
          return jsonContent;
+      }
+      
+      public function get contentAsString() : String
+      {
+         if(this._loader.dataFormat != URLLoaderDataFormat.TEXT)
+         {
+            return null;
+         }
+         return String(this.content);
       }
       
       public function stop() : void
@@ -166,3 +157,4 @@ package jackboxgames.loader
       }
    }
 }
+

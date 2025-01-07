@@ -2,8 +2,6 @@ package jackboxgames.talkshow.utils
 {
    public class RandomLowRepeat
    {
-       
-      
       private var _reserve:uint;
       
       private var _played:Array;
@@ -48,7 +46,7 @@ package jackboxgames.talkshow.utils
          {
             if(this._unplayed.length > 0)
             {
-               this._lastFetch = this._unplayed[Math.round(Math.random() * (this._unplayed.length - 1))];
+               this._lastFetch = this._unplayed[Math.floor(this._unplayed.length * Math.random())];
             }
             hold = this._unplayed;
             this._unplayed = this._played;
@@ -58,7 +56,7 @@ package jackboxgames.talkshow.utils
                return this._lastFetch;
             }
          }
-         var entry:uint = Math.round(Math.random() * (this._unplayed.length - 1));
+         var entry:uint = Math.floor(this._unplayed.length * Math.random());
          this._lastFetch = this._unplayed[entry];
          this._played.push(this._lastFetch);
          this._unplayed.splice(entry,1);
@@ -71,3 +69,4 @@ package jackboxgames.talkshow.utils
       }
    }
 }
+

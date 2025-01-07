@@ -4,17 +4,15 @@ package jackboxgames.utils
    import flash.events.*;
    import flash.geom.*;
    import flash.utils.*;
-   import jackboxgames.algorithm.*;
    import jackboxgames.events.*;
    import jackboxgames.logger.*;
    import jackboxgames.nativeoverride.*;
-   import jackboxgames.net.*;
    import jackboxgames.timer.*;
    import jackboxgames.video.*;
+   import mx.graphics.codec.*;
    
    public class JBGUtil
    {
-      
       private static var _runFunctionAfterTimers:Array = [];
       
       private static var eventOnceCancellers:Array = [];
@@ -32,7 +30,6 @@ package jackboxgames.utils
       private static var _pauseRequestedCallback:Function = null;
       
       private static var _bitmapLoaders:Dictionary = new Dictionary();
-       
       
       public function JBGUtil()
       {
@@ -278,6 +275,21 @@ package jackboxgames.utils
          JBGUtil.arrayGotoFrame([mc],frame);
       }
       
+      public static function sortDictionaryByValue(d:Dictionary) : Array
+      {
+         var dictionaryKey:Object = null;
+         var a:Array = [];
+         for(dictionaryKey in d)
+         {
+            a.push({
+               "key":dictionaryKey,
+               "value":d[dictionaryKey]
+            });
+         }
+         a.sortOn("value",[Array.NUMERIC | Array.DESCENDING]);
+         return a;
+      }
+      
       public static function distributeEvenly(elements:Array, startX:Number, width:Number) : void
       {
          var spaceBetween:Number = width / (elements.length + 1);
@@ -433,7 +445,7 @@ package jackboxgames.utils
                callbackComplete(success);
                callbackComplete = null;
             }
-            if(EnvUtil.isMobile())
+            if(BuildConfig.instance.configVal("delayVideoOnComplete"))
             {
                runFunctionAfter(function():void
                {
@@ -452,7 +464,7 @@ package jackboxgames.utils
                v.dispose();
             }
             _videoIsPlaying = false;
-            if(EnvUtil.isMobile())
+            if(BuildConfig.instance.configVal("delayVideoOnComplete"))
             {
                return;
             }
@@ -498,7 +510,7 @@ package jackboxgames.utils
             v.play(loop);
          };
          v = VideoPlayerFactory.videoPlayer(_mcVideoFrame);
-         v.volume = volume;
+         v.volume = isNaN(volume) ? 1 : volume;
          _videoIsFullscreen = _mcVideoFrame == null || _mcVideoFrame.x == 0 && _mcVideoFrame.y == 0 && _mcVideoFrame.width == StageRef.width && _mcVideoFrame.height == StageRef.height;
          _mcVideoFrame = null;
          v.addEventListener("onError",onErrorListener);
@@ -581,109 +593,30 @@ package jackboxgames.utils
          loadBitmapDataFromByteArray(id,Base64.decodeToByteArray(base64),complete);
       }
       
+      public static function scaleBitmapData(bitmapData:BitmapData, scale:Number) : BitmapData
+      {
+         var matrix:Matrix = new Matrix();
+         matrix.scale(scale,scale);
+         var result:BitmapData = new BitmapData(bitmapData.width * scale,bitmapData.height * scale,bitmapData.transparent,0);
+         result.draw(bitmapData,matrix);
+         return result;
+      }
+      
+      public static function encodeBitmapDataToBase64(bitmapData:BitmapData) : String
+      {
+         if("encode" in bitmapData)
+         {
+            return Base64.encodeByteArray(bitmapData.encode(bitmapData.rect,new PNGEncoderOptions()));
+         }
+         return Base64.encodeByteArray(new PNGEncoder().encode(bitmapData));
+      }
+      
       public static function safeRemoveChild(from:DisplayObjectContainer, d:DisplayObject) : void
       {
          if(from.contains(d))
          {
             from.removeChild(d);
          }
-      }
-      
-      public static function checkNetworkStatus(url:String, callback:Function = null) : void
-      {
-         var loader:* = undefined;
-         var _downloadCanceller:Function = null;
-         var cancelCanceller:Function = function():void
-         {
-            if(_downloadCanceller != null)
-            {
-               _downloadCanceller();
-               _downloadCanceller = null;
-            }
-         };
-         var request:* = NetUtil.createURLRequest(url);
-         loader = NetUtil.createURLLoader();
-         _downloadCanceller = null;
-         loader.addEventListener(Event.COMPLETE,function(event:Event):void
-         {
-            cancelCanceller();
-            EventDispatcher(event.target).removeEventListener(event.type,arguments.callee);
-            var data:Object = JSON.deserialize(event.target.data);
-            Logger.debug("JBGUtil::checkNetworkStatus (\"" + url + "\") = " + TraceUtil.objectRecursive(data,"data"));
-            if(callback != null)
-            {
-               if(!data.hasOwnProperty("error"))
-               {
-                  callback(true);
-               }
-               else
-               {
-                  callback(false,data["error"]);
-               }
-            }
-         });
-         loader.addEventListener(IOErrorEvent.IO_ERROR,function(event:Event):void
-         {
-            cancelCanceller();
-            EventDispatcher(event.target).removeEventListener(event.type,arguments.callee);
-            Logger.debug("JBGUtil::checkNetworkStatus (\"" + url + "\") Io Error! Failed to download data!");
-            if(callback != null)
-            {
-               callback(false);
-            }
-         });
-         loader.addEventListener(IOErrorEvent.NETWORK_ERROR,function(event:Event):void
-         {
-            cancelCanceller();
-            EventDispatcher(event.target).removeEventListener(event.type,arguments.callee);
-            Logger.debug("JBGUtil::checkNetworkStatus (\"" + url + "\") Network error! Failed to download data!");
-            if(callback != null)
-            {
-               callback(false);
-            }
-         });
-         loader.dataFormat = "text";
-         loader.load(request);
-         _downloadCanceller = runFunctionAfter(function():void
-         {
-            Logger.debug("JBGUtil::checkNetworkStatus (\"" + url + "\") Timeout! Failed to download data!");
-            _downloadCanceller = null;
-            loader.close();
-            if(callback != null)
-            {
-               callback(false);
-            }
-         },Duration.fromSec(30));
-      }
-      
-      public static function formatUGCContentId(s:String) : String
-      {
-         var upper:String = s.toUpperCase();
-         if(upper.length < 7)
-         {
-            return upper;
-         }
-         return upper.substr(0,3) + "-" + upper.substr(3);
-      }
-      
-      public static function getURL(url:String, doneFn:Function) : void
-      {
-         var request:* = NetUtil.createURLRequest(url);
-         var loader:* = NetUtil.createURLLoader();
-         loader.addEventListener(Event.COMPLETE,function(evt:Event):void
-         {
-            doneFn(evt.target.data);
-         });
-         loader.addEventListener(IOErrorEvent.IO_ERROR,function(event:Event):void
-         {
-            doneFn(null);
-         });
-         loader.addEventListener(IOErrorEvent.NETWORK_ERROR,function(event:Event):void
-         {
-            doneFn(null);
-         });
-         loader.dataFormat = "text";
-         loader.load(request);
       }
       
       public static function reset(a:Array) : void
@@ -764,6 +697,10 @@ package jackboxgames.utils
       public static function primitiveDeepCopy(o:Object) : Object
       {
          var asJson:String = JSON.serialize(o);
+         if(!asJson)
+         {
+            return null;
+         }
          return JSON.deserialize(asJson);
       }
       
@@ -836,3 +773,4 @@ package jackboxgames.utils
       }
    }
 }
+

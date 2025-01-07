@@ -4,9 +4,7 @@ package jackboxgames.utils
    
    public class WatchableValue extends PausableEventDispatcher
    {
-      
       public static const EVENT_VALUE_CHANGED:String = "WatchableValue.ValueChanged";
-       
       
       private var _initial:*;
       
@@ -71,3 +69,4 @@ package jackboxgames.utils
       }
    }
 }
+

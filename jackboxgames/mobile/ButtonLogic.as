@@ -5,8 +5,6 @@ package jackboxgames.mobile
    
    public class ButtonLogic
    {
-       
-      
       private var _mc:MovieClip;
       
       private var _touchLogic:TouchableMovieClip;
@@ -158,3 +156,4 @@ package jackboxgames.mobile
       }
    }
 }
+

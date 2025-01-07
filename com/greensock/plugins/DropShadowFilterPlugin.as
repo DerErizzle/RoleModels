@@ -5,11 +5,9 @@ package com.greensock.plugins
    
    public class DropShadowFilterPlugin extends FilterPlugin
    {
-      
       public static const API:Number = 2;
       
       private static var _propNames:Array = ["distance","angle","color","alpha","blurX","blurY","strength","quality","inner","knockout","hideObject"];
-       
       
       public function DropShadowFilterPlugin()
       {
@@ -22,3 +20,4 @@ package com.greensock.plugins
       }
    }
 }
+

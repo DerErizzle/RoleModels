@@ -6,8 +6,6 @@ package jackboxgames.talkshow.actions
    
    public class Action implements IAction
    {
-       
-      
       private var _id:int;
       
       private var _name:String;
@@ -74,6 +72,11 @@ package jackboxgames.talkshow.actions
          return -1;
       }
       
+      public function get numParameters() : int
+      {
+         return this._params.length;
+      }
+      
       public function getPrimaryMediaParameterIdx() : int
       {
          var p:int = 0;
@@ -98,3 +101,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

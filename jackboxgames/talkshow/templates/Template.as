@@ -10,12 +10,10 @@ package jackboxgames.talkshow.templates
    import jackboxgames.talkshow.core.PlaybackEngine;
    import jackboxgames.talkshow.events.ExportEvent;
    import jackboxgames.talkshow.utils.LoadStatus;
-   import jackboxgames.utils.PausableEventDispatcher;
+   import jackboxgames.utils.*;
    
    public class Template extends PausableEventDispatcher implements ITemplate
    {
-       
-      
       protected var _name:String;
       
       protected var _id:int;
@@ -107,6 +105,11 @@ package jackboxgames.talkshow.templates
          return this._params;
       }
       
+      public function get fields() : Array
+      {
+         return ObjectUtil.getValues(this._fields);
+      }
+      
       public function getValue(fid:int) : *
       {
          var tf:TemplateField = this._fields["F" + fid];
@@ -115,7 +118,7 @@ package jackboxgames.talkshow.templates
             return null;
          }
          var val:* = this.handler.getValue(tf.name);
-         if(val == null)
+         if(val === null || val === undefined)
          {
             val = this.getDefaultValue(tf,true);
          }
@@ -209,7 +212,7 @@ package jackboxgames.talkshow.templates
                v = tf.variable;
                if(v != null && v.length > 2)
                {
-                  PlaybackEngine.getInstance().setVariableValue(v,this.handler.getValue(tf.name));
+                  PlaybackEngine.getInstance().setVariableValue(v,this.getValue(tf.id));
                }
             }
          }
@@ -253,3 +256,4 @@ package jackboxgames.talkshow.templates
       }
    }
 }
+

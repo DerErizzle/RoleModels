@@ -4,8 +4,6 @@ package jackboxgames.talkshow.media
    
    public final class MediaMetadataHelper
    {
-       
-      
       public function MediaMetadataHelper()
       {
          super();
@@ -21,8 +19,8 @@ package jackboxgames.talkshow.media
          {
             text = "";
          }
-         var textMatches:Array = text.match(/\[.*?=.*?\]/g);
-         var newText:String = text.replace(/\[.*?=.*?\]/g,"");
+         var textMatches:Array = text.match(/\[.*?\]/g);
+         var newText:String = text.replace(/\[.*?\]/g,"");
          newText = TextUtils.trim(newText);
          var metadata:Object = {};
          for each(m in textMatches)
@@ -40,3 +38,4 @@ package jackboxgames.talkshow.media
       }
    }
 }
+

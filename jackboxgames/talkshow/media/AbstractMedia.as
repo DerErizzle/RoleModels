@@ -10,8 +10,6 @@ package jackboxgames.talkshow.media
    
    public class AbstractMedia implements IMedia
    {
-       
-      
       protected var _id:int;
       
       protected var _allVersions:Array;
@@ -226,3 +224,4 @@ package jackboxgames.talkshow.media
       }
    }
 }
+

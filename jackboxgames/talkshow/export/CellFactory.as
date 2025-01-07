@@ -1,22 +1,7 @@
 package jackboxgames.talkshow.export
 {
-   import jackboxgames.talkshow.actions.ActionRef;
-   import jackboxgames.talkshow.actions.MediaParamValue;
-   import jackboxgames.talkshow.actions.Parameter;
-   import jackboxgames.talkshow.actions.StartNextActionRef;
-   import jackboxgames.talkshow.actions.TemplateParamValue;
-   import jackboxgames.talkshow.api.Constants;
-   import jackboxgames.talkshow.api.IBranch;
-   import jackboxgames.talkshow.api.IExport;
-   import jackboxgames.talkshow.api.IParameter;
-   import jackboxgames.talkshow.cells.*;
-   import jackboxgames.talkshow.timing.CueTiming;
-   import jackboxgames.talkshow.timing.Timing;
-   import jackboxgames.talkshow.utils.ExportDictionary;
-   
    internal class CellFactory
    {
-      
       private static const DELIMITER_CELLS:String = "^";
       
       private static const DELIMITER_CELL_DATA:String = "|";
@@ -40,7 +25,6 @@ package jackboxgames.talkshow.export
       private static const DELIMITER_TEMPLATE_VALUES:String = "!";
       
       private static const AT_START_NEXT:String = "N";
-       
       
       public function CellFactory()
       {
@@ -60,7 +44,7 @@ package jackboxgames.talkshow.export
          for each(cellString in cells)
          {
             data = cellString.split(DELIMITER_CELL_DATA);
-            id = data.shift();
+            id = uint(data.shift());
             target = dict.lookup(data.shift());
             type = data.shift();
             switch(type)
@@ -330,3 +314,4 @@ package jackboxgames.talkshow.export
       }
    }
 }
+

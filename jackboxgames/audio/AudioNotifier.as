@@ -5,9 +5,7 @@ package jackboxgames.audio
    
    public class AudioNotifier extends PausableEventDispatcher
    {
-      
       private static var _instance:AudioNotifier;
-       
       
       public function AudioNotifier()
       {
@@ -35,3 +33,4 @@ package jackboxgames.audio
       }
    }
 }
+

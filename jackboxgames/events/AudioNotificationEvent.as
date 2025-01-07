@@ -4,11 +4,9 @@ package jackboxgames.events
    
    public class AudioNotificationEvent extends Event
    {
-      
       public static const AUDIO_STARTED:String = "AudioNotificationEvent.Start";
       
       public static const AUDIO_ENDED:String = "AudioNotificationEvent.End";
-       
       
       private var _id:String;
       
@@ -48,3 +46,4 @@ package jackboxgames.events
       }
    }
 }
+

@@ -5,8 +5,6 @@ package jackboxgames.nativeoverride
    
    public class AudioBank
    {
-       
-      
       private var _name:String;
       
       private var _onLoadCompleteCallback:Function;
@@ -94,3 +92,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

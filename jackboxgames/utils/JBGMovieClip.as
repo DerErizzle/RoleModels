@@ -7,8 +7,6 @@ package jackboxgames.utils
    
    public class JBGMovieClip extends PausableEventDispatcher
    {
-       
-      
       protected var _mc:MovieClip;
       
       public function JBGMovieClip(mc:MovieClip = null)
@@ -170,3 +168,4 @@ package jackboxgames.utils
       }
    }
 }
+

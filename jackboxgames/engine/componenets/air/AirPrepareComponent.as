@@ -11,8 +11,6 @@ package jackboxgames.engine.componenets.air
    
    public class AirPrepareComponent extends PausableEventDispatcher implements IPrepareComponent, IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       public function AirPrepareComponent(engine:GameEngine)
@@ -81,3 +79,4 @@ package jackboxgames.engine.componenets.air
       }
    }
 }
+

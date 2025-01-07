@@ -14,8 +14,6 @@ package jackboxgames.engine.componenets.air
    
    public class AirPlatformComponent extends PausableEventDispatcher implements ILaunchGameComponent, IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       private var _loader:ILoader;
@@ -48,7 +46,6 @@ package jackboxgames.engine.componenets.air
       
       public function startGame(doneFn:Function) : void
       {
-         FlashNative.Initialize(this._engine.activeGame.serverUrl,this._engine.activeGame.gameId);
          doneFn();
       }
       
@@ -87,3 +84,4 @@ package jackboxgames.engine.componenets.air
       }
    }
 }
+

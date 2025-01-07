@@ -1,11 +1,7 @@
 package jackboxgames.talkshow.core
 {
-   import jackboxgames.talkshow.api.IPreloader;
-   
    internal class PreloadManager
    {
-       
-      
       private var _playbackPct:Number;
       
       private var _startPct:Number;
@@ -100,3 +96,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

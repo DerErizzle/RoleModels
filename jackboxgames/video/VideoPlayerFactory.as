@@ -6,9 +6,7 @@ package jackboxgames.video
    
    public final class VideoPlayerFactory
    {
-      
       public static var Parent:DisplayObjectContainer = null;
-       
       
       public function VideoPlayerFactory()
       {
@@ -33,3 +31,4 @@ package jackboxgames.video
       }
    }
 }
+

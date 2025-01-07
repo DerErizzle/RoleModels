@@ -1,11 +1,7 @@
 package jackboxgames.talkshow.timing
 {
-   import jackboxgames.talkshow.actions.ActionRef;
-   
    internal class TimedItem
    {
-       
-      
       private var _ref:ActionRef;
       
       private var _time:uint;
@@ -28,3 +24,4 @@ package jackboxgames.talkshow.timing
       }
    }
 }
+

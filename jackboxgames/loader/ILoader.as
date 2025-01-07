@@ -1,12 +1,9 @@
 package jackboxgames.loader
 {
    import flash.events.IEventDispatcher;
-   import flash.utils.ByteArray;
    
    public interface ILoader extends IEventDispatcher
    {
-       
-      
       function get content() : *;
       
       function get url() : String;
@@ -14,8 +11,6 @@ package jackboxgames.loader
       function get loaded() : Boolean;
       
       function load(param1:Function = null) : void;
-      
-      function loadUnzipped(param1:ByteArray) : void;
       
       function loadFallback() : void;
       
@@ -28,3 +23,4 @@ package jackboxgames.loader
       function toString() : String;
    }
 }
+

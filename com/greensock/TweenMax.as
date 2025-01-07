@@ -15,7 +15,6 @@ package com.greensock
    
    public class TweenMax extends TweenLite implements IEventDispatcher
    {
-      
       public static const version:String = "12.1.5";
       
       protected static var _listenerLookup:Object = {
@@ -34,9 +33,7 @@ package com.greensock
       
       public static var allFromTo:Function = staggerFromTo;
       
-      {
-         TweenPlugin.activate([AutoAlphaPlugin,EndArrayPlugin,FramePlugin,RemoveTintPlugin,TintPlugin,VisiblePlugin,VolumePlugin,BevelFilterPlugin,BezierPlugin,BezierThroughPlugin,BlurFilterPlugin,ColorMatrixFilterPlugin,ColorTransformPlugin,DropShadowFilterPlugin,FrameLabelPlugin,GlowFilterPlugin,HexColorsPlugin,RoundPropsPlugin,ShortRotationPlugin]);
-      }
+      TweenPlugin.activate([AutoAlphaPlugin,EndArrayPlugin,FramePlugin,RemoveTintPlugin,TintPlugin,VisiblePlugin,VolumePlugin,BevelFilterPlugin,BezierPlugin,BezierThroughPlugin,BlurFilterPlugin,ColorMatrixFilterPlugin,ColorTransformPlugin,DropShadowFilterPlugin,FrameLabelPlugin,GlowFilterPlugin,HexColorsPlugin,RoundPropsPlugin,ShortRotationPlugin]);
       
       protected var _dispatcher:EventDispatcher;
       
@@ -239,7 +236,8 @@ package com.greensock
          for(i = 0; i < l; i++)
          {
             tween = a[i];
-            if(allTrue || tween is SimpleTimeline || (isDC = TweenLite(tween).target == TweenLite(tween).vars.onComplete) && delayedCalls || tweens && !isDC)
+            isDC = !(tween is SimpleTimeline) && TweenLite(tween).target == TweenLite(tween).vars.onComplete;
+            if(allTrue || tween is SimpleTimeline || isDC && delayedCalls || tweens && !isDC)
             {
                if(complete)
                {
@@ -908,3 +906,4 @@ package com.greensock
       }
    }
 }
+

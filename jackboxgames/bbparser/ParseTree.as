@@ -4,8 +4,6 @@ package jackboxgames.bbparser
    
    public class ParseTree
    {
-       
-      
       private var _type:ParseTreeType;
       
       private var _content:String;
@@ -130,3 +128,4 @@ package jackboxgames.bbparser
       }
    }
 }
+

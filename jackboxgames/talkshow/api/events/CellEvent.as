@@ -5,7 +5,6 @@ package jackboxgames.talkshow.api.events
    
    public class CellEvent extends Event
    {
-      
       public static const CELL_STARTED:String = "started";
       
       public static const CELL_JUMP:String = "cellJump";
@@ -15,7 +14,6 @@ package jackboxgames.talkshow.api.events
       public static const NO_REF_BRANCH:String = "noRefBranch";
       
       public static const ACTION_CELL_REACHED:String = "actionCellReached";
-       
       
       private var _cell:ICell;
       
@@ -31,3 +29,4 @@ package jackboxgames.talkshow.api.events
       }
    }
 }
+

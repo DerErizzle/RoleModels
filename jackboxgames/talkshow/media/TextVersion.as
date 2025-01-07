@@ -4,8 +4,6 @@ package jackboxgames.talkshow.media
    
    public class TextVersion extends AbstractVersion
    {
-       
-      
       public function TextVersion(idx:uint, id:uint, locale:String, tag:String, text:String)
       {
          super(idx,id,locale,tag,text);
@@ -18,3 +16,4 @@ package jackboxgames.talkshow.media
       }
    }
 }
+

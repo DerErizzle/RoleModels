@@ -3,24 +3,22 @@ package jackboxgames.engine.componenets.air
    import com.greensock.TweenMax;
    import flash.display.*;
    import flash.events.*;
-   import flash.external.*;
-   import jackboxgames.audio.JBGSoundPlayer;
+   import jackboxgames.audio.*;
    import jackboxgames.engine.*;
    import jackboxgames.engine.componenets.*;
-   import jackboxgames.events.EventWithData;
+   import jackboxgames.events.*;
    import jackboxgames.flash.*;
-   import jackboxgames.loader.*;
+   import jackboxgames.localizy.*;
    import jackboxgames.nativeoverride.*;
    import jackboxgames.pause.*;
-   import jackboxgames.talkshow.core.PlaybackEngine;
-   import jackboxgames.timer.TimerUtil;
+   import jackboxgames.talkshow.core.*;
+   import jackboxgames.timer.*;
+   import jackboxgames.userinput.*;
    import jackboxgames.utils.*;
    import jackboxgames.video.*;
    
    public class AirPauseComponent extends PausableEventDispatcher implements IPauseComponent, IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       private var _pauseSwf:MovieClip;
@@ -35,14 +33,13 @@ package jackboxgames.engine.componenets.air
       
       private var _isResuming:Boolean;
       
-      private var _pauseType:String;
+      private var _pauseContext:String;
       
       public function AirPauseComponent(engine:GameEngine)
       {
          super();
          this._engine = engine;
          this._allowPause = false;
-         this._pauseType = "kill";
       }
       
       public function get priority() : uint
@@ -52,33 +49,18 @@ package jackboxgames.engine.componenets.air
       
       public function init(doneFn:Function) : void
       {
-         JBGLoader.instance.loadFile("PauseDialog.swf",function(result:Object):void
+         PauseMenuManager.initialize();
+         JBGUtil.eventOnce(PauseMenuManager.instance,PauseMenuManager.EVENT_PAUSE_MENU_CONTENT_LOADED,function(event:EventWithData):void
          {
-            var t:PausableTimer = null;
-            _pauseSwf = result.data;
-            t = new PausableTimer(100);
-            t.addEventListener(TimerEvent.TIMER,function(evt:TimerEvent):void
-            {
-               if(Boolean(_pauseSwf.pauseScreen))
-               {
-                  t.stop();
-                  _pauseScreen = _pauseSwf.pauseScreen;
-                  _pauseScreen.addEventListener(PauseScreen.EVENT_PAUSE_DECISION,_onPauseDecisionEventListener);
-                  Gamepad.instance.addEventListener(Gamepad.EVENT_RECEIVED_INPUT,_onGamepadInput);
-                  doneFn();
-               }
-            });
-            t.start();
-         },false);
+            UserInputDirector.instance.addEventListener(UserInputDirector.EVENT_INPUT,_onUserInput);
+         });
+         PauseMenuManager.instance.loadMenuContent(PauseMenuManager.PAUSE_MENU_CONTENT_FILE);
+         doneFn();
       }
       
       public function dispose() : void
       {
-         if(Boolean(this._pauseScreen))
-         {
-            this._pauseScreen.removeEventListener(PauseScreen.EVENT_PAUSE_DECISION,this._onPauseDecisionEventListener);
-         }
-         Gamepad.instance.removeEventListener(Gamepad.EVENT_RECEIVED_INPUT,this._onGamepadInput);
+         UserInputDirector.instance.removeEventListener(UserInputDirector.EVENT_INPUT,this._onUserInput);
       }
       
       public function startGame(doneFn:Function) : void
@@ -101,7 +83,7 @@ package jackboxgames.engine.componenets.air
          {
             return false;
          }
-         if(!this._allowPause || this.isPaused || !this._pauseSwf || !this._pauseScreen || this._isResuming)
+         if(!this._allowPause || this.isPaused || this._isResuming)
          {
             return false;
          }
@@ -118,7 +100,7 @@ package jackboxgames.engine.componenets.air
          {
             return false;
          }
-         this._doPauseQuit();
+         this._engine.activeGame.restart();
          return true;
       }
       
@@ -127,9 +109,9 @@ package jackboxgames.engine.componenets.air
          this._allowPause = enabled;
       }
       
-      public function setPauseType(type:String) : void
+      public function setPauseContext(context:String) : void
       {
-         this._pauseType = type;
+         this._pauseContext = context;
       }
       
       public function pause() : Boolean
@@ -138,12 +120,13 @@ package jackboxgames.engine.componenets.air
          {
             return false;
          }
+         PauseMenuManager.instance.updateMenu(PauseMenuManager.instance.pauseMenuData.toSimpleObject(),this._pauseContext);
+         PauseMenuManager.instance.addEventListener(PauseMenuManager.EVENT_PAUSE_MENU_SELECTED,this._onPauseMenuItemSelected);
          this._isPaused = true;
          this._engine.dispatchEvent(new Event(PauseScreen.PAUSE_TYPE_START));
          PausableEventDispatcher.pauseAll();
          VideoPlayerFlash.pauseAll();
          JBGSoundPlayer.instance.pause();
-         InputManager.instance.pause();
          TweenMax.pauseAll();
          MovieClipPauser.instance.pause(this._engine.rootGame.main);
          TimerUtil.pauseAll();
@@ -153,8 +136,8 @@ package jackboxgames.engine.componenets.air
             PlaybackEngine.getInstance().pauser.userPause();
          }
          FlashNative.pauseTimer();
-         StageRef.addChild(this._pauseSwf);
-         this._pauseScreen.appearNoFlag(this._pauseType == PauseScreen.PAUSE_TYPE_REBOOT);
+         StageRef.addChildAt(PauseMenuManager.instance.pauseMc,StageRef.numChildren - 1);
+         PauseMenuManager.instance.setMenuShown(true);
          return true;
       }
       
@@ -166,18 +149,15 @@ package jackboxgames.engine.componenets.air
          }
          this._isResuming = true;
          this._isPaused = false;
+         Gamepad.instance.useNextUpdateAsCatchUp();
+         KeyboardInputHandler.instance.catchUp();
+         PauseMenuManager.instance.removeEventListener(PauseMenuManager.EVENT_PAUSE_MENU_SELECTED,this._onPauseMenuItemSelected);
+         PauseMenuManager.instance.setMenuShown(false);
          PausableEventDispatcher.resumeAll();
-         if(BuildConfig.instance.configVal("flashKeyboard"))
-         {
-            Gamepad.instance.setKeyboardObserver(this._engine.activeGame.main.stage);
-         }
-         if(Boolean(this._pauseSwf.parent) && this._pauseSwf.parent is DisplayObjectContainer)
-         {
-            JBGUtil.safeRemoveChild(this._pauseSwf.parent,this._pauseSwf);
-         }
+         KeyboardInputHandler.initialize(this._engine.activeGame.main.stage);
+         StageRef.removeChild(PauseMenuManager.instance.pauseMc);
          VideoPlayerFlash.resumeAll();
          JBGSoundPlayer.instance.resume();
-         InputManager.instance.resume();
          TweenMax.resumeAll();
          MovieClipPauser.instance.resume();
          PausableEventDispatcher.resumeAll();
@@ -188,64 +168,56 @@ package jackboxgames.engine.componenets.air
          }
          FlashNative.resumeTimer();
          this._isResuming = false;
+         LocalizationManager.GameSource = BuildConfig.instance.configVal("gameName");
       }
       
       public function onPauseDecision(decision:Boolean) : void
       {
          this.resume();
-         if(decision)
-         {
-            this._doPauseQuit();
-         }
-         else
-         {
-            this._engine.dispatchEvent(new Event(PauseScreen.PAUSE_TYPE_RESUME));
-         }
       }
       
-      private function _doPauseQuit() : void
-      {
-         switch(this._pauseType)
-         {
-            case PauseScreen.PAUSE_TYPE_KILL:
-               this._engine.activeGame.exit();
-               this._engine.dispatchEvent(new Event(PauseScreen.PAUSE_TYPE_KILL));
-               break;
-            case PauseScreen.PAUSE_TYPE_REBOOT:
-            default:
-               this._engine.activeGame.restart();
-               this._engine.dispatchEvent(new Event(PauseScreen.PAUSE_TYPE_REBOOT));
-         }
-      }
-      
-      private function _onPauseDecisionEventListener(evt:EventWithData) : void
-      {
-         this.onPauseDecision(Boolean(evt.data.hasOwnProperty("decision")) && Boolean(evt.data.decision));
-      }
-      
-      private function _onGamepadInput(evt:EventWithData) : void
+      private function _onUserInput(evt:EventWithData) : void
       {
          var pauseInputs:Array = BuildConfig.instance.configVal("pause-inputs") ? JSON.deserialize(BuildConfig.instance.configVal("pause-inputs")) : ["START"];
          var allowPauseEvenIfInJustQuitModeInputs:Array = BuildConfig.instance.configVal("allow-pause-even-if-in-just-quit-mode-inputs") ? JSON.deserialize(BuildConfig.instance.configVal("allow-pause-even-if-in-just-quit-mode-inputs")) : [];
-         if(ArrayUtil.arrayContainsOneOf(evt.data.inputs,pauseInputs))
+         Assert.assert(pauseInputs != null);
+         Assert.assert(allowPauseEvenIfInJustQuitModeInputs != null);
+         if(UserInputUtil.inputsContain(evt.data.inputs,pauseInputs))
          {
-            if(ArrayUtil.arrayContainsOneOf(evt.data.inputs,allowPauseEvenIfInJustQuitModeInputs))
+            if(UserInputUtil.inputsContain(evt.data.inputs,allowPauseEvenIfInJustQuitModeInputs))
             {
                this._allowPauseEvenIfInJustQuitMode = true;
             }
-            if(this.pause())
-            {
-               Gamepad.instance.resetPreviousInput(pauseInputs);
-            }
+            this.pause();
             this._allowPauseEvenIfInJustQuitMode = false;
          }
-         if(BuildConfig.instance.configVal("flashKeyboard"))
+      }
+      
+      private function _onPauseMenuItemSelected(event:EventWithData) : void
+      {
+         var action:String = null;
+         action = event.data.action;
+         JBGUtil.eventOnce(PauseMenuManager.instance,PauseMenuManager.EVENT_PAUSE_MENU_DONE,function(event:EventWithData):void
          {
-            if(evt.data.inputs.indexOf("B") >= 0 || evt.data.inputs.indexOf("BACK") >= 0)
+            if(action == PauseMenuManager.PAUSE_ACTION_RESUME)
             {
-               this.pause();
+               _engine.dispatchEvent(new Event(PauseScreen.PAUSE_TYPE_RESUME));
             }
-         }
+            if(action == PauseMenuManager.PAUSE_ACTION_RESTART_GAME)
+            {
+               _engine.activeGame.restart();
+            }
+            else if(action == PauseMenuManager.PAUSE_ACTION_BACK_TO_PACK)
+            {
+               _engine.activeGame.exit();
+            }
+            else if(action == PauseMenuManager.PAUSE_ACTION_EXIT_TO_DESKTOP)
+            {
+               _engine.exit();
+            }
+         });
+         this.resume();
       }
    }
 }
+

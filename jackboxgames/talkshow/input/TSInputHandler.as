@@ -4,9 +4,7 @@ package jackboxgames.talkshow.input
    
    public class TSInputHandler
    {
-      
       private static var _instance:TSInputHandler;
-       
       
       private var _ts:IEngineAPI;
       
@@ -31,6 +29,11 @@ package jackboxgames.talkshow.input
       
       public function reset() : void
       {
+         this._currentModule = new TSNoInput();
+      }
+      
+      public function setupForAnyInput() : void
+      {
          this._currentModule = new TSAnyInput();
       }
       
@@ -49,9 +52,15 @@ package jackboxgames.talkshow.input
          this._currentModule = new TSNoInput();
       }
       
+      public function setupForCustomInput(module:ITSInputModule) : void
+      {
+         this._currentModule = module;
+      }
+      
       public function input(input:String) : void
       {
          this._currentModule.input(input);
       }
    }
 }
+

@@ -4,8 +4,6 @@ package jackboxgames.talkshow.api
    
    public interface IActionPackage extends ICodeSpace
    {
-       
-      
       function get ts() : IEngineAPI;
       
       function get type() : String;
@@ -21,3 +19,4 @@ package jackboxgames.talkshow.api
       function getDisplayObject(param1:IActionRef, param2:Object, param3:Boolean = false) : DisplayObject;
    }
 }
+

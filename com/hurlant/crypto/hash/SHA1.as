@@ -2,9 +2,7 @@ package com.hurlant.crypto.hash
 {
    public class SHA1 extends SHABase implements IHash
    {
-      
       public static const HASH_SIZE:int = 20;
-       
       
       public function SHA1()
       {
@@ -99,3 +97,4 @@ package com.hurlant.crypto.hash
       }
    }
 }
+

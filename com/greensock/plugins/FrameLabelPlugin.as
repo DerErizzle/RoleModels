@@ -5,9 +5,7 @@ package com.greensock.plugins
    
    public class FrameLabelPlugin extends FramePlugin
    {
-      
       public static const API:Number = 2;
-       
       
       public function FrameLabelPlugin()
       {
@@ -43,3 +41,4 @@ package com.greensock.plugins
       }
    }
 }
+

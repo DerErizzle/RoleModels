@@ -10,6 +10,7 @@ package jackboxgames.nativeoverride
    
    public class Platform extends PausableEventDispatcher implements IPreparable
    {
+      private static var _instance:Platform;
       
       public static const MESSAGE_BACKGROUND_STATE_CHANGED:String = "BackgroundStateChanged";
       
@@ -40,32 +41,6 @@ package jackboxgames.nativeoverride
       private static var _platformLocale:String = null;
       
       private static var _platformFidelity:String = null;
-      
-      private static var _instance:Platform;
-       
-      
-      private const PLATFORM_FIDELITY_SUPPORTED:Array = [PLATFORM_FIDELITY_LOW,PLATFORM_FIDELITY_MEDIUM,PLATFORM_FIDELITY_HIGH];
-      
-      private const PLATFORMS_THAT_ARE_CONSOLES:Array = ["XBONE","PS3","PS4","PS5"];
-      
-      private const PLATFORMS_THAT_ARE_SET_TOP_BOXES:Array = ["AFT","AFTM","OUYA","GOOGLETV"];
-      
-      private const PLATFORMS_THAT_ARE_HANDHELD_DEVICES:Array = ["IOS","ANDROID"];
-      
-      private const PLATFORMS_THAT_ARE_HANDHELD_ANDROID_DEVICES:Array = ["ANDROID"];
-      
-      private const PLATFORMS_THAT_ARE_HANDHELD_IOS_DEVICES:Array = ["IOS"];
-      
-      private const USER_AGENTS:Object = {
-         "PS3":"Mozilla/5.0 (PLAYSTATION 3 4.21) AppleWebKit/531.22.8 (KHTML, like Gecko)",
-         "PS4":"Mozilla/5.0 (PlayStation 4 1.51) AppleWebKit/536.26 (KHTML, like Gecko)",
-         "XBONE":"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0; Xbox; Xbox One)",
-         "IOS":"Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53",
-         "ANDROID":"Mozilla/5.0 (Linux; Android 4.3; Nexus 10 Build/JWR66Y) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.72 Safari/537.36",
-         "GOOGLETV":"Mozilla/5.0 (Linux; Android 4.3; Nexus 10 Build/JWR66Y) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.72 Safari/537.36",
-         "AFT":"Mozilla/5.0 (Linux; U; Android 2.3.4; en-us; Kindle Fire Build/GINGERBREAD) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
-         "OUYA":"Mozilla/5.0 (Linux; U; Android OUYA 4.1.2; en-us; OUYA Build/JZO54L-OUYA) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30"
-      };
       
       private var _prepareFailError:String;
       
@@ -121,6 +96,22 @@ package jackboxgames.nativeoverride
       
       public function Platform()
       {
+         this.PLATFORM_FIDELITY_SUPPORTED = [PLATFORM_FIDELITY_LOW,PLATFORM_FIDELITY_MEDIUM,PLATFORM_FIDELITY_HIGH];
+         this.PLATFORMS_THAT_ARE_CONSOLES = ["XBONE","PS3","PS4","PS5"];
+         this.PLATFORMS_THAT_ARE_SET_TOP_BOXES = ["AFT","AFTM","OUYA","GOOGLETV"];
+         this.PLATFORMS_THAT_ARE_HANDHELD_DEVICES = ["IOS","ANDROID"];
+         this.PLATFORMS_THAT_ARE_HANDHELD_ANDROID_DEVICES = ["ANDROID"];
+         this.PLATFORMS_THAT_ARE_HANDHELD_IOS_DEVICES = ["IOS"];
+         this.USER_AGENTS = {
+            "PS3":"Mozilla/5.0 (PLAYSTATION 3 4.21) AppleWebKit/531.22.8 (KHTML, like Gecko)",
+            "PS4":"Mozilla/5.0 (PlayStation 4 1.51) AppleWebKit/536.26 (KHTML, like Gecko)",
+            "XBONE":"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0; Xbox; Xbox One)",
+            "IOS":"Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53",
+            "ANDROID":"Mozilla/5.0 (Linux; Android 4.3; Nexus 10 Build/JWR66Y) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.72 Safari/537.36",
+            "GOOGLETV":"Mozilla/5.0 (Linux; Android 4.3; Nexus 10 Build/JWR66Y) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.72 Safari/537.36",
+            "AFT":"Mozilla/5.0 (Linux; U; Android 2.3.4; en-us; Kindle Fire Build/GINGERBREAD) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
+            "OUYA":"Mozilla/5.0 (Linux; U; Android OUYA 4.1.2; en-us; OUYA Build/JZO54L-OUYA) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30"
+         };
          super();
          if(!EnvUtil.isAIR())
          {
@@ -518,3 +509,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

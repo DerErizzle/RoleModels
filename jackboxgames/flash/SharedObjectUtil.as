@@ -8,11 +8,9 @@ package jackboxgames.flash
    
    public class SharedObjectUtil extends PausableEventDispatcher
    {
+      protected static var _instance:SharedObjectUtil;
       
       protected static const INSTANCE_ERROR_MSG:String = "class SharedObjectUtil is a singleton.  new instances may not be created using the \'new\' keyword";
-      
-      protected static var _instance:SharedObjectUtil;
-       
       
       public function SharedObjectUtil(e:SharedObjectUtilEnforcer)
       {
@@ -106,10 +104,9 @@ package jackboxgames.flash
 
 final class SharedObjectUtilEnforcer
 {
-    
-   
    public function SharedObjectUtilEnforcer()
    {
       super();
    }
 }
+

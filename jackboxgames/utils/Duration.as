@@ -2,8 +2,6 @@ package jackboxgames.utils
 {
    public class Duration
    {
-       
-      
       private var _tInMs:Number;
       
       public function Duration(tInMs:Number)
@@ -131,3 +129,4 @@ package jackboxgames.utils
       }
    }
 }
+

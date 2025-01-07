@@ -4,9 +4,7 @@ package com.greensock.plugins
    
    public class ShortRotationPlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       public function ShortRotationPlugin()
       {
@@ -47,3 +45,4 @@ package com.greensock.plugins
       }
    }
 }
+

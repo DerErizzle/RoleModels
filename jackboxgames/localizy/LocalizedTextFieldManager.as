@@ -1,22 +1,26 @@
 package jackboxgames.localizy
 {
-   import flash.display.MovieClip;
-   import flash.text.TextField;
-   import flash.utils.Dictionary;
-   import jackboxgames.logger.Logger;
+   import flash.display.*;
+   import flash.events.*;
+   import flash.text.*;
+   import flash.utils.*;
+   import jackboxgames.flash.*;
+   import jackboxgames.logger.*;
+   import jackboxgames.text.*;
+   import jackboxgames.utils.*;
    
    public class LocalizedTextFieldManager
    {
-      
       private static var _instance:LocalizedTextFieldManager;
-       
       
-      private var _mapPerSource:Object;
+      private var _tfsPerSource:Dictionary;
       
       public function LocalizedTextFieldManager()
       {
          super();
-         this._mapPerSource = {};
+         this._tfsPerSource = new Dictionary();
+         LocalizationManager.instance.addEventListener(LocalizationManager.EVENT_LOAD_COMPLETE,this._onUpdateText);
+         LocalizationManager.instance.addEventListener(LocalizationManager.EVENT_LOCALE_CHANGED,this._onUpdateText);
       }
       
       public static function get instance() : LocalizedTextFieldManager
@@ -28,75 +32,116 @@ package jackboxgames.localizy
          return _instance;
       }
       
-      public function add(array:Array) : void
+      private function _onUpdateText(evt:Event) : void
       {
-         var element:* = undefined;
-         var source:String = LocalizationManager.GameSource;
-         if(array == null || array.length == 0)
+         var source:String = null;
+         for(source in this._tfsPerSource)
          {
-            return;
-         }
-         if(this._mapPerSource[source] == null)
-         {
-            this._mapPerSource[source] = new Dictionary(true);
-         }
-         for each(element in array)
-         {
-            if(this._mapPerSource[source][element] == null)
+            this._tfsPerSource[source].forEach(function(tf:LocalizedTextField, ... args):void
             {
-               if(element is TextField)
-               {
-                  this._mapPerSource[source][element] = new LocalizedTextField(element.parent as MovieClip);
-               }
-               else
-               {
-                  Logger.error("Invalid object type for LocalizedTextFieldManager.");
-               }
-            }
+               tf.updateText();
+            });
          }
       }
       
-      public function remove(array:Array) : void
+      public function addFromRoot(root:DisplayObjectContainer, source:String = null) : void
       {
-         var element:* = undefined;
-         var item:* = undefined;
-         var source:String = LocalizationManager.GameSource;
-         if(array == null || array.length == 0 || this._mapPerSource[source] == null)
+         var helpersWithTextKeys:Array;
+         if(!source)
          {
-            return;
+            source = LocalizationManager.GameSource;
          }
-         for each(element in array)
+         if(!(source in this._tfsPerSource))
          {
-            if(this._mapPerSource[source][element] != null)
-            {
-               item = this._mapPerSource[source][element];
-               if(item is LocalizedTextField)
-               {
-                  (item as LocalizedTextField).destroy();
-               }
-               delete this._mapPerSource[source][element];
-            }
+            this._tfsPerSource[source] = [];
          }
+         helpersWithTextKeys = ETFHelperUtil.findETFHelpersInChildren(root,true).filter(function(h:ETFHelperComponent, ... args):Boolean
+         {
+            return Boolean(h.textKey);
+         });
+         helpersWithTextKeys.forEach(function(h:ETFHelperComponent, ... args):void
+         {
+            _tfsPerSource[source].push(new LocalizedTextField(root,h,source));
+         });
       }
       
-      public function clear() : void
+      public function removeFromRoot(root:DisplayObjectContainer, source:String = null) : void
       {
-         var element:* = undefined;
-         var item:* = undefined;
-         var source:String = LocalizationManager.GameSource;
-         if(this._mapPerSource[source] == null)
+         if(!source)
+         {
+            source = LocalizationManager.GameSource;
+         }
+         if(!(source in this._tfsPerSource))
          {
             return;
          }
-         for each(element in this._mapPerSource[source])
+         this._tfsPerSource[source] = this._tfsPerSource[source].filter(function(tf:LocalizedTextField, ... args):Boolean
          {
-            item = this._mapPerSource[source][element];
-            if(item != null && item is LocalizedTextField)
-            {
-               (item as LocalizedTextField).destroy();
-            }
-            delete this._mapPerSource[source][element];
+            return tf.fromRoot != root;
+         });
+      }
+      
+      public function clear(source:String) : void
+      {
+         if(!(source in this._tfsPerSource))
+         {
+            return;
          }
+         this._tfsPerSource[source].forEach(function(tf:LocalizedTextField, ... args):void
+         {
+         });
+         delete this._tfsPerSource[source];
       }
    }
 }
+
+import flash.display.DisplayObjectContainer;
+import jackboxgames.engine.GameEngine;
+import jackboxgames.flash.ETFHelperComponent;
+import jackboxgames.text.ETFHelperUtil;
+import jackboxgames.text.ExtendableTextField;
+
+class LocalizedTextField
+{
+   private var _source:String;
+   
+   private var _fromRoot:DisplayObjectContainer;
+   
+   private var _stringId:String;
+   
+   private var _tf:ExtendableTextField;
+   
+   public function LocalizedTextField(fromRoot:DisplayObjectContainer, helper:ETFHelperComponent, source:String)
+   {
+      super();
+      this._source = source;
+      this._fromRoot = fromRoot;
+      this._stringId = helper.textKey.replace(/[^A-Za-z_0-9]+/g,"").toUpperCase();
+      this._tf = ETFHelperUtil.buildExtendableTextFieldFromHelper(helper);
+      this.updateText();
+   }
+   
+   public function get fromRoot() : DisplayObjectContainer
+   {
+      return this._fromRoot;
+   }
+   
+   public function updateText() : void
+   {
+      var newString:String = null;
+      if(this._stringId.toUpperCase() == "QUIT_BACK_PROMPT")
+      {
+         newString = LocalizationManager.instance.getValueForKey(GameEngine.instance.supportsExit ? "EXIT" : "BACK",this._source);
+      }
+      else
+      {
+         newString = LocalizationManager.instance.getValueForKey(this._stringId,this._source);
+      }
+      if(!newString)
+      {
+         return;
+      }
+      this._tf.text = newString;
+   }
+}
+

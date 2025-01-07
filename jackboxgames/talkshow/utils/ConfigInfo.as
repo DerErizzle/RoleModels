@@ -4,7 +4,6 @@ package jackboxgames.talkshow.utils
    
    public class ConfigInfo implements IConfigInfo
    {
-      
       public static const INPUT_DELAY:String = "tsInputDelay";
       
       public static const EXPORT_PATH:String = "tsExportPath";
@@ -44,7 +43,6 @@ package jackboxgames.talkshow.utils
          "tsPluginPath":"project/plugins/",
          "tsAltStartFile":"project/data/start.swf"
       };
-       
       
       private var _data:Object;
       
@@ -121,7 +119,7 @@ package jackboxgames.talkshow.utils
          {
             if(VariableUtil.isValidID(g.@id))
             {
-               if(g.hasComplexContent())
+               if(Boolean(g.hasComplexContent()))
                {
                   out[g.@id] = this.parseXmlStartVars(g);
                }
@@ -168,3 +166,4 @@ package jackboxgames.talkshow.utils
       }
    }
 }
+

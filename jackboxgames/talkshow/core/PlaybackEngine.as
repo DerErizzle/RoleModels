@@ -26,7 +26,6 @@ package jackboxgames.talkshow.core
    
    public class PlaybackEngine extends PausableEventDispatcher implements IEngineAPI
    {
-      
       private namespace engine_private;
       
       private static var _instance:PlaybackEngine;
@@ -34,7 +33,6 @@ package jackboxgames.talkshow.core
       private static const INSTANCE_ERROR_MSG:String = "class PlaybackEngine is a singleton.  new instances may not be created using the \'new\' keyword";
       
       private static var _authorizedClassList:Array = [ExportManager,Export];
-       
       
       private var _createTime:uint;
       
@@ -649,10 +647,9 @@ package jackboxgames.talkshow.core
 
 final class _enforcer_
 {
-    
-   
    public function _enforcer_()
    {
       super();
    }
 }
+

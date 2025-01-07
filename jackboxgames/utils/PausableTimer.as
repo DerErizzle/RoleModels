@@ -8,8 +8,6 @@ package jackboxgames.utils
    
    public class PausableTimer extends Timer implements IJBGTimer
    {
-       
-      
       private var _isPaused:Boolean;
       
       private var _startTime:uint;
@@ -124,3 +122,4 @@ package jackboxgames.utils
       }
    }
 }
+

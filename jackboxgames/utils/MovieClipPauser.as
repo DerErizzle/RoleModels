@@ -6,9 +6,7 @@ package jackboxgames.utils
    
    public class MovieClipPauser
    {
-      
       private static var _instance:MovieClipPauser;
-       
       
       private var pausedArr:Array;
       
@@ -109,3 +107,4 @@ package jackboxgames.utils
       }
    }
 }
+

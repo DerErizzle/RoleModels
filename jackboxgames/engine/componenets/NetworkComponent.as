@@ -6,8 +6,6 @@ package jackboxgames.engine.componenets
    
    public class NetworkComponent extends PausableEventDispatcher implements IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       public function NetworkComponent(engine:GameEngine)
@@ -41,3 +39,4 @@ package jackboxgames.engine.componenets
       }
    }
 }
+

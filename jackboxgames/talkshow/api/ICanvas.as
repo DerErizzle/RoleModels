@@ -4,8 +4,6 @@ package jackboxgames.talkshow.api
    
    public interface ICanvas
    {
-       
-      
       function addChild(param1:DisplayObject) : DisplayObject;
       
       function addChildAt(param1:DisplayObject, param2:int) : DisplayObject;
@@ -13,3 +11,4 @@ package jackboxgames.talkshow.api
       function removeChild(param1:DisplayObject) : DisplayObject;
    }
 }
+

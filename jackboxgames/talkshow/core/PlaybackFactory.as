@@ -14,9 +14,7 @@ package jackboxgames.talkshow.core
    
    public class PlaybackFactory extends MovieClip
    {
-      
       private static const FILE_DEFAULT_PRELOADER:String = "loadui.swf";
-       
       
       private var _trace:TextField;
       
@@ -133,3 +131,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

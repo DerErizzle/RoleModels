@@ -4,13 +4,11 @@ package jackboxgames.utils
    
    public class DisplayObjectOrganizer
    {
-      
       public static const STATE_ON:String = "on";
       
       public static const STATE_OFF:String = "off";
       
       public static const STATE_PERMANENTLY_ON:String = "permanently_on";
-       
       
       private var _parent:DisplayObjectContainer;
       
@@ -54,7 +52,7 @@ package jackboxgames.utils
          var newData:Object = {
             "displayObject":displayObject,
             "index":i,
-            "on":false
+            "state":STATE_OFF
          };
          var indexToInsert:int = 0;
          while(indexToInsert < this._childData.length && this._childData[indexToInsert].index < i)
@@ -118,3 +116,4 @@ package jackboxgames.utils
       }
    }
 }
+

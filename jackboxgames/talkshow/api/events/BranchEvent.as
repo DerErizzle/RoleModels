@@ -5,9 +5,7 @@ package jackboxgames.talkshow.api.events
    
    public class BranchEvent extends Event
    {
-      
       public static const BRANCH_STARTED:String = "branchStarted";
-       
       
       private var _branch:IBranch;
       
@@ -39,3 +37,4 @@ package jackboxgames.talkshow.api.events
       }
    }
 }
+

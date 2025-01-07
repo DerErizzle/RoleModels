@@ -5,8 +5,6 @@ package jackboxgames.talkshow.export
    
    public class Project
    {
-       
-      
       private var _id:int;
       
       private var _name:String;
@@ -81,3 +79,4 @@ package jackboxgames.talkshow.export
       }
    }
 }
+

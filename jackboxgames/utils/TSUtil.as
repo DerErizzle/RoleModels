@@ -1,20 +1,18 @@
 package jackboxgames.utils
 {
    import flash.events.Event;
-   import jackboxgames.talkshow.api.IActionRef;
-   import jackboxgames.talkshow.api.IEngineAPI;
-   import jackboxgames.talkshow.api.events.InputEvent;
-   import jackboxgames.talkshow.core.PlaybackEngine;
+   import jackboxgames.talkshow.api.*;
+   import jackboxgames.talkshow.api.events.*;
+   import jackboxgames.talkshow.core.*;
+   import jackboxgames.talkshow.utils.*;
    
    public final class TSUtil
    {
-      
       private static var _ts:IEngineAPI;
       
       private static var _cancelInputListeners:Array = [];
       
       private static var _safeInputCancelers:Array = [];
-       
       
       public function TSUtil()
       {
@@ -39,22 +37,39 @@ package jackboxgames.utils
       public static function createRefEndFn(ref:IActionRef) : Function
       {
          var okayToEndRef:Boolean = false;
-         var canceller:Function = null;
+         var inputCanceller:Function = null;
+         var jumpCanceller:Function = null;
          okayToEndRef = true;
-         canceller = JBGUtil.eventOnce(PlaybackEngine.getInstance(),InputEvent.INPUT,function(evt:Event):void
+         inputCanceller = JBGUtil.eventOnce(PlaybackEngine.getInstance(),InputEvent.INPUT,function(evt:Event):void
          {
             okayToEndRef = false;
          });
-         _cancelInputListeners.push(canceller);
+         jumpCanceller = JBGUtil.eventOnce(PlaybackEngine.getInstance(),CellEvent.CELL_JUMP,function(evt:Event):void
+         {
+            okayToEndRef = false;
+         });
+         _cancelInputListeners.push(inputCanceller);
+         _cancelInputListeners.push(jumpCanceller);
          return function(... args):*
          {
-            ArrayUtil.removeElementFromArray(_cancelInputListeners,canceller);
+            ArrayUtil.removeElementFromArray(_cancelInputListeners,inputCanceller);
+            ArrayUtil.removeElementFromArray(_cancelInputListeners,jumpCanceller);
             if(okayToEndRef)
             {
                ref.end();
             }
             return null;
          };
+      }
+      
+      public static function setTemplateRootPath(path:String) : void
+      {
+         _ts.g.templateRootPath = path;
+      }
+      
+      public static function createCellPath(fc:String, cell:String) : String
+      {
+         return PlaybackEngine.getInstance().activeExport.projectName + ":" + fc + ":" + cell;
       }
       
       public static function safeInput(input:String) : void
@@ -97,5 +112,30 @@ package jackboxgames.utils
             "duration":Duration.fromSec(seconds)
          };
       }
+      
+      public static function resolveArrayFromVariablePath(path:String, type:Class) : Array
+      {
+         var lookup:* = VariableUtil.getVariableValue(path);
+         if(lookup && lookup is Array)
+         {
+            return lookup;
+         }
+         if(lookup && lookup is type)
+         {
+            return [lookup];
+         }
+         return [];
+      }
+      
+      public static function resolveFromVariablePath(path:String, type:Class) : *
+      {
+         var lookup:* = VariableUtil.getVariableValue(path);
+         if(lookup is type)
+         {
+            return lookup;
+         }
+         return null;
+      }
    }
 }
+

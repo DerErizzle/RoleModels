@@ -1,19 +1,10 @@
 package jackboxgames.talkshow.export
 {
-   import jackboxgames.talkshow.core.PlaybackEngine;
-   import jackboxgames.talkshow.media.AbstractMedia;
-   import jackboxgames.talkshow.media.AudioMedia;
-   import jackboxgames.talkshow.media.GraphicMedia;
-   import jackboxgames.talkshow.media.TextMedia;
-   import jackboxgames.talkshow.utils.ExportDictionary;
-   
    internal class MediaFactory
    {
-      
       private static const DELIMITER_DEFINITION:String = "^";
       
       private static const DELIMITER_MEDIA_DATA:String = "|";
-       
       
       public function MediaFactory()
       {
@@ -33,9 +24,9 @@ package jackboxgames.talkshow.export
          for each(def in defs)
          {
             items = def.split(DELIMITER_MEDIA_DATA);
-            id = items.shift();
+            id = int(items.shift());
             type = items.shift();
-            count = items.shift();
+            count = int(items.shift());
             if(type == "A")
             {
                media = new AudioMedia(id,export,fl);
@@ -62,3 +53,4 @@ package jackboxgames.talkshow.export
       }
    }
 }
+

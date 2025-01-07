@@ -5,8 +5,6 @@ package jackboxgames.bbparser
    
    public class Tokenizer
    {
-       
-      
       private var _tags:Dictionary;
       
       public function Tokenizer(tags:Dictionary)
@@ -29,10 +27,10 @@ package jackboxgames.bbparser
          var attrMatch:Array = null;
          if(!match[1])
          {
-            tagName = String(match[2]);
+            tagName = match[2];
             attributes = new Dictionary();
             attrPattern = /([a-zA-Z0-9\.\-_:;\/]+)?=(["])([a-zA-Z0-9\.\-_:;#\/\s]+)\2/g;
-            attrStr = String(match[0].substr(1 + tagName.length,match[0].length - 2 - tagName.length));
+            attrStr = match[0].substr(1 + tagName.length,match[0].length - 2 - tagName.length);
             attrMatch = attrPattern.exec(attrStr);
             while(attrMatch != null)
             {
@@ -44,29 +42,68 @@ package jackboxgames.bbparser
                {
                   attributes[attrMatch[1]] = attrMatch[3];
                }
-               attrMatch = attrPattern.exec(attrStr);
             }
             return new Token(TokenType.STARTTAG,tagName,attributes,match[0]);
          }
          return new Token(TokenType.ENDTAG,match[1].substr(1,match[1].length - 1));
       }
       
+      private function _getBytesNeededForCharCode(charCode:int) : int
+      {
+         if(charCode <= 127)
+         {
+            return 1;
+         }
+         if(charCode <= 2047)
+         {
+            return 2;
+         }
+         if(charCode <= 65535)
+         {
+            return 3;
+         }
+         if(charCode <= 2097151)
+         {
+            return 4;
+         }
+         Assert.assert(false,"WHAT IS THIS CODE POINT?!");
+         return 1;
+      }
+      
+      private function _regexIndexToStringIndex(s:String, regexIndex:int) : int
+      {
+         if(EnvUtil.isAIR())
+         {
+            return regexIndex;
+         }
+         var currentBytes:int = 0;
+         for(var i:int = 0; i < s.length; i++)
+         {
+            if(currentBytes >= regexIndex)
+            {
+               return i;
+            }
+            currentBytes += this._getBytesNeededForCharCode(s.charCodeAt(i));
+         }
+         return -1;
+      }
+      
       private function getTokens(str:String) : Array
       {
          var delta:int = 0;
-         var tagPattern:RegExp = /\[(\/\w*)\]|\[(\w*)(=([\"])[a-zA-Z0-9\\.\\-_:;#\/]*\4)?( ([a-zA-Z0-9\\.\\-_:;\/]+)?=([\"])([a-zA-Z0-9\.\-_:;#\/\s]+)\7)*\]/g;
+         var tagPattern:RegExp = /\[(\/\w*)\]|\[(\w*)(=([\"])[a-zA-Z0-9\\.\\-_:;\/]*\4)?( ([a-zA-Z0-9\\.\\-_:;\/]+)?=([\"])([a-zA-Z0-9\.\-_:;#\/\s]+)\7)*\]/g;
          var tokens:Array = [];
          var match:Array = tagPattern.exec(str);
          var lastIndex:int = 0;
          while(match != null)
          {
-            delta = TextUtils.regexIndexToStringIndex(str,match.index) - lastIndex;
+            delta = this._regexIndexToStringIndex(str,match.index) - lastIndex;
             if(delta > 0)
             {
                tokens.push(Tokenizer.createTextToken(str.substr(lastIndex,delta)));
             }
             tokens.push(Tokenizer.createTagToken(match));
-            lastIndex = TextUtils.regexIndexToStringIndex(str,tagPattern.lastIndex);
+            lastIndex = this._regexIndexToStringIndex(str,tagPattern.lastIndex);
             match = tagPattern.exec(str);
          }
          if(lastIndex >= 0)
@@ -125,3 +162,4 @@ package jackboxgames.bbparser
       }
    }
 }
+

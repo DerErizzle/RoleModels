@@ -4,8 +4,6 @@ package jackboxgames.talkshow.cells
    
    public class InputBranch extends AbstractBranch
    {
-       
-      
       private var _input:String;
       
       private var _choiceNum:int;
@@ -51,3 +49,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

@@ -6,9 +6,7 @@ package jackboxgames.utils
    
    public class PlatformMovieClipManager
    {
-      
       private static var _instance:PlatformMovieClipManager;
-       
       
       private var _swfLoad:MediaLoader;
       
@@ -48,3 +46,4 @@ package jackboxgames.utils
       }
    }
 }
+

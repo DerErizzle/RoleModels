@@ -5,9 +5,7 @@ package com.greensock.plugins
    
    public class RoundPropsPlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       protected var _tween:TweenLite;
       
@@ -39,7 +37,7 @@ package com.greensock.plugins
          i = int(rp.length);
          while(--i > -1)
          {
-            prop = String(rp[i]);
+            prop = rp[i];
             pt = this._tween._firstPT;
             while(Boolean(pt))
             {
@@ -79,3 +77,4 @@ package com.greensock.plugins
       }
    }
 }
+

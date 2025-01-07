@@ -6,8 +6,6 @@ package jackboxgames.configuration
    
    public class ConfigFileSource implements IConfigSource
    {
-       
-      
       private var _paths:Array;
       
       private var _config:Object;
@@ -34,7 +32,7 @@ package jackboxgames.configuration
             {
                if(Boolean(result.success))
                {
-                  _config = ObjectUtil.concat(_config,JSON.deserialize(result.data));
+                  _config = ObjectUtil.concat(_config,result.loader.contentAsJSON);
                   doneFn();
                }
                else
@@ -48,7 +46,7 @@ package jackboxgames.configuration
       
       public function hasValueForKey(key:String) : Boolean
       {
-         return Boolean(this._config) ? this._config.hasOwnProperty(key) : false;
+         return Boolean(this._config) ? Boolean(this._config.hasOwnProperty(key)) : false;
       }
       
       public function getValueForKey(key:String) : *
@@ -57,3 +55,4 @@ package jackboxgames.configuration
       }
    }
 }
+

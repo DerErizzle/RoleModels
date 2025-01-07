@@ -4,8 +4,6 @@ package com.adobe.net
    
    public class URIEncodingBitmap extends ByteArray
    {
-       
-      
       public function URIEncodingBitmap(charsToEscape:String)
       {
          var i:int = 0;
@@ -41,7 +39,7 @@ package com.adobe.net
          data.writeUTFBytes(char);
          data.position = 0;
          c = data.readByte();
-         if(Boolean(c & 128))
+         if(Boolean(c & 0x80))
          {
             return 0;
          }
@@ -59,3 +57,4 @@ package com.adobe.net
       }
    }
 }
+

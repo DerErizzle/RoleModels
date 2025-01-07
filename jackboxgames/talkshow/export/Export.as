@@ -28,13 +28,11 @@ package jackboxgames.talkshow.export
    
    public class Export extends PausableEventDispatcher implements IExport
    {
-      
       private static const DELIMITER:String = "^";
       
       private static const DELIMITER_DATA:String = "|";
       
       private static const INTERNAL_ACTION_ID_MAX:int = 999;
-       
       
       protected var _config:ConfigInfo;
       
@@ -131,7 +129,7 @@ package jackboxgames.talkshow.export
       public function mediaWasLoadedByFlowchart(m:AbstractMedia, fl:IFlowchart) : Boolean
       {
          var key:String = "F" + fl.id;
-         return this._mediaLoaded.hasOwnProperty(key) && this._mediaLoaded[key].indexOf(m) >= 0;
+         return Boolean(this._mediaLoaded.hasOwnProperty(key)) && this._mediaLoaded[key].indexOf(m) >= 0;
       }
       
       public function unloadMedia(m:AbstractMedia) : void
@@ -354,7 +352,7 @@ package jackboxgames.talkshow.export
          {
             return null;
          }
-         return prj.getActionPackage(items.length == 2 ? String(items[1]) : String(items[0]));
+         return prj.getActionPackage(items.length == 2 ? items[1] : items[0]);
       }
       
       public function getTemplate(id:*) : ITemplate
@@ -614,3 +612,4 @@ package jackboxgames.talkshow.export
       }
    }
 }
+

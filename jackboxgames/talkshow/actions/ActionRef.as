@@ -17,8 +17,6 @@ package jackboxgames.talkshow.actions
    
    public class ActionRef implements ILoadable, IActionRef
    {
-       
-      
       private const VAR_CHECK:String = "\\{\\{((g|l)\\.[A-Za-z_$]([A-Za-z0-9_$]*|\\.[A-Za-z0-9_$])*)\\}\\}";
       
       protected var _timing:Timing;
@@ -129,7 +127,7 @@ package jackboxgames.talkshow.actions
                      }
                      else
                      {
-                        txt = String(version.text);
+                        txt = version.text;
                      }
                      params[p.name] = VariableUtil.replaceVariables(txt);
                   }
@@ -225,13 +223,34 @@ package jackboxgames.talkshow.actions
          return param;
       }
       
+      private function _shouldLoadAllVersions(val:IMediaParamValue) : Boolean
+      {
+         var regex:RegExp = new RegExp(this.VAR_CHECK);
+         return (val.selType == MediaParamValue.SEL_INDEX || val.selType == MediaParamValue.SEL_TAG) && Boolean(regex.test(val.selValue)) && val.media.numVersions < LoadData.MAX_VOLATILE;
+      }
+      
+      private function _loadAllValues(val:IMediaParamValue, data:ILoadData) : void
+      {
+         var ver:IMediaVersion = null;
+         for(var i:int = 0; i < val.media.numVersions; i++)
+         {
+            ver = val.media.getVersionByIndex(i);
+            if(ver != null && ver is ILoadable)
+            {
+               if(!ILoadable(ver).isLoaded())
+               {
+                  ILoadable(ver).load(data);
+               }
+            }
+         }
+      }
+      
       public function load(data:ILoadData = null) : void
       {
          var pv:* = undefined;
          var val:IMediaParamValue = null;
          var ver:IMediaVersion = null;
-         var regExp:RegExp = null;
-         var i:uint = 0;
+         var primaryVal:IMediaParamValue = null;
          if(this._action == null)
          {
             return;
@@ -249,30 +268,23 @@ package jackboxgames.talkshow.actions
                {
                   val.media.onMediaLoaded(this._parentCell.flowchart);
                }
-               if(val.selType == 2 || val.selType == 3)
+               if(this._shouldLoadAllVersions(val))
                {
-                  regExp = new RegExp(this.VAR_CHECK);
-                  if(regExp.test(val.selValue) && val.media.numVersions < LoadData.MAX_VOLATILE)
-                  {
-                     i = 0;
-                     while(i < val.media.numVersions)
-                     {
-                        ver = val.media.getVersionByIndex(i++);
-                        if(ver != null && ver is ILoadable)
-                        {
-                           if(!ILoadable(ver).isLoaded())
-                           {
-                              ILoadable(ver).load(data);
-                           }
-                        }
-                     }
-                     continue;
-                  }
+                  this._loadAllValues(val,data);
                }
-               ver = val.getCurrentVersion();
-               if(ver is ILoadable)
+               else
                {
-                  if(!ILoadable(ver).isLoaded())
+                  if(val.selType == MediaParamValue.SEL_PRIMARY)
+                  {
+                     primaryVal = this.getPrimaryMediaParamValue();
+                     if(this._shouldLoadAllVersions(primaryVal))
+                     {
+                        this._loadAllValues(val,data);
+                        continue;
+                     }
+                  }
+                  ver = val.getCurrentVersion();
+                  if(ver is ILoadable && !ILoadable(ver).isLoaded())
                   {
                      ILoadable(ver).load(data);
                   }
@@ -332,3 +344,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

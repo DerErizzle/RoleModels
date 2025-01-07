@@ -4,8 +4,6 @@ package jackboxgames.engine
    
    public interface IGame
    {
-       
-      
       function get gameName() : String;
       
       function get gameSavePrefix() : String;
@@ -20,11 +18,11 @@ package jackboxgames.engine
       
       function get main() : MovieClip;
       
-      function get initialSettings() : Object;
+      function get settings() : Array;
       
       function get preventDispose() : Boolean;
       
-      function init() : void;
+      function init(param1:Function) : void;
       
       function dispose() : void;
       
@@ -34,10 +32,11 @@ package jackboxgames.engine
       
       function exit() : void;
       
-      function doReset() : void;
+      function doReset(param1:String = "") : void;
       
       function setVisibility(param1:Boolean) : void;
       
       function onSetupFromNative(param1:String, param2:Boolean = false) : void;
    }
 }
+

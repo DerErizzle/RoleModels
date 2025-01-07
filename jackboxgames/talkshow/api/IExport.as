@@ -5,8 +5,6 @@ package jackboxgames.talkshow.api
    
    public interface IExport extends ICodeSpace, IEventDispatcher, ILoadable
    {
-       
-      
       function getAllProjects() : Array;
       
       function getFlowchart(param1:*) : IFlowchart;
@@ -54,3 +52,4 @@ package jackboxgames.talkshow.api
       function destroy() : void;
    }
 }
+

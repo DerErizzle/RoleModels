@@ -14,11 +14,10 @@ package
    )]
    public dynamic class CourierNew extends Font
    {
-       
-      
       public function CourierNew()
       {
          super();
       }
    }
 }
+

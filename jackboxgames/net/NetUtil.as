@@ -8,8 +8,6 @@ package jackboxgames.net
    
    public final class NetUtil
    {
-       
-      
       public function NetUtil()
       {
          super();
@@ -34,3 +32,4 @@ package jackboxgames.net
       }
    }
 }
+

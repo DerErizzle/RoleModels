@@ -6,11 +6,9 @@ package jackboxgames.talkshow.cells
    
    public class LoadData implements ILoadData
    {
-      
       public static const MAX_VOLATILE:uint = 3;
       
       public static const DEFAULT_LOAD_DEPTH:uint = 1;
-       
       
       private var _pathchecked:Dictionary;
       
@@ -101,3 +99,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

@@ -6,8 +6,6 @@ package jackboxgames.talkshow.api
    
    public interface IAudioVersion extends ILoadableVersion, IEventDispatcher
    {
-       
-      
       function get audio() : Sound;
       
       function get category() : String;
@@ -19,3 +17,4 @@ package jackboxgames.talkshow.api
       function get isPlayable() : Boolean;
    }
 }
+

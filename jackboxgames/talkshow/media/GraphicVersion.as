@@ -15,8 +15,6 @@ package jackboxgames.talkshow.media
    
    public class GraphicVersion extends AbstractLoadableVersion
    {
-       
-      
       protected var _content:Loader;
       
       public function GraphicVersion(idx:uint, id:uint, locale:String, tag:String, text:String, ftype:String, config:IConfigInfo)
@@ -110,3 +108,4 @@ package jackboxgames.talkshow.media
       }
    }
 }
+

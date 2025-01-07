@@ -4,8 +4,6 @@ package jackboxgames.talkshow.api
    
    public interface ITemplate extends ILoadable, IEventDispatcher
    {
-       
-      
       function get id() : int;
       
       function get name() : String;
@@ -13,6 +11,8 @@ package jackboxgames.talkshow.api
       function get handler() : ITemplateHandler;
       
       function get params() : Array;
+      
+      function get fields() : Array;
       
       function getValue(param1:int) : *;
       
@@ -23,3 +23,4 @@ package jackboxgames.talkshow.api
       function loadField(param1:int) : void;
    }
 }
+

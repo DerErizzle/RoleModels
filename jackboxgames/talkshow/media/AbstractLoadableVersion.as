@@ -8,7 +8,6 @@ package jackboxgames.talkshow.media
    
    public class AbstractLoadableVersion extends AbstractVersion implements ILoadableVersion
    {
-      
       public static const TYPE_NONE:String = "X";
       
       public static const TYPE_SWF:String = "S";
@@ -22,7 +21,6 @@ package jackboxgames.talkshow.media
       public static const TYPE_PNG:String = "P";
       
       public static const TYPE_FLV:String = "F";
-       
       
       protected var _contentType:String;
       
@@ -129,3 +127,4 @@ package jackboxgames.talkshow.media
       }
    }
 }
+

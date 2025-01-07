@@ -5,9 +5,7 @@ package jackboxgames.nativeoverride
    
    public class Trophy implements IPreparable
    {
-      
       private static var _instance:Trophy;
-       
       
       private var _prepareCallback:Function;
       
@@ -82,3 +80,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

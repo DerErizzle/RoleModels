@@ -6,9 +6,7 @@ package com.laiyonghao
    
    public class Uuid
    {
-      
       private static const ALPHA_CHAR_CODES:Array = [48,49,50,51,52,53,54,55,56,57,65,66,67,68,69,70];
-       
       
       private var str:String;
       
@@ -56,12 +54,13 @@ package com.laiyonghao
             }
             b = buff.readByte();
             _loc5_ = index++;
-            chars[_loc5_] = ALPHA_CHAR_CODES[(b & 240) >>> 4];
+            chars[_loc5_] = ALPHA_CHAR_CODES[(b & 0xF0) >>> 4];
             var _loc6_:* = index++;
-            chars[_loc6_] = ALPHA_CHAR_CODES[b & 15];
+            chars[_loc6_] = ALPHA_CHAR_CODES[b & 0x0F];
          }
          str = String.fromCharCode.apply(null,chars);
          return str;
       }
    }
 }
+

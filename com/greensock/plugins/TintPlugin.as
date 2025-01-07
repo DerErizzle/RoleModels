@@ -8,11 +8,9 @@ package com.greensock.plugins
    
    public class TintPlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
       
       protected static var _props:Array = ["redMultiplier","greenMultiplier","blueMultiplier","alphaMultiplier","redOffset","greenOffset","blueOffset","alphaOffset"];
-       
       
       protected var _transform:Transform;
       
@@ -46,7 +44,7 @@ package com.greensock.plugins
          var i:int = int(_props.length);
          while(--i > -1)
          {
-            p = String(_props[i]);
+            p = _props[i];
             if(start[p] != end[p])
             {
                _addTween(start,p,start[p],end[p],"tint");
@@ -67,3 +65,4 @@ package com.greensock.plugins
       }
    }
 }
+

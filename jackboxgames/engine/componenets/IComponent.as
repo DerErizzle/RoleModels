@@ -4,8 +4,6 @@ package jackboxgames.engine.componenets
    
    public interface IComponent extends IEventDispatcher
    {
-       
-      
       function get priority() : uint;
       
       function init(param1:Function) : void;
@@ -17,3 +15,4 @@ package jackboxgames.engine.componenets
       function disposeGame() : void;
    }
 }
+

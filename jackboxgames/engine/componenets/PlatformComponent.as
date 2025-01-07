@@ -9,12 +9,9 @@ package jackboxgames.engine.componenets
    import jackboxgames.settings.SettingsConstants;
    import jackboxgames.settings.SettingsManager;
    import jackboxgames.utils.*;
-   import jackboxgames.video.*;
    
    public class PlatformComponent extends PausableEventDispatcher implements ILaunchGameComponent, IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       public function PlatformComponent(engine:GameEngine)
@@ -82,6 +79,10 @@ package jackboxgames.engine.componenets
          {
             this._engine.error.handleError(evt.data.parameter);
          }
+         if(BuildConfig.instance.configVal("isBundle") != true)
+         {
+            return;
+         }
          if(evt.data.message == "ReturnToStart")
          {
             this._engine.launchGame("","","");
@@ -93,3 +94,4 @@ package jackboxgames.engine.componenets
       }
    }
 }
+

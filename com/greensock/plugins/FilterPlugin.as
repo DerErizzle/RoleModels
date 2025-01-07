@@ -6,9 +6,7 @@ package com.greensock.plugins
    
    public class FilterPlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       protected var _target:Object;
       
@@ -73,7 +71,7 @@ package com.greensock.plugins
          i = int(propNames.length);
          while(--i > -1)
          {
-            p = String(propNames[i]);
+            p = propNames[i];
             if(p in props && this._filter[p] != props[p])
             {
                if(p == "color" || p == "highlightColor" || p == "shadowColor")
@@ -125,3 +123,4 @@ package com.greensock.plugins
       }
    }
 }
+

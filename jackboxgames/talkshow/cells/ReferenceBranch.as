@@ -5,8 +5,6 @@ package jackboxgames.talkshow.cells
    
    public class ReferenceBranch extends AbstractBranch
    {
-       
-      
       private var _hitlist:Array;
       
       public function ReferenceBranch(cell:ReferenceCell, branchId:uint, targetId:int, type:uint, hitlist:String = null)
@@ -76,3 +74,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

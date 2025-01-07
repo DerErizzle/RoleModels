@@ -6,8 +6,6 @@ package jackboxgames.talkshow.display
    
    public class Canvas extends Sprite implements ICanvas
    {
-       
-      
       public function Canvas()
       {
          super();
@@ -29,3 +27,4 @@ package jackboxgames.talkshow.display
       }
    }
 }
+

@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface IActionRef
    {
-       
-      
       function get action() : IAction;
       
       function get isPrimary() : Boolean;
@@ -19,3 +17,4 @@ package jackboxgames.talkshow.api
       function end() : void;
    }
 }
+

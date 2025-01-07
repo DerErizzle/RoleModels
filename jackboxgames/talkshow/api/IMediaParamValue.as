@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface IMediaParamValue
    {
-       
-      
       function get selType() : uint;
       
       function get selValue() : *;
@@ -17,3 +15,4 @@ package jackboxgames.talkshow.api
       function get previous() : IMediaVersion;
    }
 }
+

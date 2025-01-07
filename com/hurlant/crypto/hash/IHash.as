@@ -4,8 +4,6 @@ package com.hurlant.crypto.hash
    
    public interface IHash
    {
-       
-      
       function getInputSize() : uint;
       
       function getHashSize() : uint;
@@ -17,3 +15,4 @@ package com.hurlant.crypto.hash
       function getPadSize() : int;
    }
 }
+

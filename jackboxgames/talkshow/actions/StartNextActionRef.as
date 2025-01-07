@@ -7,8 +7,6 @@ package jackboxgames.talkshow.actions
    
    public class StartNextActionRef extends ActionRef
    {
-       
-      
       private var START_NEXT_ID:int = -99999;
       
       protected var _tFlowchart:uint;
@@ -92,3 +90,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

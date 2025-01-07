@@ -6,11 +6,9 @@ package jackboxgames.utils
    
    public class PausableEventDispatcher extends EventDispatcher
    {
+      private static var PAUSED_EVENTS:Array;
       
       private static var PAUSED:Boolean = false;
-      
-      private static var PAUSED_EVENTS:Array;
-       
       
       public function PausableEventDispatcher(target:IEventDispatcher = null)
       {
@@ -35,7 +33,7 @@ package jackboxgames.utils
          while(PAUSED_EVENTS.length > 0)
          {
             eventObj = PAUSED_EVENTS.shift();
-            (eventObj.dispatcher as IEventDispatcher).dispatchEvent(eventObj.event as Event);
+            (eventObj.dispatcher as PausableEventDispatcher).dispatchEventImmediate(eventObj.event as Event);
          }
       }
       
@@ -58,3 +56,4 @@ package jackboxgames.utils
       }
    }
 }
+

@@ -5,7 +5,6 @@ package com.greensock.plugins
    
    public class ColorMatrixFilterPlugin extends FilterPlugin
    {
-      
       public static const API:Number = 2;
       
       private static var _propNames:Array = [];
@@ -17,7 +16,6 @@ package com.greensock.plugins
       protected static var _lumG:Number = 0.71516;
       
       protected static var _lumB:Number = 0.072169;
-       
       
       protected var _matrix:Array;
       
@@ -38,9 +36,9 @@ package com.greensock.plugins
          {
             amount = 1;
          }
-         var r:Number = (color >> 16 & 255) / 255;
-         var g:Number = (color >> 8 & 255) / 255;
-         var b:Number = (color & 255) / 255;
+         var r:Number = (color >> 16 & 0xFF) / 255;
+         var g:Number = (color >> 8 & 0xFF) / 255;
+         var b:Number = (color & 0xFF) / 255;
          var inv:Number = 1 - amount;
          var temp:Array = [inv + amount * r * _lumR,amount * r * _lumG,amount * r * _lumB,0,0,amount * g * _lumR,inv + amount * g * _lumG,amount * g * _lumB,0,0,amount * b * _lumR,amount * b * _lumG,inv + amount * b * _lumB,0,0,0,0,0,1,0];
          return applyMatrix(temp,m);
@@ -179,3 +177,4 @@ package com.greensock.plugins
       }
    }
 }
+

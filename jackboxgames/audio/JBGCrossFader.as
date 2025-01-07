@@ -2,8 +2,6 @@ package jackboxgames.audio
 {
    public class JBGCrossFader
    {
-       
-      
       private var _soundA:JBGSound;
       
       private var _soundB:JBGSound;
@@ -43,3 +41,4 @@ package jackboxgames.audio
       }
    }
 }
+

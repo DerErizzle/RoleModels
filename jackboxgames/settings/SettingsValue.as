@@ -4,9 +4,7 @@ package jackboxgames.settings
    
    public class SettingsValue extends PausableEventDispatcher
    {
-      
       public static const EVENT_VALUE_CHANGED:String = "SettingsValue.Changed";
-       
       
       private var _getFn:Function;
       
@@ -36,5 +34,11 @@ package jackboxgames.settings
       {
          return this.val == this._getInitialFn();
       }
+      
+      public function setToDefault() : void
+      {
+         this.val = this._getInitialFn();
+      }
    }
 }
+

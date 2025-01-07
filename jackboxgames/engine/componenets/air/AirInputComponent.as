@@ -5,15 +5,12 @@ package jackboxgames.engine.componenets.air
    import flash.ui.Keyboard;
    import jackboxgames.engine.GameEngine;
    import jackboxgames.engine.componenets.IComponent;
-   import jackboxgames.flash.InputManager;
    import jackboxgames.settings.SettingsConstants;
    import jackboxgames.settings.SettingsManager;
    import jackboxgames.utils.PausableEventDispatcher;
    
    public class AirInputComponent extends PausableEventDispatcher implements IComponent
    {
-       
-      
       private var _engine:GameEngine;
       
       private var _stage:Stage;
@@ -46,7 +43,6 @@ package jackboxgames.engine.componenets.air
          stage.addEventListener(KeyboardEvent.KEY_UP,this.onKey,false,int.MAX_VALUE);
          stage.addEventListener(KeyboardEvent.KEY_UP,this.onKey,true,int.MAX_VALUE);
          stage.addEventListener(KeyboardEvent.KEY_UP,this.onKeyCommand);
-         InputManager.instance.init(stage);
          doneFn();
       }
       
@@ -73,3 +69,4 @@ package jackboxgames.engine.componenets.air
       }
    }
 }
+

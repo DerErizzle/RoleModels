@@ -8,8 +8,6 @@ package jackboxgames.video
    
    public class VideoPlayerBase extends PausableEventDispatcher implements IVideoPlayer
    {
-       
-      
       protected var Parent:DisplayObjectContainer = null;
       
       protected var _url:String;
@@ -126,3 +124,4 @@ package jackboxgames.video
       }
    }
 }
+

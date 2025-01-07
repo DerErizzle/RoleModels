@@ -4,9 +4,7 @@ package com.greensock.plugins
    
    public class EndArrayPlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       protected var _a:Array;
       
@@ -80,8 +78,6 @@ package com.greensock.plugins
 
 class ArrayTweenInfo
 {
-    
-   
    public var i:uint;
    
    public var s:Number;
@@ -96,3 +92,4 @@ class ArrayTweenInfo
       this.c = change;
    }
 }
+

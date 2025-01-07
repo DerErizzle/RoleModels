@@ -4,8 +4,7 @@ package jackboxgames.talkshow.api
    
    public interface IGraphicVersion extends ILoadableVersion
    {
-       
-      
       function get graphic() : DisplayObject;
    }
 }
+

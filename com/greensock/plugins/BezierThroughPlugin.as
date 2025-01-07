@@ -4,9 +4,7 @@ package com.greensock.plugins
    
    public class BezierThroughPlugin extends BezierPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       public function BezierThroughPlugin()
       {
@@ -25,3 +23,4 @@ package com.greensock.plugins
       }
    }
 }
+

@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface IActionPackageRef extends ILoadable
    {
-       
-      
       function get id() : int;
       
       function get name() : String;
@@ -17,3 +15,4 @@ package jackboxgames.talkshow.api
       function getExport() : IExport;
    }
 }
+

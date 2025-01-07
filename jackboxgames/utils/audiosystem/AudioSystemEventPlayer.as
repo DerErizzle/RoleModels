@@ -1,13 +1,12 @@
 package jackboxgames.utils.audiosystem
 {
-   import jackboxgames.events.EventWithData;
+   import flash.geom.*;
+   import jackboxgames.events.*;
    import jackboxgames.nativeoverride.*;
    import jackboxgames.utils.*;
    
-   public class AudioSystemEventPlayer
+   public class AudioSystemEventPlayer extends PausableEventDispatcher
    {
-       
-      
       private var _eventName:String;
       
       private var _event:AudioEvent;
@@ -56,12 +55,13 @@ package jackboxgames.utils.audiosystem
       
       public function play(doneFn:Function = null) : void
       {
-         JBGUtil.eventOnce(this._event,AudioEvent.EVENT_PLAYBACK_DONE,function():void
+         JBGUtil.eventOnce(this._event,AudioEvent.EVENT_PLAYBACK_DONE,function(evt:EventWithData):void
          {
             if(doneFn != null)
             {
                doneFn();
             }
+            dispatchEvent(evt);
          });
          this._event.play();
       }
@@ -106,5 +106,16 @@ package jackboxgames.utils.audiosystem
       {
          this._event.setParameterValue(name,val);
       }
+      
+      public function triggerCue() : void
+      {
+         this._event.triggerCue();
+      }
+      
+      public function setLocation(flashLocation:Point) : void
+      {
+         AudioSystemUtil.setLocation(this._event,flashLocation);
+      }
    }
 }
+

@@ -5,9 +5,7 @@ package com.greensock.plugins
    
    public class FramePlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       public var frame:int;
       
@@ -40,3 +38,4 @@ package com.greensock.plugins
       }
    }
 }
+

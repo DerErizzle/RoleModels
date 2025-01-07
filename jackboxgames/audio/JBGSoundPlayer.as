@@ -5,9 +5,7 @@ package jackboxgames.audio
    
    public class JBGSoundPlayer
    {
-      
       private static var _instance:JBGSoundPlayer;
-       
       
       private var _sounds:Array;
       
@@ -91,7 +89,7 @@ package jackboxgames.audio
       
       public function unregisterSound(sound:JBGSound) : void
       {
-         var index:int = this._sounds.indexOf(sound);
+         var index:int = int(this._sounds.indexOf(sound));
          if(index >= 0)
          {
             this._sounds.splice(index,1);
@@ -99,3 +97,4 @@ package jackboxgames.audio
       }
    }
 }
+

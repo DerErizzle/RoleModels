@@ -4,11 +4,9 @@ package jackboxgames.utils
    
    public class Base64
    {
-      
       private static const BASE64_CHARS:String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
       
       public static const version:String = "1.1.0";
-       
       
       public function Base64()
       {
@@ -41,10 +39,10 @@ package jackboxgames.utils
                dataBuffer[i] = data.readUnsignedByte();
                i++;
             }
-            outputBuffer[0] = (dataBuffer[0] & 252) >> 2;
+            outputBuffer[0] = (dataBuffer[0] & 0xFC) >> 2;
             outputBuffer[1] = (dataBuffer[0] & 3) << 4 | dataBuffer[1] >> 4;
-            outputBuffer[2] = (dataBuffer[1] & 15) << 2 | dataBuffer[2] >> 6;
-            outputBuffer[3] = dataBuffer[2] & 63;
+            outputBuffer[2] = (dataBuffer[1] & 0x0F) << 2 | dataBuffer[2] >> 6;
+            outputBuffer[3] = dataBuffer[2] & 0x3F;
             for(j = dataBuffer.length; j < 3; j++)
             {
                outputBuffer[j + 1] = 64;
@@ -78,8 +76,8 @@ package jackboxgames.utils
                dataBuffer[j] = BASE64_CHARS.indexOf(data.charAt(i + j));
                j++;
             }
-            outputBuffer[0] = (dataBuffer[0] << 2) + ((dataBuffer[1] & 48) >> 4);
-            outputBuffer[1] = ((dataBuffer[1] & 15) << 4) + ((dataBuffer[2] & 60) >> 2);
+            outputBuffer[0] = (dataBuffer[0] << 2) + ((dataBuffer[1] & 0x30) >> 4);
+            outputBuffer[1] = ((dataBuffer[1] & 0x0F) << 4) + ((dataBuffer[2] & 0x3C) >> 2);
             outputBuffer[2] = ((dataBuffer[2] & 3) << 6) + dataBuffer[3];
             for(k = 0; k < outputBuffer.length; k++)
             {
@@ -95,3 +93,4 @@ package jackboxgames.utils
       }
    }
 }
+

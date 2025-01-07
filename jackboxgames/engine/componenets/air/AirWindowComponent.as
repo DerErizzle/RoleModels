@@ -4,18 +4,13 @@ package jackboxgames.engine.componenets.air
    import jackboxgames.engine.GameEngine;
    import jackboxgames.engine.componenets.IComponent;
    import jackboxgames.engine.componenets.IExitComponent;
-   import jackboxgames.engine.componenets.IFullscreenComponent;
-   import jackboxgames.nativeoverride.Platform;
-   import jackboxgames.utils.BuildConfig;
    import jackboxgames.utils.PausableEventDispatcher;
    
-   public class AirWindowComponent extends PausableEventDispatcher implements IFullscreenComponent, IExitComponent, IComponent
+   public class AirWindowComponent extends PausableEventDispatcher implements IExitComponent, IComponent
    {
-      
       private static var ASPECT_RATIO:Number = 1280 / 720;
       
       private static var WINDOW_RATIO:Number = 1296 / 759;
-       
       
       private var _engine:GameEngine;
       
@@ -52,15 +47,6 @@ package jackboxgames.engine.componenets.air
       {
       }
       
-      public function get supportsFullscreen() : Boolean
-      {
-         return Platform.instance.supportsWindow && BuildConfig.instance.configVal("supportsFullScreen") == true;
-      }
-      
-      public function setFullscreen(isFull:Boolean) : void
-      {
-      }
-      
       public function get supportsExit() : Boolean
       {
          return true;
@@ -71,3 +57,4 @@ package jackboxgames.engine.componenets.air
       }
    }
 }
+

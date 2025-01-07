@@ -6,7 +6,6 @@ package jackboxgames.nativeoverride
    
    public class Store extends PausableEventDispatcher
    {
-      
       private static var _instance:Store;
       
       public static const EVENT_PRODUCTS_RETRIEVED:String = "Store.ProductsRetrieved";
@@ -22,7 +21,6 @@ package jackboxgames.nativeoverride
       public static const EVENT_RESTORE_PURCHASES_COMPLETE:String = "Store.RestorePurchasesComplete";
       
       private static const SAVED_PURCHASES_KEY:String = "SAVED_PURCHASES";
-       
       
       private var _purchasedProducts:Array;
       
@@ -213,3 +211,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

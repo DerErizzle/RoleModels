@@ -11,8 +11,6 @@ package jackboxgames.video
    
    public class VideoPlayerMobile extends VideoPlayerBase implements IVideoPlayer
    {
-       
-      
       private var _nativeVideo:jackboxgames.nativeoverride.Video;
       
       public function VideoPlayerMobile(videoframe:MovieClip = null, parent:DisplayObjectContainer = null)
@@ -57,6 +55,10 @@ package jackboxgames.video
       
       override public function load(url:String, loop:Boolean = false, background:Boolean = false) : void
       {
+         if(BuildConfig.instance.configVal("video-needs-game-path"))
+         {
+            url = "games/" + GameEngine.instance.activeGame.gameName + "/" + url;
+         }
          super.load(url + BuildConfig.instance.configVal("video-extension"),loop,background);
          this._nativeVideo.addEventListener("VideoLoaded",this.handleLoaded);
          this._nativeVideo.addEventListener("onError",this.handleError);
@@ -201,3 +203,4 @@ package jackboxgames.video
       }
    }
 }
+

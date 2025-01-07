@@ -2,7 +2,6 @@ package jackboxgames.talkshow.api
 {
    public class Constants
    {
-      
       public static const CELL_ACTION:String = "A";
       
       public static const CELL_CALL:String = "S";
@@ -40,7 +39,6 @@ package jackboxgames.talkshow.api
       public static const EVENT_MEDIA_LOADED:String = "TS.mediaLoaded";
       
       public static const EVENT_ENGINE_LOADED:String = "TS.engineLoaded";
-       
       
       public function Constants()
       {
@@ -48,3 +46,4 @@ package jackboxgames.talkshow.api
       }
    }
 }
+

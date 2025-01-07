@@ -7,8 +7,6 @@ package jackboxgames.timer
    
    public class FrameTimer extends PausableEventDispatcher implements IJBGTimer
    {
-       
-      
       private var _delay:uint;
       
       private var _repeatCount:uint;
@@ -113,3 +111,4 @@ package jackboxgames.timer
       }
    }
 }
+

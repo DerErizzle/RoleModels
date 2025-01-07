@@ -2,8 +2,6 @@ package jackboxgames.bbparser
 {
    public class Tag
    {
-       
-      
       private var _tagName:String;
       
       private var _insertLineBreaks:Boolean;
@@ -24,8 +22,17 @@ package jackboxgames.bbparser
          this._markupGenerator = markupGenerator;
       }
       
-      public static function create(tagName:String, markupGenerator:Function, insertLineBreaks:Boolean = false, suppressLineBreaks:Boolean = false, noNesting:Boolean = false) : Tag
+      public static function defaultMarkupGenerator(tag:Tag, content:String) : String
       {
+         return "<" + tag.tagName + ">" + content + "</" + tag.tagName + ">";
+      }
+      
+      public static function create(tagName:String, markupGenerator:Function = null, insertLineBreaks:Boolean = false, suppressLineBreaks:Boolean = false, noNesting:Boolean = false) : Tag
+      {
+         if(markupGenerator == null)
+         {
+            markupGenerator = Tag.defaultMarkupGenerator;
+         }
          return new Tag(tagName,insertLineBreaks,suppressLineBreaks,noNesting,markupGenerator);
       }
       
@@ -55,3 +62,4 @@ package jackboxgames.bbparser
       }
    }
 }
+

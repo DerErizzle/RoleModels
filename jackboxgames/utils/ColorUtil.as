@@ -6,8 +6,6 @@ package jackboxgames.utils
    
    public final class ColorUtil
    {
-       
-      
       public function ColorUtil()
       {
          super();
@@ -27,14 +25,14 @@ package jackboxgames.utils
       
       public static function additiveTint(d:DisplayObject, c:uint) : void
       {
-         var t:ColorTransform = new ColorTransform(1,1,1,1,Number(c >> 16 & 255),Number(c >> 8 & 255),Number(c & 255));
+         var t:ColorTransform = new ColorTransform(1,1,1,1,Number(c >> 16 & 0xFF),Number(c >> 8 & 0xFF),Number(c & 0xFF));
          d.transform.colorTransform = t;
       }
       
       public static function subtractiveTint(d:DisplayObject, c:uint) : void
       {
          var subC:uint = uint(16777215 - c);
-         var t:ColorTransform = new ColorTransform(1,1,1,1,-Number(subC >> 16 & 255),-Number(subC >> 8 & 255),-Number(subC & 255));
+         var t:ColorTransform = new ColorTransform(1,1,1,1,-Number(subC >> 16 & 0xFF),-Number(subC >> 8 & 0xFF),-Number(subC & 0xFF));
          d.transform.colorTransform = t;
       }
       
@@ -56,5 +54,19 @@ package jackboxgames.utils
          }
          return "#" + playerColor;
       }
+      
+      public static function hexToRgb(hex:String) : uint
+      {
+         if(hex.length < 2)
+         {
+            return 0;
+         }
+         if(hex.charAt(0) != "#")
+         {
+            return 0;
+         }
+         return parseInt(hex.slice(1),16);
+      }
    }
 }
+

@@ -4,7 +4,6 @@ package jackboxgames.talkshow.actions
    
    public class Parameter implements IParameter
    {
-      
       public static const TYPE_AUDIO:String = "A";
       
       public static const TYPE_BOOLEAN:String = "B";
@@ -18,7 +17,6 @@ package jackboxgames.talkshow.actions
       public static const TYPE_STRING:String = "S";
       
       public static const TYPE_TEXT:String = "T";
-       
       
       private var _name:String;
       
@@ -52,3 +50,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

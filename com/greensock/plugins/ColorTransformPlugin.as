@@ -6,9 +6,7 @@ package com.greensock.plugins
    
    public class ColorTransformPlugin extends TintPlugin
    {
-      
       public static const API:Number = 2;
-       
       
       public function ColorTransformPlugin()
       {
@@ -83,3 +81,4 @@ package com.greensock.plugins
       }
    }
 }
+

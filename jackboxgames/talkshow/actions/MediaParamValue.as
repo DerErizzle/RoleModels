@@ -7,7 +7,6 @@ package jackboxgames.talkshow.actions
    
    public class MediaParamValue implements IMediaParamValue
    {
-      
       public static const SEL_RANDOM:uint = 0;
       
       public static const SEL_ORDER:uint = 1;
@@ -19,7 +18,6 @@ package jackboxgames.talkshow.actions
       public static const SEL_PRIMARY:uint = 4;
       
       public static const ORDER_LOOP:String = "Loop";
-       
       
       private var _selType:uint;
       
@@ -75,6 +73,8 @@ package jackboxgames.talkshow.actions
       
       public function getCurrentVersion(commit:Boolean = false) : IMediaVersion
       {
+         var primaryMedia:IMediaParamValue = null;
+         var primaryVersion:IMediaVersion = null;
          var ver:IMediaVersion = null;
          if(this.media != null)
          {
@@ -87,6 +87,16 @@ package jackboxgames.talkshow.actions
                   ver = this.media.getNextOrderedVersion(commit,this._selVal == ORDER_LOOP);
                   break;
                case MediaParamValue.SEL_PRIMARY:
+                  primaryMedia = this._actionRef.getPrimaryMediaParamValue();
+                  if(commit)
+                  {
+                     primaryVersion = primaryMedia.previous;
+                  }
+                  else
+                  {
+                     primaryVersion = primaryMedia.getCurrentVersion();
+                  }
+                  ver = this.media.getVersionByIndex(primaryVersion.idx);
                   break;
                case MediaParamValue.SEL_RANDOM:
                   ver = this.media.getNextRandomVersion(commit);
@@ -103,3 +113,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

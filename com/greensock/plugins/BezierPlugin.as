@@ -5,7 +5,6 @@ package com.greensock.plugins
    
    public class BezierPlugin extends TweenPlugin
    {
-      
       public static const API:Number = 2;
       
       protected static const _RAD2DEG:Number = 180 / Math.PI;
@@ -17,7 +16,6 @@ package com.greensock.plugins
       protected static var _r3:Array = [];
       
       protected static var _corProps:Object = {};
-       
       
       protected var _target:Object;
       
@@ -102,7 +100,7 @@ package com.greensock.plugins
             i = int(props.length);
             while(--i > -1)
             {
-               p = String(props[i]);
+               p = props[i];
                if(Math.abs(first[p] - last[p]) > 0.05)
                {
                   seamless = false;
@@ -124,7 +122,7 @@ package com.greensock.plugins
          i = int(props.length);
          while(--i > -1)
          {
-            p = String(props[i]);
+            p = props[i];
             _corProps[p] = correlate.indexOf("," + p + ",") !== -1;
             obj[p] = _parseAnchors(values,p,_corProps[p],prepend);
          }
@@ -160,7 +158,7 @@ package com.greensock.plugins
          j = quadratic ? 4 : 1;
          while(--i > -1)
          {
-            p = String(props[i]);
+            p = props[i];
             a = obj[p];
             _calculateControlPoints(a,curviness,quadratic,basic,_corProps[p]);
             if(seamless)
@@ -213,13 +211,14 @@ package com.greensock.plugins
          i = int(props.length);
          while(--i > -1)
          {
-            p = String(props[i]);
+            p = props[i];
             obj[p] = cur = [];
             cnt = 0;
             l = int(values.length);
             for(j = 0; j < l; j++)
             {
-               a = prepend == null ? Number(values[j][p]) : (typeof (tmp = values[j][p]) === "string" && tmp.charAt(1) === "=" ? prepend[p] + Number(tmp.charAt(0) + tmp.substr(2)) : Number(tmp));
+               tmp = values[j][p];
+               a = prepend == null ? Number(values[j][p]) : (typeof tmp === "string" && tmp.charAt(1) === "=" ? prepend[p] + Number(tmp.charAt(0) + tmp.substr(2)) : Number(tmp));
                if(soft)
                {
                   if(j > 1)
@@ -265,7 +264,8 @@ package com.greensock.plugins
             i = int(values.length);
             while(--i > -1)
             {
-               if(typeof (tmp = values[i][p]) === "string")
+               tmp = values[i][p];
+               if(typeof tmp === "string")
                {
                   if(tmp.charAt(1) === "=")
                   {
@@ -507,7 +507,7 @@ package com.greensock.plugins
          i = int(this._props.length);
          while(--i > -1)
          {
-            p = String(this._props[i]);
+            p = this._props[i];
             this._overwriteProps.push(p);
             isFunc = this._func[p] = target[p] is Function;
             first[p] = !isFunc ? target[p] : target[Boolean(p.indexOf("set")) || !("get" + p.substr(3) in target) ? p : "get" + p.substr(3)]();
@@ -519,7 +519,7 @@ package com.greensock.plugins
                }
             }
          }
-         this._beziers = vars.type !== "cubic" && vars.type !== "quadratic" && vars.type !== "soft" ? bezierThrough(values,isNaN(vars.curviness) ? 1 : Number(vars.curviness),false,vars.type === "thruBasic",String(vars.correlate) || "x,y,z",prepend) : _parseBezierData(values,vars.type,first);
+         this._beziers = vars.type !== "cubic" && vars.type !== "quadratic" && vars.type !== "soft" ? bezierThrough(values,isNaN(vars.curviness) ? 1 : Number(vars.curviness),false,vars.type === "thruBasic",vars.correlate || "x,y,z",prepend) : _parseBezierData(values,vars.type,first);
          this._segCount = this._beziers[p].length;
          if(Boolean(this._timeRes))
          {
@@ -533,7 +533,8 @@ package com.greensock.plugins
             this._s2 = this._curSeg[0];
             this._prec = 1 / this._curSeg.length;
          }
-         if(Boolean(ar = this._autoRotate))
+         ar = this._autoRotate;
+         if(Boolean(ar))
          {
             this._initialRotations = [];
             if(!(ar[0] is Array))
@@ -545,10 +546,10 @@ package com.greensock.plugins
             {
                for(j = 0; j < 3; j++)
                {
-                  p = String(ar[i][j]);
+                  p = ar[i][j];
                   this._func[p] = target[p] is Function ? target[Boolean(p.indexOf("set")) || !("get" + p.substr(3) in target) ? p : "get" + p.substr(3)] : false;
                }
-               p = String(ar[i][2]);
+               p = ar[i][2];
                this._initialRotations[i] = Boolean(this._func[p]) ? this._func[p]() : this._target[p];
             }
          }
@@ -692,7 +693,7 @@ package com.greensock.plugins
          i = int(this._props.length);
          while(--i > -1)
          {
-            p = String(this._props[i]);
+            p = this._props[i];
             b = this._beziers[p][curIndex];
             val = (t * t * b.da + 3 * inv * (t * b.ca + inv * b.ba)) * t + b.a;
             if(Boolean(this._round[p]))
@@ -714,7 +715,7 @@ package com.greensock.plugins
             i = int(ar.length);
             while(--i > -1)
             {
-               p = String(ar[i][2]);
+               p = ar[i][2];
                add = Number(Number(ar[i][3]) || 0);
                conv = ar[i][4] == true ? 1 : _RAD2DEG;
                b = this._beziers[ar[i][0]][curIndex];
@@ -744,8 +745,6 @@ package com.greensock.plugins
 
 class Segment
 {
-    
-   
    public var a:Number;
    
    public var b:Number;
@@ -772,3 +771,4 @@ class Segment
       this.ba = b - a;
    }
 }
+

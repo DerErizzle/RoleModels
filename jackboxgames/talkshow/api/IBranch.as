@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface IBranch
    {
-       
-      
       function get targetId() : int;
       
       function get type() : uint;
@@ -17,3 +15,4 @@ package jackboxgames.talkshow.api
       function start() : void;
    }
 }
+

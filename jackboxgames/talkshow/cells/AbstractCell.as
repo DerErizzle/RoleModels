@@ -10,8 +10,6 @@ package jackboxgames.talkshow.cells
    
    public class AbstractCell implements ICell
    {
-       
-      
       protected var _id:uint;
       
       protected var _target:String;
@@ -81,3 +79,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

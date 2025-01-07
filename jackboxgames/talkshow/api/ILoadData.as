@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface ILoadData
    {
-       
-      
       function get level() : uint;
       
       function decrement() : void;
@@ -19,3 +17,4 @@ package jackboxgames.talkshow.api
       function clone() : ILoadData;
    }
 }
+

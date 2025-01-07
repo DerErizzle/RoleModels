@@ -13,8 +13,6 @@ package jackboxgames.talkshow.cells
    
    public class CallCell extends AbstractCell
    {
-       
-      
       private var _childId:uint;
       
       private var _subroutineId:uint;
@@ -224,3 +222,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

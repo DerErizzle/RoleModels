@@ -1,28 +1,12 @@
 package jackboxgames.talkshow.core
 {
-   import flash.events.Event;
-   import flash.events.KeyboardEvent;
-   import flash.events.ProgressEvent;
-   import flash.events.TimerEvent;
-   import flash.utils.Dictionary;
-   import flash.utils.Timer;
-   import jackboxgames.logger.Logger;
-   import jackboxgames.talkshow.api.IPausable;
-   import jackboxgames.talkshow.api.IPauseManager;
-   import jackboxgames.talkshow.api.PauseType;
-   import jackboxgames.talkshow.api.events.CellEvent;
-   import jackboxgames.talkshow.api.events.PauseEvent;
-   import jackboxgames.utils.PausableEventDispatcher;
-   
    internal final class PauseManager extends PausableEventDispatcher implements IPauseManager
    {
-      
       public static const PLAY:String = "play";
       
       public static const STOP:String = "stop";
       
       public static const BUFFER_DELAY:Number = 1000;
-       
       
       private var _engine:PlaybackEngine;
       
@@ -202,3 +186,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

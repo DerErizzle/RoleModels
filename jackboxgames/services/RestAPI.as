@@ -2,12 +2,10 @@ package jackboxgames.services
 {
    import flash.system.Security;
    import jackboxgames.loader.*;
-   import jackboxgames.utils.*;
+   import jackboxgames.nativeoverride.*;
    
    public class RestAPI
    {
-       
-      
       private var _apiUrl:String;
       
       private var _autoSerialize:Boolean = true;
@@ -74,3 +72,4 @@ package jackboxgames.services
       }
    }
 }
+

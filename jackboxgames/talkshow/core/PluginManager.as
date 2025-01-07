@@ -11,8 +11,6 @@ package jackboxgames.talkshow.core
    
    public class PluginManager
    {
-       
-      
       private var _ts:IEngineAPI;
       
       private var _loaders:Dictionary;
@@ -50,3 +48,4 @@ package jackboxgames.talkshow.core
       }
    }
 }
+

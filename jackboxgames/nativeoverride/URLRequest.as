@@ -4,8 +4,6 @@ package jackboxgames.nativeoverride
    
    public class URLRequest
    {
-       
-      
       private var mURL:String;
       
       private var mMethod:String;
@@ -77,3 +75,4 @@ package jackboxgames.nativeoverride
       }
    }
 }
+

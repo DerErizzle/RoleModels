@@ -8,8 +8,6 @@ package jackboxgames.talkshow.actions
    
    public class TimeoutBranchActionRef extends ActionRef
    {
-       
-      
       private var TIMING_BRANCH_ID:int = -99998;
       
       protected var _tCell:ICell;
@@ -46,3 +44,4 @@ package jackboxgames.talkshow.actions
       }
    }
 }
+

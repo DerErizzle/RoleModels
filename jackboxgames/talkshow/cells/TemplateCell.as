@@ -16,8 +16,6 @@ package jackboxgames.talkshow.cells
    
    public class TemplateCell extends AbstractCell
    {
-       
-      
       private var _childId:uint;
       
       private var _templateId:uint;
@@ -289,3 +287,4 @@ package jackboxgames.talkshow.cells
       }
    }
 }
+

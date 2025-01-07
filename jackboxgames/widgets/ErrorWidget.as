@@ -9,11 +9,9 @@ package jackboxgames.widgets
    
    public class ErrorWidget extends JBGMovieClip
    {
-      
       private static var _timer:PausableTimer;
       
       private static var _message:String;
-       
       
       private var _widget:MovieClipShower;
       
@@ -27,12 +25,16 @@ package jackboxgames.widgets
       public function set widget(val:MovieClip) : void
       {
          this._widget = new MovieClipShower(val);
-         this._widgetTf = new ExtendableTextField(val.tf,[],[PostEffectFactory.createDynamicResizerEffect(2),PostEffectFactory.createBalancerEffect(TextUtils.BALANCE_CENTER)]);
+         this._widgetTf = ETFHelperUtil.buildExtendableTextFieldFromRoot(val.tf);
          this._widgetTf.text = "";
       }
       
       public function handleError(s:String = "", timeout:int = 6000) : void
       {
+         if(!s)
+         {
+            return;
+         }
          if(s == "")
          {
             return;
@@ -86,3 +88,4 @@ package jackboxgames.widgets
       }
    }
 }
+

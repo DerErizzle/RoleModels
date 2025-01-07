@@ -2,8 +2,6 @@ package jackboxgames.talkshow.api
 {
    public interface IAction
    {
-       
-      
       function get id() : int;
       
       function get name() : String;
@@ -17,5 +15,8 @@ package jackboxgames.talkshow.api
       function getParameterIdx(param1:IParameter) : int;
       
       function getParameterIdxByName(param1:String) : int;
+      
+      function get numParameters() : int;
    }
 }
+
